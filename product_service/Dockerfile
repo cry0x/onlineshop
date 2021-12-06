@@ -7,7 +7,11 @@ COPY mvnw .
 COPY pom.xml .
 COPY src src
 
-RUN ./mvnw clean install
+RUN chmod a+x mvnw
+
+RUN ./mvnw clean package -DskipTests
+
+#################################################
 
 FROM openjdk:11-jre-slim as run
 
