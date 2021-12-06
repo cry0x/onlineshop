@@ -11,8 +11,6 @@ RUN chmod a+x mvnw
 
 RUN ./mvnw clean package -DskipTests
 
-#################################################
-
 FROM openjdk:11-jre-slim as run
 
 COPY --from=build /build/app/target/*.jar /app.jar
