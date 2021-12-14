@@ -5,9 +5,15 @@ import org.msia_projekt.product_service.services.ArticleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "/v1/articles")
@@ -29,17 +35,28 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public Article getArticle(@PathVariable Long id) {
+    public EntityModel<Article> getArticle(@PathVariable Long id) {
         log.info(String.format("GET: v1/articles/%d has been called", id));
 
-        return this.articleService.readArticleById(id);
+        Article article = this.articleService.readArticleById(id);
+
+        return EntityModel.of(article,
+                linkTo(methodOn(ArticleController.class).getArticle(id)).withSelfRel(),
+                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
     @GetMapping
-    public List<Article> getAllArticles() {
+    public CollectionModel<EntityModel<Article>> getAllArticles() {
         log.info("GET: /v1/articles has been called");
+        
+        List<EntityModel<Article>> articles = this.articleService.readAllArticles().stream()
+                .map(article -> EntityModel.of(article,
+                    linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
+                    linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles")))
+                .collect(Collectors.toList());
 
-        return this.articleService.readAllArticles();
+        return CollectionModel.of(articles,
+                linkTo(methodOn(ArticleController.class).getAllArticles()).withSelfRel());
     }
 
     @PutMapping("/{id}")
