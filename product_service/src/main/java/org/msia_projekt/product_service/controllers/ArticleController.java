@@ -23,27 +23,37 @@ public class ArticleController {
 
     @PostMapping
     public Article postArticle(@RequestBody Article article) {
+        log.info("POST: /v1/articles has been called");
+
         return this.articleService.createArticle(article);
     }
 
     @GetMapping("/{id}")
     public Article getArticle(@PathVariable Long id) {
-        return this.articleService.readArticleById(id).get();
+        log.info(String.format("GET: v1/articles/%d has been called", id));
+
+        return this.articleService.readArticleById(id);
     }
 
     @GetMapping
     public List<Article> getAllArticles() {
+        log.info("GET: /v1/articles has been called");
+
         return this.articleService.readAllArticles();
     }
 
     @PutMapping("/{id}")
-    public Article updateArticle(@PathVariable Long id,
+    public Article putArticle(@PathVariable Long id,
                               @RequestBody Article article) {
+        log.info(String.format("PUT: v1/articles/%d has been called", id));
+
         return this.articleService.updateArticle(id, article);
     }
 
     @DeleteMapping(path = "/{id}")
     public void deleteArticleById(@PathVariable Long id) {
+        log.info(String.format("DELETE: v1/articles/%d has been called", id));
+
         this.articleService.deleteArticleById(id);
     }
 
