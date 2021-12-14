@@ -28,10 +28,14 @@ public class ArticleController {
     }
 
     @PostMapping
-    public Article postArticle(@RequestBody Article article) {
+    public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
-        return this.articleService.createArticle(article);
+        Article createdArticle = this.articleService.createArticle(article);
+
+        return EntityModel.of(createdArticle,
+                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
+                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
     @GetMapping("/{id}")
@@ -48,7 +52,7 @@ public class ArticleController {
     @GetMapping
     public CollectionModel<EntityModel<Article>> getAllArticles() {
         log.info("GET: /v1/articles has been called");
-        
+
         List<EntityModel<Article>> articles = this.articleService.readAllArticles().stream()
                 .map(article -> EntityModel.of(article,
                     linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
@@ -60,11 +64,15 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public Article putArticle(@PathVariable Long id,
-                              @RequestBody Article article) {
+    public EntityModel<Article> putArticle(@PathVariable Long id,
+                                           @RequestBody Article article) {
         log.info(String.format("PUT: v1/articles/%d has been called", id));
 
-        return this.articleService.updateArticle(id, article);
+        Article updatedArticle = this.articleService.updateArticle(id, article);
+
+        return EntityModel.of(updatedArticle,
+                linkTo(methodOn(ArticleController.class).getArticle(updatedArticle.getId())).withSelfRel(),
+                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
     @DeleteMapping(path = "/{id}")
