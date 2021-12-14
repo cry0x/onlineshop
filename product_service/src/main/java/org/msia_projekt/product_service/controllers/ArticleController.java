@@ -2,16 +2,19 @@ package org.msia_projekt.product_service.controllers;
 
 import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.services.ArticleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/v1/articles")
+@RequestMapping(path = "/v1/articles")
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final static Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     @Autowired
     public ArticleController(ArticleService articleService) {
@@ -24,7 +27,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
-    public Article getArticleById(@PathVariable Long id) {
+    public Article getArticle(@PathVariable Long id) {
         return this.articleService.readArticleById(id).get();
     }
 
@@ -34,7 +37,7 @@ public class ArticleController {
     }
 
     @PutMapping("/{id}")
-    public Article putArticle(@PathVariable Long id,
+    public Article updateArticle(@PathVariable Long id,
                               @RequestBody Article article) {
         return this.articleService.updateArticle(id, article);
     }

@@ -19,29 +19,6 @@ public class Article {
 
     }
 
-    public Article(String name,
-                   String description,
-                   String picture,
-                   double price,
-                   int stock) {
-        setName(name);
-        setDescription(description);
-        setPicture(picture);
-        setPrice(price);
-        setStock(stock);
-    }
-
-    public Article(long id,
-                   String name,
-                   String description,
-                   String picture,
-                   double price,
-                   int stock) {
-        this(name, description, picture, price, stock);
-
-        setId(id);
-    }
-
     public Long getId() {
         return id;
     }
