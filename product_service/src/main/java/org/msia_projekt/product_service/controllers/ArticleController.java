@@ -9,6 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,6 +81,11 @@ public class ArticleController {
         log.info(String.format("DELETE: v1/articles/%d has been called", id));
 
         this.articleService.deleteArticleById(id);
+    }
+
+    @GetMapping("/{id}/picture")
+    public String getBase64ArticlePicture(@PathVariable Long id) throws IOException {
+        return this.articleService.readBase64PictureFromArticle(id);
     }
 
 }

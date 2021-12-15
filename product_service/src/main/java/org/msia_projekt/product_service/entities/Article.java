@@ -1,9 +1,13 @@
 package org.msia_projekt.product_service.entities;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Base64;
 
 @Entity
 @Table(name = "article")
@@ -14,6 +18,7 @@ public class Article {
     private Long id;
     private String name;
     private String description;
+    @Column(columnDefinition="TEXT")
     private String picture;
     private double price;
     private int stock;
