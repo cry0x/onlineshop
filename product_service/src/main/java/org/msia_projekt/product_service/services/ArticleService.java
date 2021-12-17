@@ -1,15 +1,11 @@
 package org.msia_projekt.product_service.services;
 
-import org.apache.commons.io.FileUtils;
 import org.msia_projekt.product_service.exceptions.ArticleDoesntExistsException;
 import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.repositories.IArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @Service
