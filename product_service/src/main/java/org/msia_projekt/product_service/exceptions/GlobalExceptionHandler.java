@@ -28,7 +28,6 @@ public class GlobalExceptionHandler {
         log.error(exception.getLocalizedMessage());
 
         return new ResponseStatusException(httpStatus, exception.getMessage());
-
     }
 
 }

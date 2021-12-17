@@ -2,11 +2,12 @@ package org.msia_projekt.product_service.entities;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.msia_projekt.product_service.DefaultBase64ProductPicture;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "article")
+@Table(name = "articles")
 public class Article {
 
     @Id
@@ -14,12 +15,12 @@ public class Article {
     private Long id;
     private String name;
     private String description;
-    private String picture;
+    @Column(columnDefinition="TEXT")
+    private String picture = DefaultBase64ProductPicture.getDefaultBase64ProductPicture();
     private double price;
     private int stock;
 
     public Article() {
-
     }
 
     public Long getId() {

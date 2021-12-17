@@ -1,5 +1,6 @@
 package org.msia_projekt.product_service.controllers;
 
+import org.msia_projekt.product_service.DefaultBase64ProductPicture;
 import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.services.ArticleService;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ public class ArticleController {
     public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
+        article.setPicture(DefaultBase64ProductPicture.getDefaultBase64ProductPicture());
         Article createdArticle = this.articleService.createArticle(article);
 
         return EntityModel.of(createdArticle,
@@ -68,6 +70,7 @@ public class ArticleController {
                                            @RequestBody Article article) {
         log.info(String.format("PUT: v1/articles/%d has been called", id));
 
+        article.setPicture(DefaultBase64ProductPicture.getDefaultBase64ProductPicture());
         Article updatedArticle = this.articleService.updateArticle(id, article);
 
         return EntityModel.of(updatedArticle,
