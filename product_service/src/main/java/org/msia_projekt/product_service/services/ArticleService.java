@@ -49,10 +49,4 @@ public class ArticleService {
         return this.iArticleRepository.findAll();
     }
 
-    public String readBase64PictureFromArticle(Long id) throws IOException {
-        Article article = this.iArticleRepository.findById(id).orElseThrow(() -> new ArticleDoesntExistsException(id));
-
-        byte[] fileContent = FileUtils.readFileToByteArray(new File(article.getPicture()));
-        return Base64.getEncoder().encodeToString(fileContent);
-    }
 }
