@@ -7,7 +7,7 @@ import org.msia_projekt.product_service.DefaultBase64ProductPicture;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "article")
+@Table(name = "articles")
 public class Article {
 
     @Id
