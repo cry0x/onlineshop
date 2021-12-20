@@ -2,7 +2,7 @@ package org.msia_projekt.product_service.entities;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.msia_projekt.product_service.DefaultBase64ProductPicture;
+import org.msia_projekt.product_service.utilities.DefaultBase64ProductPicture;
 
 import javax.persistence.*;
 

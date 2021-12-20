@@ -26,7 +26,11 @@ public class ArticleService {
         if (!this.iArticleRepository.existsById(id))
             throw new ArticleDoesntExistsException(id);
 
+        Article unchangedArticle = readArticleById(id);
+
+        updatedArticle.setName(unchangedArticle.getName());
         updatedArticle.setId(id);
+
         return this.iArticleRepository.save(updatedArticle);
     }
 
