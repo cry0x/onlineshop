@@ -20,10 +20,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     // OpenAPI Docs Generator
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+    // MongoDB
+	// compile("org.springframework.data:spring-data-mongodb")
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-	
+
 	testCompileOnly 'org.projectlombok:lombok:1.18.22'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
