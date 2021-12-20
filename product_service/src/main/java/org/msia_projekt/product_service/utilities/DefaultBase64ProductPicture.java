@@ -1,4 +1,4 @@
-package org.msia_projekt.product_service;
+package org.msia_projekt.product_service.utilities;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
