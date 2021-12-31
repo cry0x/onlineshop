@@ -9,7 +9,7 @@ COPY src src
 
 RUN chmod a+x mvnw
 
-RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package
 
 FROM openjdk:11-jre-slim as run
 
