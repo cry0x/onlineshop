@@ -8,8 +8,6 @@ services:
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
             POSTGRES_DB: product_service
-        ports:
-           - "5432:5432"
         networks:
             servicenetwork:
 
@@ -18,7 +16,7 @@ services:
         image: onlineshop/product_service:latest
         restart: always
         environment:
-            spring.datasource.url: jdbc:postgresql://postgresdb:5432/product_service
+            spring.datasource.url: jdbc:postgresql://postgresdb/product_service
             spring.datasource.username: root
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
