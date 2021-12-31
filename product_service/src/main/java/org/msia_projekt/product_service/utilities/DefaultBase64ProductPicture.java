@@ -13,7 +13,7 @@ public class DefaultBase64ProductPicture {
         byte[] fileContent = new byte[0];
 
         try {
-            Resource resource = new ClassPathResource("static\\images\\default_article_picture.jpg");
+            Resource resource = new ClassPathResource("\\static\\images\\default_article_picture.jpg");
 
             fileContent = FileUtils.readFileToByteArray(resource.getFile());
         } catch (IOException e) {
