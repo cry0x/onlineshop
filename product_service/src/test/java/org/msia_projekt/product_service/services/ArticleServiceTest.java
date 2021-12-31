@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +60,7 @@ class ArticleServiceTest {
         newArticle.setStock(6);
 
         when(iArticleRepository.existsById(oldArticle.getId())).thenReturn(true);
+        when(iArticleRepository.findById(oldArticle.getId())).thenReturn(Optional.of(oldArticle));
         when(iArticleRepository.save(newArticle)).thenReturn(newArticle);
 
         Article actualArticle = this.articleService.updateArticle(oldArticle.getId(), newArticle);

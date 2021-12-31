@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class ArticleController {
         this.articleService = articleService;
     }
 
-    @PostMapping
+    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
@@ -38,7 +39,7 @@ public class ArticleController {
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> getArticle(@PathVariable Long id) {
         log.info(String.format("GET: v1/articles/%d has been called", id));
 
@@ -49,7 +50,7 @@ public class ArticleController {
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
-    @GetMapping
+    @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public CollectionModel<EntityModel<Article>> getAllArticles() {
         log.info("GET: /v1/articles has been called");
 
@@ -63,7 +64,7 @@ public class ArticleController {
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withSelfRel());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> putArticle(@PathVariable Long id,
                                            @RequestBody Article article) {
         log.info(String.format("PUT: v1/articles/%d has been called", id));
