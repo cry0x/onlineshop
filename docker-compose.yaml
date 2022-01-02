@@ -28,6 +28,17 @@ services:
         networks:
             servicenetwork:
 
+    customer_service:
+        build: customer_service
+        image: onlineshop/customer_service:latest
+        restart: always
+        ports:
+            - "9001:8080"
+        depends_on:
+            - postgresdb
+        networks:
+            servicenetwork:
+
 networks:
     servicenetwork:
         driver: bridge
