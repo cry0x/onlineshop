@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,9 +18,9 @@ public class DefaultBase64ProductPictureTest {
     void getDefaultBase64ProductPictureTest() throws IOException {
         String actualEncodedPicture = DefaultBase64ProductPicture.getDefaultBase64ProductPicture();
 
-        FileInputStream fis = new FileInputStream("src/test/resources/DefaultBase64ProductPictureTestData");
-        String stringTooLong = IOUtils.toString(fis, "UTF-8");
+        FileInputStream fis = new FileInputStream("src\\test\\resources\\DefaultBase64ProductPictureTestData");
+        String expectedEncodedPicture = IOUtils.toString(fis, StandardCharsets.UTF_8);
 
-        assertEquals(stringTooLong, actualEncodedPicture);
+        assertEquals(expectedEncodedPicture, actualEncodedPicture);
     }
 }

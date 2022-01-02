@@ -14,14 +14,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = { ArticleDoesntExistsException.class })
     public final ResponseStatusException handleException(Exception ex) {
-//        if (ex instanceof ArticleDoesntExistsException) {
+        if (ex instanceof ArticleDoesntExistsException) {
             return handleExceptionInternally(HttpStatus.NOT_FOUND, ex);
-//        } else {
-//            HttpStatus status = HttpStatus.NOT_FOUND;
-//            ArticleDoesntExistsException articleDoesntExistsException = (ArticleDoesntExistsException) ex;
-//
-//            return new ResponseStatusException(status, articleDoesntExistsException.getMessage());
-//        }
+        } else {
+            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+
+            return handleExceptionInternally(status, ex);
+        }
     }
 
     private ResponseStatusException handleExceptionInternally(HttpStatus httpStatus, Exception exception) {
