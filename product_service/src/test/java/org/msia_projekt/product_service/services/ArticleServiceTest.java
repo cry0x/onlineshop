@@ -36,7 +36,7 @@ class ArticleServiceTest {
         expectedArticle.setName("Table");
         expectedArticle.setDescription("Black table made of wood");
         expectedArticle.setPrice(129.99);
-        expectedArticle.setStock(4);
+        expectedArticle.setQuantity(4);
 
         when(iArticleRepository.save(expectedArticle)).thenReturn(expectedArticle);
 
@@ -50,14 +50,14 @@ class ArticleServiceTest {
         oldArticle.setName("Table");
         oldArticle.setDescription("Black table made of wood");
         oldArticle.setPrice(129.99);
-        oldArticle.setStock(4);
+        oldArticle.setQuantity(4);
 
         Article newArticle = new Article();
         newArticle.setId(1L);
         newArticle.setName("Table");
         newArticle.setDescription("Red table made of wood");
         newArticle.setPrice(229.99);
-        newArticle.setStock(6);
+        newArticle.setQuantity(6);
 
         when(iArticleRepository.existsById(oldArticle.getId())).thenReturn(true);
         when(iArticleRepository.findById(oldArticle.getId())).thenReturn(Optional.of(oldArticle));
@@ -76,7 +76,7 @@ class ArticleServiceTest {
         article.setName("Table");
         article.setDescription("Red table made of wood");
         article.setPrice(229.99);
-        article.setStock(6);
+        article.setQuantity(6);
 
         when(iArticleRepository.existsById(article.getId())).thenReturn(false);
         when(iArticleRepository.save(article)).thenReturn(article);
@@ -91,7 +91,7 @@ class ArticleServiceTest {
         article.setName("Table");
         article.setDescription("Red table made of wood");
         article.setPrice(229.99);
-        article.setStock(6);
+        article.setQuantity(6);
 
         when(iArticleRepository.existsById(article.getId())).thenReturn(false);
 
