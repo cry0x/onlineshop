@@ -33,5 +33,8 @@ public class Article {
     @Getter
     @Setter
     private int quantity;
-
+    @Lob
+    @Getter
+    @Setter
+    private byte[] image_new;
 }
