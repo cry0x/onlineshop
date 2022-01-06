@@ -10,6 +10,10 @@ import java.util.Base64;
 public class DefaultBase64ProductPicture {
 
     public static String getDefaultBase64ProductPicture() {
+        return Base64.getEncoder().encodeToString(getDefaultProductPicture());
+    }
+
+    public static byte[] getDefaultProductPicture() {
         byte[] fileContent = new byte[0];
 
         try {
@@ -20,6 +24,6 @@ public class DefaultBase64ProductPicture {
             e.printStackTrace();
         }
 
-        return Base64.getEncoder().encodeToString(fileContent);
+        return fileContent;
     }
 }
