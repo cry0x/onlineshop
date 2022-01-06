@@ -1,7 +1,7 @@
 package org.msia_projekt.product_service.entities;
 
 import lombok.*;
-import org.msia_projekt.product_service.utilities.DefaultBase64ProductPicture;
+import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 
 import javax.persistence.*;
 
@@ -23,10 +23,10 @@ public class Article {
     @Getter
     @Setter
     private String description;
-    @Column(columnDefinition="TEXT")
+    @Lob
     @Getter
     @Setter
-    private String image = DefaultBase64ProductPicture.getDefaultBase64ProductPicture();
+    private byte[] image = DefaultProductPicture.getDefaultProductPicture();
     @Getter
     @Setter
     private double price;
