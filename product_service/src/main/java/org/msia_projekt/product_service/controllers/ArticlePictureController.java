@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,8 +37,7 @@ public class ArticlePictureController {
         ArticlePicture articlePicture = this.iArticlePictureRepository.findById(id).orElseThrow(() -> new ArticlePictureDoesntExistException(id));
 
         return EntityModel.of(articlePicture,
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withRel("article_pictures"));
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
     }
 
     @GetMapping
@@ -45,23 +46,11 @@ public class ArticlePictureController {
 
         List<EntityModel<ArticlePicture>> articlePictures = this.iArticlePictureRepository.findAll().stream()
                 .map(articlePicture -> EntityModel.of(articlePicture,
-                        linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel(),
-                        linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withRel("article_pictures")))
+                        linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
         return CollectionModel.of(articlePictures,
                 linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withSelfRel());
-    }
-
-    @PostMapping
-    public EntityModel<ArticlePicture> postArticlePicture(@RequestBody ArticlePicture articlePicture) {
-        log.info("POST: /v1/articlepictures has been called");
-
-        ArticlePicture newArticlePicture = this.iArticlePictureRepository.save(articlePicture);
-
-        return EntityModel.of(newArticlePicture,
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(newArticlePicture.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withRel("article_pictures"));
     }
 
 }

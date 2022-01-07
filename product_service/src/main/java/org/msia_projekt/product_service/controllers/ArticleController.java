@@ -89,13 +89,11 @@ public class ArticleController {
     }
 
     @PutMapping(value = "/{articleId}/articlepicture")
-    public EntityModel<Article> putArticlePictureOfArticleById(@PathVariable Long articleId, @RequestBody MultipartFile file) throws IOException {
+    public EntityModel<Article> putArticlePictureOfArticleById(@PathVariable Long articleId,
+                                                               @RequestBody MultipartFile file) throws IOException {
         log.info(String.format("PUT: v1/articles/%d/articlepicture has been called", articleId));
 
         Article article = this.articleService.readArticleById(articleId);
-
-        System.out.println(file.getName());
-        System.out.println(file.getInputStream().readAllBytes());
 
         ArticlePicture articlePicture = new ArticlePicture();
         articlePicture.setName(file.getOriginalFilename());
@@ -115,6 +113,7 @@ public class ArticleController {
     @DeleteMapping(path = "/{articleId}")
     public void deleteArticleById(@PathVariable Long articleId) {
         log.info(String.format("DELETE: v1/articles/%d has been called", articleId));
+
         this.articlePictureService.deleteArticlePictureById(this.articleService.readArticleById(articleId).getArticlePicture().getId());
         this.articleService.deleteArticleById(articleId);
     }
