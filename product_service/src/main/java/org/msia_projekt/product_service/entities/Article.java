@@ -1,8 +1,6 @@
 package org.msia_projekt.product_service.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.*;
-import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 
 import javax.persistence.*;
 
