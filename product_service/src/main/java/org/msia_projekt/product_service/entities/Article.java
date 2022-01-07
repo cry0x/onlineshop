@@ -1,5 +1,6 @@
 package org.msia_projekt.product_service.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.*;
 import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
     private Long id;
@@ -23,15 +24,15 @@ public class Article {
     @Getter
     @Setter
     private String description;
-    @Lob
-    @Getter
-    @Setter
-    private byte[] image = DefaultProductPicture.getDefaultProductPicture();
     @Getter
     @Setter
     private double price;
     @Getter
     @Setter
     private int quantity;
+    @Getter
+    @Setter
+    @OneToOne
+    private ArticlePicture articlePicture;
 
 }

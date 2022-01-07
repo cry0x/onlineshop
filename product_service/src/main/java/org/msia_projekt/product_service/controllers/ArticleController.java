@@ -1,6 +1,8 @@
 package org.msia_projekt.product_service.controllers;
 
 import org.msia_projekt.product_service.entities.Article;
+import org.msia_projekt.product_service.entities.ArticlePicture;
+import org.msia_projekt.product_service.services.ArticlePictureService;
 import org.msia_projekt.product_service.services.ArticleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +23,27 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final ArticlePictureService articlePictureService;
     private final static Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     @Autowired
-    public ArticleController(ArticleService articleService) {
+    public ArticleController(ArticleService articleService, ArticlePictureService articlePictureService) {
         this.articleService = articleService;
+        this.articlePictureService = articlePictureService;
     }
 
     @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
+        if (article.getArticlePicture() == null)
+            article.setArticlePicture(this.articlePictureService.createArticlePicture(new ArticlePicture()));
+
         Article createdArticle = this.articleService.createArticle(article);
 
         return EntityModel.of(createdArticle,
                 linkTo(methodOn(ArticleController.class).getArticle(createdArticle.getId())).withSelfRel(),
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"),
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
@@ -47,6 +55,7 @@ public class ArticleController {
 
         return EntityModel.of(article,
                 linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"),
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
@@ -57,6 +66,7 @@ public class ArticleController {
         List<EntityModel<Article>> articles = this.articleService.readAllArticles().stream()
                 .map(article -> EntityModel.of(article,
                     linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
+                    linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"),
                     linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles")))
                 .collect(Collectors.toList());
 
@@ -73,13 +83,14 @@ public class ArticleController {
 
         return EntityModel.of(updatedArticle,
                 linkTo(methodOn(ArticleController.class).getArticle(updatedArticle.getId())).withSelfRel(),
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(updatedArticle.getArticlePicture().getId())).withRel("article_picture"),
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
     }
 
     @DeleteMapping(path = "/{id}")
     public void deleteArticleById(@PathVariable Long id) {
         log.info(String.format("DELETE: v1/articles/%d has been called", id));
-
+        this.articlePictureService.deleteArticlePictureById(this.articleService.readArticleById(id).getArticlePicture().getId());
         this.articleService.deleteArticleById(id);
     }
 
