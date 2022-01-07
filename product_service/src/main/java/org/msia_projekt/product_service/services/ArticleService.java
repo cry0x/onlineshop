@@ -22,6 +22,14 @@ public class ArticleService {
         return this.iArticleRepository.save(article);
     }
 
+    public Article readArticleById(Long id) {
+        return this.iArticleRepository.findById(id).orElseThrow(() -> new ArticleDoesntExistsException(id));
+    }
+
+    public List<Article> readAllArticles() {
+        return this.iArticleRepository.findAll();
+    }
+
     public Article updateArticle(Long id, Article updatedArticle) {
         if (!this.iArticleRepository.existsById(id))
             throw new ArticleDoesntExistsException(id);
@@ -39,14 +47,6 @@ public class ArticleService {
             throw new ArticleDoesntExistsException(id);
 
         this.iArticleRepository.deleteById(id);
-    }
-
-    public Article readArticleById(Long id) {
-        return this.iArticleRepository.findById(id).orElseThrow(() -> new ArticleDoesntExistsException(id));
-    }
-
-    public List<Article> readAllArticles() {
-        return this.iArticleRepository.findAll();
     }
 
 }

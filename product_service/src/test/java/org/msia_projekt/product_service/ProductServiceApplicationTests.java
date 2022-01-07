@@ -18,12 +18,18 @@ class ProductServiceApplicationTests {
     private ArticleService articleService;
     @Autowired
     private IArticleRepository iArticleRepository;
+    @Autowired
+    private ArticlePictureService articlePictureService;
+    @Autowired
+    private IArticlePictureRepository iArticlePictureRepository;
 
     @Test
     void contextLoads() {
         assertNotNull(articleController);
         assertNotNull(articleService);
         assertNotNull(iArticleRepository);
+        assertNotNull(articlePictureService);
+        assertNotNull(iArticlePictureRepository);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.msia_projekt.product_service.exceptions;
 
+import org.msia_projekt.product_service.ArticlePictureDoesntExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,14 +13,14 @@ public class GlobalExceptionHandler {
 
     private final static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(value = { ArticleDoesntExistsException.class })
+    @ExceptionHandler(value = { ArticleDoesntExistsException.class, ArticlePictureDoesntExistException.class })
     public final ResponseStatusException handleException(Exception ex) {
         if (ex instanceof ArticleDoesntExistsException) {
             return handleExceptionInternally(HttpStatus.NOT_FOUND, ex);
+        } else if (ex instanceof ArticlePictureDoesntExistException) {
+            return handleExceptionInternally(HttpStatus.NOT_FOUND, ex);
         } else {
-            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return handleExceptionInternally(status, ex);
+            return handleExceptionInternally(HttpStatus.INTERNAL_SERVER_ERROR, ex);
         }
     }
 
