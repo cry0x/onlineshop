@@ -17,9 +17,12 @@ public class ArticlePicture {
     @Getter
     @Setter
     private Long id;
+    @Getter
+    @Setter
+    private String name = DefaultProductPicture.getDefaultProductPictureName();
     @Lob
     @Getter
     @Setter
-    private byte[] image = DefaultProductPicture.getDefaultProductPicture();
+    private byte[] data = DefaultProductPicture.getDefaultProductPictureData();
 
 }

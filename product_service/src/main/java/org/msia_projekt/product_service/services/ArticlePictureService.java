@@ -38,4 +38,13 @@ public class ArticlePictureService {
         this.articlePictureRepository.deleteById(id);
     }
 
+    public ArticlePicture updateArticlePicture(Long id, ArticlePicture updatedArticlePicture) {
+        if (!this.articlePictureRepository.existsById(id))
+            throw new ArticlePictureDoesntExistException(id);
+
+        updatedArticlePicture.setId(id);
+
+        return this.articlePictureRepository.save(updatedArticlePicture);
+    }
+
 }

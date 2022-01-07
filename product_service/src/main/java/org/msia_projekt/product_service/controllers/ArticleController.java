@@ -11,7 +11,9 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,20 +45,18 @@ public class ArticleController {
 
         return EntityModel.of(createdArticle,
                 linkTo(methodOn(ArticleController.class).getArticle(createdArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"),
-                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"));
     }
 
-    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-    public EntityModel<Article> getArticle(@PathVariable Long id) {
-        log.info(String.format("GET: v1/articles/%d has been called", id));
+    @GetMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    public EntityModel<Article> getArticle(@PathVariable Long articleId) {
+        log.info(String.format("GET: v1/articles/%d has been called", articleId));
 
-        Article article = this.articleService.readArticleById(id);
+        Article article = this.articleService.readArticleById(articleId);
 
         return EntityModel.of(article,
                 linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"),
-                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"));
     }
 
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -66,32 +66,57 @@ public class ArticleController {
         List<EntityModel<Article>> articles = this.articleService.readAllArticles().stream()
                 .map(article -> EntityModel.of(article,
                     linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                    linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"),
-                    linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles")))
+                    linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture")))
                 .collect(Collectors.toList());
 
         return CollectionModel.of(articles,
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withSelfRel());
     }
 
-    @PutMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
-    public EntityModel<Article> putArticle(@PathVariable Long id,
+    @PutMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    public EntityModel<Article> putArticle(@PathVariable Long articleId,
                                            @RequestBody Article article) {
-        log.info(String.format("PUT: v1/articles/%d has been called", id));
+        log.info(String.format("PUT: v1/articles/%d has been called", articleId));
 
-        Article updatedArticle = this.articleService.updateArticle(id, article);
+        ArticlePicture articlePicture = this.articleService.readArticleById(articleId).getArticlePicture();
+        article.setArticlePicture(articlePicture);
+
+        Article updatedArticle = this.articleService.updateArticle(articleId, article);
 
         return EntityModel.of(updatedArticle,
                 linkTo(methodOn(ArticleController.class).getArticle(updatedArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(updatedArticle.getArticlePicture().getId())).withRel("article_picture"),
-                linkTo(methodOn(ArticleController.class).getAllArticles()).withRel("articles"));
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(updatedArticle.getArticlePicture().getId())).withRel("article_picture"));
     }
 
-    @DeleteMapping(path = "/{id}")
-    public void deleteArticleById(@PathVariable Long id) {
-        log.info(String.format("DELETE: v1/articles/%d has been called", id));
-        this.articlePictureService.deleteArticlePictureById(this.articleService.readArticleById(id).getArticlePicture().getId());
-        this.articleService.deleteArticleById(id);
+    @PutMapping(value = "/{articleId}/articlepicture")
+    public EntityModel<Article> putArticlePictureOfArticleById(@PathVariable Long articleId, @RequestBody MultipartFile file) throws IOException {
+        log.info(String.format("PUT: v1/articles/%d/articlepicture has been called", articleId));
+
+        Article article = this.articleService.readArticleById(articleId);
+
+        System.out.println(file.getName());
+        System.out.println(file.getInputStream().readAllBytes());
+
+        ArticlePicture articlePicture = new ArticlePicture();
+        articlePicture.setName(file.getOriginalFilename());
+        articlePicture.setData(file.getInputStream().readAllBytes());
+
+        articlePicture = this.articlePictureService.updateArticlePicture(article.getArticlePicture().getId(), articlePicture);
+
+        article.setArticlePicture(articlePicture);
+
+        article = this.articleService.updateArticle(article.getId(), article);
+
+        return EntityModel.of(article,
+                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("articlepicture"));
+    }
+
+    @DeleteMapping(path = "/{articleId}")
+    public void deleteArticleById(@PathVariable Long articleId) {
+        log.info(String.format("DELETE: v1/articles/%d has been called", articleId));
+        this.articlePictureService.deleteArticlePictureById(this.articleService.readArticleById(articleId).getArticlePicture().getId());
+        this.articleService.deleteArticleById(articleId);
     }
 
 }
