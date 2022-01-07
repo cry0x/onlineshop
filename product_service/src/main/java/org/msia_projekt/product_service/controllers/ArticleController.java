@@ -1,6 +1,5 @@
 package org.msia_projekt.product_service.controllers;
 
-import org.msia_projekt.product_service.IArticlePictureRepository;
 import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.services.ArticleService;
 import org.slf4j.Logger;

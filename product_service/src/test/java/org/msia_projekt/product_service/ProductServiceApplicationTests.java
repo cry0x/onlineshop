@@ -2,7 +2,9 @@ package org.msia_projekt.product_service;
 
 import org.junit.jupiter.api.Test;
 import org.msia_projekt.product_service.controllers.ArticleController;
+import org.msia_projekt.product_service.repositories.IArticlePictureRepository;
 import org.msia_projekt.product_service.repositories.IArticleRepository;
+import org.msia_projekt.product_service.services.ArticlePictureService;
 import org.msia_projekt.product_service.services.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

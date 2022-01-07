@@ -1,4 +1,4 @@
-package org.msia_projekt.product_service;
+package org.msia_projekt.product_service.entities;
 
 import lombok.*;
 import org.msia_projekt.product_service.utilities.DefaultProductPicture;

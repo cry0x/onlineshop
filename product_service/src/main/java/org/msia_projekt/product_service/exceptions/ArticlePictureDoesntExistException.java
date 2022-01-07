@@ -1,4 +1,4 @@
-package org.msia_projekt.product_service;
+package org.msia_projekt.product_service.exceptions;
 
 public class ArticlePictureDoesntExistException extends RuntimeException {
 

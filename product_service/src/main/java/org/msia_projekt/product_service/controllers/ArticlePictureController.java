@@ -1,5 +1,8 @@
-package org.msia_projekt.product_service;
+package org.msia_projekt.product_service.controllers;
 
+import org.msia_projekt.product_service.entities.ArticlePicture;
+import org.msia_projekt.product_service.repositories.IArticlePictureRepository;
+import org.msia_projekt.product_service.exceptions.ArticlePictureDoesntExistException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
