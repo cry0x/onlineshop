@@ -22,5 +22,7 @@ WORKDIR /opt/app
 EXPOSE 8080/tcp
 
 ARG JAR_FILE=/customer_service/build/libs/\*.jar
-COPY --from=build ${JAR_FILE} /opt/app.jar
+
+COPY --from=build /build/libs/*-SNAPSHOT.jar /opt/app.jar
+
 ENTRYPOINT ["java","-jar","/opt/app.jar"]
