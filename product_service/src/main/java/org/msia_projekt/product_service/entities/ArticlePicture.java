@@ -1,15 +1,16 @@
 package org.msia_projekt.product_service.entities;
 
 import lombok.*;
+import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "article_pictures")
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class Article {
+public class ArticlePicture {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,19 +19,10 @@ public class Article {
     private Long id;
     @Getter
     @Setter
-    private String name;
+    private String name = DefaultProductPicture.getName();
+    @Lob
     @Getter
     @Setter
-    private String description;
-    @Getter
-    @Setter
-    private double price;
-    @Getter
-    @Setter
-    private int quantity;
-    @Getter
-    @Setter
-    @OneToOne
-    private ArticlePicture articlePicture;
+    private byte[] data = DefaultProductPicture.getBinaryData();
 
 }

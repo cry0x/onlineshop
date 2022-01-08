@@ -2,21 +2,22 @@ package org.msia_projekt.product_service.services;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
-import org.msia_projekt.product_service.utilities.DefaultBase64ProductPicture;
+import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class DefaultBase64ProductPictureTest {
+public class DefaultProductPictureTest {
 
     @Test
-    void getDefaultBase64ProductPictureTest() throws IOException {
-        String actualEncodedPicture = DefaultBase64ProductPicture.getDefaultBase64ProductPicture();
+    void getDefaultProductPictureTest() throws IOException {
+        String actualEncodedPicture = Base64.getEncoder().encodeToString(DefaultProductPicture.getBinaryData());
         InputStream fis = this.getClass().getResourceAsStream("/DefaultBase64ProductPictureTestData");
         String expectedEncodedPicture = IOUtils.toString(fis, StandardCharsets.UTF_8);
 
