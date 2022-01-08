@@ -1,33 +1,61 @@
 version: "3.9"
 
 services:
-    postgresdb:
+    product_service_db:
+        container_name: product_service_db
         image: postgres:latest
         restart: always
         environment:
+            POSTGRES_DB: product_service
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
-            POSTGRES_DB: product_service
         networks:
-            servicenetwork:
+            onlineshop_network:
 
     product_service:
         build: product_service
         image: onlineshop/product_service:latest
         restart: always
         environment:
-            spring.datasource.url: jdbc:postgresql://postgresdb/product_service
+            spring.datasource.url: jdbc:postgresql://product_service_db/product_service
             spring.datasource.username: root
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
         ports:
-           - "9000:8080"
+            - 9000:8080
         depends_on:
-            - postgresdb
+            - product_service_db
         networks:
-            servicenetwork:
+            onlineshop_network:
+
+    customer_service_db:
+        container_name: customer_service_db
+        image: postgres:latest
+        restart: always
+        environment:
+            POSTGRES_DB: customer_service
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        networks:
+            onlineshop_network:
+
+    customer_service:
+        build: customer_service
+        restart: always
+        environment:
+            spring.datasource.url: jdbc:postgresql://customer_service_db/customer_service
+            spring.datasource.username: root
+            spring.datasource.password: root
+            spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+            spring.datasource.driver-class-name: org.postgresql.Driver
+        ports:
+            - 9001:8080
+        depends_on:
+            - customer_service_db
+        networks:
+            onlineshop_network:
 
 networks:
-    servicenetwork:
+    onlineshop_network:
         driver: bridge

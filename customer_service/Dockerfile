@@ -16,11 +16,8 @@ RUN ./gradlew bootJar
 FROM openjdk:8-jre-alpine as run
 
 # SET WORKDIR
-WORKDIR /opt/app
+WORKDIR /customer_service
 
-# ACCEPT TCP-REQ ON PORT 8080
-EXPOSE 8080/tcp
+COPY --from=build /customer_service/build/libs/*-SNAPSHOT.jar /customer_service/app.jar
 
-ARG JAR_FILE=/customer_service/build/libs/\*.jar
-COPY --from=build ${JAR_FILE} /opt/app.jar
-ENTRYPOINT ["java","-jar","/opt/app.jar"]
+ENTRYPOINT ["java","-jar","/customer_service/app.jar"]
