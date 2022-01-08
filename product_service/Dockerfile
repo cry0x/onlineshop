@@ -11,6 +11,8 @@ RUN chmod a+x mvnw
 
 RUN ./mvnw clean package
 
+##################################################
+
 FROM openjdk:11-jre-slim as run
 
 COPY --from=build /build/app/target/*.jar /app.jar

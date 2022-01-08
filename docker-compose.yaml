@@ -10,7 +10,7 @@ services:
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
         networks:
-            product_service_network:
+            onlineshop_network:
 
     product_service:
         build: product_service
@@ -25,24 +25,24 @@ services:
         ports:
            - 9000:8080
         depends_on:
-            - postgresdb
+            - product_service_db
         networks:
-            product_service_network:
+            onlineshop_network:
 
     customer_service_db:
         container_name: customer_service_db
-        image: postgres:11.4
+        image: postgres:latest
         restart: always
         environment:
             POSTGRES_DB: customer_service
             POSTGRES_USER: root
             POSTGRES_PASSWORD: root
         networks:
-            customer_service_network:
+            onlineshop_network:
 
     customer_service:
         build: customer_service
-        restart: on-failure
+        restart: always
         environment:
             spring.datasource.url: jdbc:postgresql://customer_service_db/customer_service
             spring.datasource.username: root
@@ -54,10 +54,8 @@ services:
         depends_on:
             - customer_service_db
         networks:
-            customer_service_network:
+            onlineshop_network:
 
 networks:
-    product_service_network:
-        driver: bridge
-    customer_service_network:
+    onlineshop_network:
         driver: bridge
