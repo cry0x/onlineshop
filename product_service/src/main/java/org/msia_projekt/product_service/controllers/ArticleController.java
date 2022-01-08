@@ -114,8 +114,10 @@ public class ArticleController {
     public void deleteArticleById(@PathVariable Long articleId) {
         log.info(String.format("DELETE: v1/articles/%d has been called", articleId));
 
-        this.articlePictureService.deleteArticlePictureById(this.articleService.readArticleById(articleId).getArticlePicture().getId());
+        Long articlePicutreId = this.articleService.readArticleById(articleId).getArticlePicture().getId();
+
         this.articleService.deleteArticleById(articleId);
+        this.articlePictureService.deleteArticlePictureById(articlePicutreId);
     }
 
 }

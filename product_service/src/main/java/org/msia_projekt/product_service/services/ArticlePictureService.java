@@ -30,10 +30,6 @@ public class ArticlePictureService {
         return this.articlePictureRepository.findAll();
     }
 
-    public void deleteArticlePicture(ArticlePicture articlePicture) {
-        this.articlePictureRepository.delete(articlePicture);
-    }
-
     public void deleteArticlePictureById(Long id) {
         this.articlePictureRepository.deleteById(id);
     }
