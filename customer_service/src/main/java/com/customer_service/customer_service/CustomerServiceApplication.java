@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 @SpringBootApplication
 // See: localhost:9001/swagger-ui.html
 // Get JSON: http://localhost:9001/v3/api-docs
-// @EnableMongoRepositories
 @OpenAPIDefinition
 public class CustomerServiceApplication {
 

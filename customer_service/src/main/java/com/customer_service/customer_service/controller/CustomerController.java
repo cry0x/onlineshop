@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController()
+@RequestMapping(value = "/api/v1/customer")
 public class CustomerController {
 
     @Autowired
@@ -64,6 +66,7 @@ public class CustomerController {
 
     
     // delete customers
+    // TODO: ADD EXCEPTION IF ORDERS EXIST
     @Operation(summary = "This is to delete a customer stored in the DB")
     @DeleteMapping("customer/{id}")
     public void delete(@PathVariable long id)
