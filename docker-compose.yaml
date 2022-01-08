@@ -1,6 +1,42 @@
 version: "3.9"
 
 services:
+    grafana_monitoring:
+         container_name: onlineshop_grafana_monitor
+         image: grafana/grafana-enterprise
+         restart: always
+         ports:
+            - 3000:3000
+         networks:
+            onlineshop_network:
+ 
+    prometheus_gatherer:
+        container_name: onlineshop_prometheus_gatherer
+        image: prom/prometheus:latest
+        restart: always
+        ports:
+            - 9090:9090
+        depends_on: 
+            - cadvisor
+            - product_service
+        networks:
+            onlineshop_network:
+
+    cadvisor:
+        container_name: cadvisor
+        image: gcr.io/cadvisor/cadvisor:latest
+        ports: 
+            - 9091:8080
+        depends_on:
+            - product_service
+        volumes:
+            - /:/rootfs:ro
+            - /var/run:/var/run:rw
+            - /sys:/sys:ro
+            - /var/lib/docker/:/var/lib/docker:ro
+        networks:
+            onlineshop_network:
+                    
     product_service_db:
         container_name: product_service_db
         image: postgres:latest
@@ -23,7 +59,7 @@ services:
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
         ports:
-           - 9000:8080
+            - 9000:8080
         depends_on:
             - product_service_db
         networks:
