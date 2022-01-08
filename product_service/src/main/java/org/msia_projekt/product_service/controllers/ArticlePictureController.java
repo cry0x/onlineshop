@@ -27,11 +27,11 @@ public class ArticlePictureController {
         this.articlePictureService = articlePictureService;
     }
 
-    @GetMapping(value = "/{id}")
-    public EntityModel<ArticlePicture> getArticlePicture(@PathVariable Long id) {
-        log.info(String.format("GET: /v1/articlepictures/%d has been called", id));
+    @GetMapping(value = "/{articlePictureId}")
+    public EntityModel<ArticlePicture> getArticlePicture(@PathVariable Long articlePictureId) {
+        log.info(String.format("GET: /v1/articlepictures/%d has been called", articlePictureId));
 
-        ArticlePicture articlePicture = this.articlePictureService.readArticlePictureById(id);
+        ArticlePicture articlePicture = this.articlePictureService.readArticlePictureById(articlePictureId);
 
         return EntityModel.of(articlePicture,
                 linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
