@@ -19,10 +19,10 @@ public class ArticlePicture {
     private Long id;
     @Getter
     @Setter
-    private String name = DefaultProductPicture.getDefaultProductPictureName();
+    private String name = DefaultProductPicture.getName();
     @Lob
     @Getter
     @Setter
-    private byte[] data = DefaultProductPicture.getDefaultProductPictureData();
+    private byte[] data = DefaultProductPicture.getBinaryData();
 
 }

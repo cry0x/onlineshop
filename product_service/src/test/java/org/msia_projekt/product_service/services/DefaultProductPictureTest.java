@@ -17,7 +17,7 @@ public class DefaultProductPictureTest {
 
     @Test
     void getDefaultProductPictureTest() throws IOException {
-        String actualEncodedPicture = Base64.getEncoder().encodeToString(DefaultProductPicture.getDefaultProductPictureData());
+        String actualEncodedPicture = Base64.getEncoder().encodeToString(DefaultProductPicture.getBinaryData());
         InputStream fis = this.getClass().getResourceAsStream("/DefaultBase64ProductPictureTestData");
         String expectedEncodedPicture = IOUtils.toString(fis, StandardCharsets.UTF_8);
 

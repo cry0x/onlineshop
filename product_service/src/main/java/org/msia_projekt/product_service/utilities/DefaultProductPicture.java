@@ -8,11 +8,11 @@ import java.io.IOException;
 
 public class DefaultProductPicture {
 
-    public static String getDefaultProductPictureName() {
+    public static String getName() {
         return new ClassPathResource("static\\images\\default_article_picture.jpg").getFilename();
     }
 
-    public static byte[] getDefaultProductPictureData() {
+    public static byte[] getBinaryData() {
         byte[] fileData = new byte[0];
 
         try {

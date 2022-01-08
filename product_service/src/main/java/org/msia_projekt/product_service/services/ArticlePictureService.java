@@ -11,36 +11,36 @@ import java.util.List;
 @Service
 public class ArticlePictureService {
 
-    private final IArticlePictureRepository articlePictureRepository;
+    private final IArticlePictureRepository iArticlePictureRepository;
 
     @Autowired
-    public ArticlePictureService(IArticlePictureRepository articlePictureRepository) {
-        this.articlePictureRepository = articlePictureRepository;
+    public ArticlePictureService(IArticlePictureRepository iArticlePictureRepository) {
+        this.iArticlePictureRepository = iArticlePictureRepository;
     }
 
     public ArticlePicture createArticlePicture(ArticlePicture articlePicture) {
-        return this.articlePictureRepository.save(articlePicture);
+        return this.iArticlePictureRepository.save(articlePicture);
     }
 
     public ArticlePicture readArticlePictureById(Long id) {
-        return this.articlePictureRepository.findById(id).orElseThrow(() -> new ArticlePictureDoesntExistException(id));
+        return this.iArticlePictureRepository.findById(id).orElseThrow(() -> new ArticlePictureDoesntExistException(id));
     }
 
     public List<ArticlePicture> readAllArticlePictures() {
-        return this.articlePictureRepository.findAll();
+        return this.iArticlePictureRepository.findAll();
     }
 
     public void deleteArticlePictureById(Long id) {
-        this.articlePictureRepository.deleteById(id);
+        this.iArticlePictureRepository.deleteById(id);
     }
 
     public ArticlePicture updateArticlePicture(Long id, ArticlePicture updatedArticlePicture) {
-        if (!this.articlePictureRepository.existsById(id))
+        if (!this.iArticlePictureRepository.existsById(id))
             throw new ArticlePictureDoesntExistException(id);
 
         updatedArticlePicture.setId(id);
 
-        return this.articlePictureRepository.save(updatedArticlePicture);
+        return this.iArticlePictureRepository.save(updatedArticlePicture);
     }
 
 }
