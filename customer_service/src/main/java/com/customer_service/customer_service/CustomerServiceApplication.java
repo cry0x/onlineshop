@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 
 @SpringBootApplication
-// See: localhost:9001/swagger-ui.html
-// Get JSON: http://localhost:9001/v3/api-docs
+// See: localhost:8080/swagger-ui.html
+// Get JSON: http://localhost:8080/v3/api-docs
 @OpenAPIDefinition
 public class CustomerServiceApplication {
 

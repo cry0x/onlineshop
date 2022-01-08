@@ -7,11 +7,11 @@
         }
     ],
     "paths": {
-        "/customer/{id}": {
+        "/v1/customer/customer/{id}": {
             "get": {
                 "tags": ["customer-controller"],
                 "summary": "This is to fetch a single customer from the DB specified by it's ID",
-                "operationId": "find",
+                "operationId": "getCustomer",
                 "parameters": [
                     {
                         "name": "id",
@@ -36,7 +36,7 @@
             "put": {
                 "tags": ["customer-controller"],
                 "summary": "This is to update a customer stored in the DB",
-                "operationId": "updatecustomer",
+                "operationId": "postCustomer",
                 "parameters": [
                     {
                         "name": "id",
@@ -71,7 +71,7 @@
             "delete": {
                 "tags": ["customer-controller"],
                 "summary": "This is to delete a customer stored in the DB",
-                "operationId": "delete",
+                "operationId": "deleteCustomer",
                 "parameters": [
                     {
                         "name": "id",
@@ -83,23 +83,23 @@
                 "responses": { "200": { "description": "OK" } }
             }
         },
-        "/customer/": {
+        "/v1/customer/customer/": {
             "get": {
                 "tags": ["customer-controller"],
                 "summary": "This is to fetch all customers stored in the DB",
-                "operationId": "allcustomers",
+                "operationId": "getAllCustomers",
                 "responses": {
+                    "404": { "description": "Not Available" },
                     "200": {
                         "description": "Fetched all customers from the DB",
                         "content": { "application/json": {} }
-                    },
-                    "404": { "description": "Not Available" }
+                    }
                 }
             },
             "post": {
                 "tags": ["customer-controller"],
                 "summary": "This is to create a new customer and store it in the DB",
-                "operationId": "create",
+                "operationId": "putCustomer",
                 "requestBody": {
                     "content": {
                         "application/json": {
