@@ -26,6 +26,7 @@ services:
             - 9000:8080
         depends_on:
             - product_service_db
+            - eureka_service
         networks:
             onlineshop_network:
 
@@ -53,6 +54,16 @@ services:
             - 9001:8080
         depends_on:
             - customer_service_db
+            - eureka_service
+        networks:
+            onlineshop_network:
+
+    eureka_service:
+        build: eureka_service
+        image: onlineshop/eureka_service:latest
+        restart: always
+        ports:
+            - 9002:8761
         networks:
             onlineshop_network:
 
