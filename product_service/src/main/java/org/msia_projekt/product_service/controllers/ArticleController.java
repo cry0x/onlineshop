@@ -36,7 +36,7 @@ public class ArticleController {
         this.articlePictureService = articlePictureService;
     }
 
-    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
@@ -45,9 +45,7 @@ public class ArticleController {
 
         Article createdArticle = this.articleService.createArticle(article);
 
-        return EntityModel.of(createdArticle,
-                linkTo(methodOn(ArticleController.class).getArticle(createdArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"));
+        return HateoasUtilities.buildArticleEntity(createdArticle);
     }
 
     @GetMapping(value = "/{articleId}", produces = MediaTypes.HAL_JSON_VALUE)
@@ -102,19 +100,17 @@ public class ArticleController {
 
         article = this.articleService.updateArticle(article.getId(), article);
 
-        return EntityModel.of(article,
-                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"));
+        return HateoasUtilities.buildArticleEntity(article);
     }
 
     @DeleteMapping(path = "/{articleId}")
     public void deleteArticleById(@PathVariable Long articleId) {
         log.info(String.format("DELETE: v1/articles/%d has been called", articleId));
 
-        Long articlePicutreId = this.articleService.readArticleById(articleId).getArticlePicture().getId();
+        Long articlePictureId = this.articleService.readArticleById(articleId).getArticlePicture().getId();
 
         this.articleService.deleteArticleById(articleId);
-        this.articlePictureService.deleteArticlePictureById(articlePicutreId);
+        this.articlePictureService.deleteArticlePictureById(articlePictureId);
     }
 
 }

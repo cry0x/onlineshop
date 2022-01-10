@@ -1,6 +1,5 @@
 package org.msia_projekt.product_service.services;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -133,6 +133,15 @@ class ArticleServiceTest {
         when(this.iArticleRepository.existsById(articleId)).thenReturn(false);
 
         assertThrows(ArticleDoesntExistsException.class, () -> this.articleService.deleteArticleById(articleId));
+    }
+
+    @Test
+    void readAllArticlesTest() {
+        List<Article> expectedArticleList = RandomData.RandomArticleList(15);
+
+        when(this.iArticleRepository.findAll()).thenReturn(expectedArticleList);
+
+        assertEquals(expectedArticleList, this.articleService.readAllArticles());
     }
 
 }

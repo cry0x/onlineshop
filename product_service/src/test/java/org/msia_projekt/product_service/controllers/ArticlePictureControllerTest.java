@@ -5,8 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.msia_projekt.product_service.entities.ArticlePicture;
+import org.msia_projekt.product_service.exceptions.ArticlePictureDoesntExistException;
+import org.msia_projekt.product_service.exceptions.GlobalExceptionHandler;
+import org.msia_projekt.product_service.repositories.IArticlePictureRepository;
 import org.msia_projekt.product_service.services.ArticlePictureService;
 import org.msia_projekt.product_service.testUtilities.RandomData;
+import org.msia_projekt.product_service.utilities.HateoasUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,13 +23,12 @@ import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +42,8 @@ public class ArticlePictureControllerTest {
 
     @MockBean
     private ArticlePictureService articlePictureService;
+    @MockBean
+    IArticlePictureRepository iArticlePictureRepository;
 
     private static ObjectMapper objectMapper;
     private static ArticlePicture testArticlePicture1;
@@ -64,27 +69,21 @@ public class ArticlePictureControllerTest {
 
     @Test
     void getArticlePictureTest() throws Exception {
-        when(this.articlePictureService.readArticlePictureById(1L)).thenReturn(testArticlePicture1);
+        when(this.articlePictureService.readArticlePictureById(testArticlePicture1.getId())).thenReturn(testArticlePicture1);
 
-        EntityModel test = EntityModel.of(testArticlePicture1,
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(testArticlePicture1.getId())).withSelfRel());
+        String expectedHateoasArticleJson = objectMapper.writeValueAsString(HateoasUtilities.buildArticlePictureEntity(testArticlePicture1));
 
         this.mockMvc.perform(get("/v1/articlepictures/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
-                .andExpect(content().json(objectMapper.writeValueAsString(test)));
+                .andExpect(content().json(expectedHateoasArticleJson));
     }
 
     @Test
     void getAllArticlePicturesTest() throws Exception {
-        List<ArticlePicture> articlePictureList = List.of(testArticlePicture1, testArticlePicture2);
-        articlePictureList.stream()
-                .map(articlePicture -> EntityModel.of(articlePicture,
-                    linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel()))
-                .collect(Collectors.toList());
+        List<ArticlePicture> expectedArticlePictureList = RandomData.RandomArticlePictureList(15);
 
-        CollectionModel<ArticlePicture> expectedArticlePictureModel = CollectionModel.of(articlePictureList,
-                linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withSelfRel());
+        when(this.articlePictureService.readAllArticlePictures()).thenReturn(expectedArticlePictureList);
 
         this.mockMvc.perform(get("/v1/articlepictures"))
                 .andExpect(status().isOk())

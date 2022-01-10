@@ -1,4 +1,4 @@
-package org.msia_projekt.product_service.services;
+package org.msia_projekt.product_service.utilities;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;

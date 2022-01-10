@@ -2,17 +2,24 @@ package org.msia_projekt.product_service.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.entities.ArticlePicture;
+import org.msia_projekt.product_service.services.ArticlePictureService;
 import org.msia_projekt.product_service.services.ArticleService;
 import org.msia_projekt.product_service.testUtilities.RandomData;
+import org.msia_projekt.product_service.utilities.DefaultProductPicture;
 import org.msia_projekt.product_service.utilities.HateoasUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.MessageResolver;
@@ -20,13 +27,25 @@ import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,6 +57,8 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ArticleService articleService;
+    @MockBean
+    private ArticlePictureService articlePictureService;
 
     private static ArticlePicture testArticlePicture;
     private static ObjectMapper objectMapper;
@@ -89,7 +110,6 @@ public class ArticleControllerTest {
     void putArticleTest() throws Exception {
         Long articleId = 1L;
 
-
         Article updatedArticle = new Article();
         updatedArticle.setName("Updated Testarticle");
         updatedArticle.setDescription("This is a updated Testarticle");
@@ -124,6 +144,38 @@ public class ArticleControllerTest {
                         .content(updatedArticleJson))
                 .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
                 .andExpect(content().json(expectedHateoasArticleJson))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void postArticle() throws Exception {
+        Article actualArticle = RandomData.RandomArticleWithoutId();
+        String actualArticleJson = objectMapper.writeValueAsString(actualArticle);
+
+        Article expectedArticle = (Article) actualArticle.clone();
+        expectedArticle.setId(1L);
+        String expectedArticleJson = objectMapper.writeValueAsString(HateoasUtilities.buildArticleEntity(expectedArticle));
+
+        when(this.articleService.createArticle(actualArticle)).thenReturn(expectedArticle);
+
+        this.mockMvc.perform(post("/v1/articles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(actualArticleJson))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(content().json(expectedArticleJson));
+    }
+
+    @Test
+    void deleteArticleByIdTest() throws Exception {
+        Article article = RandomData.RandomArticle();
+        article.setId(1L);
+        article.getArticlePicture().setId(1L);
+        Long articleId  = article.getId();
+
+        when(this.articleService.readArticleById(articleId)).thenReturn(article);
+
+        this.mockMvc.perform(delete(String.format("/v1/articles/%d", articleId)))
                 .andExpect(status().isOk());
     }
 
