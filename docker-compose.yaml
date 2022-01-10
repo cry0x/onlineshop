@@ -63,7 +63,7 @@ services:
         image: onlineshop/eureka_service:latest
         restart: always
         environment:
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka_service/eureka
+            eureka.client.serviceUrl.defaultZone: http://eureka_service/eureka
         ports:
             - 9002:8761
         networks:
