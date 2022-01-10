@@ -13,7 +13,7 @@ services:
             onlineshop_network:
 
     product-service:
-        build: product-service
+        build: product_service
         image: onlineshop/product_service:latest
         restart: always
         environment:
@@ -43,7 +43,7 @@ services:
             onlineshop_network:
 
     customer-service:
-        build: customer-service
+        build: customer_service
         restart: always
         environment:
             spring.datasource.url: jdbc:postgresql://customer-service-db/customer_service
