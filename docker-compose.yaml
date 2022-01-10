@@ -14,7 +14,7 @@ services:
 
     product-service:
         build: product_service
-        image: onlineshop/product_service:latest
+        image: onlineshop/product-service:latest
         restart: always
         environment:
             spring.datasource.url: jdbc:postgresql://product-service-db/product_service
@@ -44,6 +44,7 @@ services:
 
     customer-service:
         build: customer_service
+        image: onlineshop/customer-service:latest
         restart: always
         environment:
             spring.datasource.url: jdbc:postgresql://customer-service-db/customer_service
