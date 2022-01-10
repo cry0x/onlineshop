@@ -26,8 +26,8 @@ services:
         ports:
             - 9000:8080
         depends_on:
-            - product_service_db
-            - eureka_service
+            - product-service-db
+            - eureka-service
         networks:
             onlineshop_network:
 
@@ -54,8 +54,8 @@ services:
         ports:
             - 9001:8080
         depends_on:
-            - customer_service_db
-            - eureka_service
+            - customer-service-db
+            - eureka-service
         networks:
             onlineshop_network:
 
