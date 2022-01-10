@@ -40,7 +40,15 @@ public class HateoasUtilitiesTest {
 
     @Test
     void buildArticlePictureEntityTest() {
-        HateoasUtilities.buildArticlePictureEntity();
+        ArticlePicture articlePicture = new ArticlePicture();
+        articlePicture.setId(1L);
+        articlePicture.setName("article_picture.jpg");
+        articlePicture.setData(RandomData.RandomByteArray(20));
+
+        EntityModel<ArticlePicture> expectedArticleEntityModel = EntityModel.of(articlePicture,
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
+
+        assertEquals(expectedArticleEntityModel, HateoasUtilities.buildArticlePictureEntity(articlePicture));
     }
 
 }
