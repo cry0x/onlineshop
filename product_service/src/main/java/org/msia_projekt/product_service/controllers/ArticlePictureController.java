@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class ArticlePictureController {
         this.articlePictureService = articlePictureService;
     }
 
-    @GetMapping(value = "/{articlePictureId}")
+    @GetMapping(value = "/{articlePictureId}", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<ArticlePicture> getArticlePicture(@PathVariable Long articlePictureId) {
         log.info(String.format("GET: /v1/articlepictures/%d has been called", articlePictureId));
 
@@ -37,7 +39,7 @@ public class ArticlePictureController {
                 linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     public CollectionModel<EntityModel<ArticlePicture>> getAllArticlePictures() {
         log.info("GET: /v1/articlepictures has been called");
 

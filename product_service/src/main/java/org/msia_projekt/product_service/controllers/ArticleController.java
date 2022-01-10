@@ -4,11 +4,13 @@ import org.msia_projekt.product_service.entities.Article;
 import org.msia_projekt.product_service.entities.ArticlePicture;
 import org.msia_projekt.product_service.services.ArticlePictureService;
 import org.msia_projekt.product_service.services.ArticleService;
+import org.msia_projekt.product_service.utilities.HateoasUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,9 +50,9 @@ public class ArticleController {
                 linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"));
     }
 
-    @GetMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "/{articleId}", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<Article> getArticle(@PathVariable Long articleId) {
-        log.info(String.format("GET: v1/articles/%d has been called", articleId));
+        log.info(String.format("GET: /v1/articles/%d has been called", articleId));
 
         Article article = this.articleService.readArticleById(articleId);
 
@@ -73,19 +75,14 @@ public class ArticleController {
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withSelfRel());
     }
 
-    @PutMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @PutMapping(value = "/{articleId}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<Article> putArticle(@PathVariable Long articleId,
                                            @RequestBody Article article) {
         log.info(String.format("PUT: v1/articles/%d has been called", articleId));
 
-        ArticlePicture articlePicture = this.articleService.readArticleById(articleId).getArticlePicture();
-        article.setArticlePicture(articlePicture);
-
         Article updatedArticle = this.articleService.updateArticle(articleId, article);
 
-        return EntityModel.of(updatedArticle,
-                linkTo(methodOn(ArticleController.class).getArticle(updatedArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(updatedArticle.getArticlePicture().getId())).withRel("article_picture"));
+        return HateoasUtilities.buildArticleEntity(updatedArticle);
     }
 
     @PutMapping(value = "/{articleId}/articlepicture")
@@ -107,7 +104,7 @@ public class ArticleController {
 
         return EntityModel.of(article,
                 linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("articlepicture"));
+                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"));
     }
 
     @DeleteMapping(path = "/{articleId}")
