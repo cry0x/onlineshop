@@ -2,25 +2,18 @@ package com.onlineshop.product_service.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onlineshop.product_service.controllers.ArticleController;
-import com.onlineshop.product_service.controllers.ArticlePictureController;
 import com.onlineshop.product_service.entities.Article;
 import com.onlineshop.product_service.entities.ArticlePicture;
-import com.onlineshop.product_service.services.ArticlePictureService;
 import com.onlineshop.product_service.services.ArticleService;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mediatype.MessageResolver;
@@ -37,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @SpringBootTest({"eureka.client.enabled:false"})
 @AutoConfigureMockMvc
 public class ArticleControllerTest {
@@ -45,8 +39,6 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ArticleService articleService;
-    @MockBean
-    private ArticlePictureService articlePictureService;
 
     private static ArticlePicture testArticlePicture;
     private static ObjectMapper objectMapper;
