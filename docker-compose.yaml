@@ -71,7 +71,7 @@ services:
 
     portainer:
         container_name: portainer
-        image: cr.portainer.io/portainer/portainer-ce:2.9.3
+        image: cr.portainer.io/portainer/portainer-ce:2.11.0
         restart: always
         ports:
             - 8000:8000
