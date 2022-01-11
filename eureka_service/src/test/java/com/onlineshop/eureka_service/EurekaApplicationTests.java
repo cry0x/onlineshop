@@ -1,4 +1,4 @@
-package org.msia_projekt.eureka;
+package com.onlineshop.eureka_service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package org.msia_projekt.eureka;
+package com.onlineshop.eureka_service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

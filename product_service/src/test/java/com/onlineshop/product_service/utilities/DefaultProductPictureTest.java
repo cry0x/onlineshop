@@ -1,8 +1,7 @@
-package com.onlineshop.product_service.services;
+package com.onlineshop.product_service.utilities;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
-import com.onlineshop.product_service.utilities.DefaultProductPicture;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;

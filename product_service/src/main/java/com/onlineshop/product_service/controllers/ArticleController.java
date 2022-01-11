@@ -4,11 +4,13 @@ import com.onlineshop.product_service.entities.Article;
 import com.onlineshop.product_service.entities.ArticlePicture;
 import com.onlineshop.product_service.services.ArticlePictureService;
 import com.onlineshop.product_service.services.ArticleService;
+import com.onlineshop.product_service.utilities.HateoasUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class ArticleController {
         this.articlePictureService = articlePictureService;
     }
 
-    @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Article> postArticle(@RequestBody Article article) {
         log.info("POST: /v1/articles has been called");
 
@@ -43,14 +45,12 @@ public class ArticleController {
 
         Article createdArticle = this.articleService.createArticle(article);
 
-        return EntityModel.of(createdArticle,
-                linkTo(methodOn(ArticleController.class).getArticle(createdArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(createdArticle.getArticlePicture().getId())).withRel("article_picture"));
+        return HateoasUtilities.buildArticleEntity(createdArticle);
     }
 
-    @GetMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE })
+    @GetMapping(value = "/{articleId}", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<Article> getArticle(@PathVariable Long articleId) {
-        log.info(String.format("GET: v1/articles/%d has been called", articleId));
+        log.info(String.format("GET: /v1/articles/%d has been called", articleId));
 
         Article article = this.articleService.readArticleById(articleId);
 
@@ -73,7 +73,7 @@ public class ArticleController {
                 linkTo(methodOn(ArticleController.class).getAllArticles()).withSelfRel());
     }
 
-    @PutMapping(value = "/{articleId}", produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+    @PutMapping(value = "/{articleId}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<Article> putArticle(@PathVariable Long articleId,
                                            @RequestBody Article article) {
         log.info(String.format("PUT: v1/articles/%d has been called", articleId));
@@ -83,9 +83,7 @@ public class ArticleController {
 
         Article updatedArticle = this.articleService.updateArticle(articleId, article);
 
-        return EntityModel.of(updatedArticle,
-                linkTo(methodOn(ArticleController.class).getArticle(updatedArticle.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(updatedArticle.getArticlePicture().getId())).withRel("article_picture"));
+        return HateoasUtilities.buildArticleEntity(updatedArticle);
     }
 
     @PutMapping(value = "/{articleId}/articlepicture")
@@ -105,19 +103,17 @@ public class ArticleController {
 
         article = this.articleService.updateArticle(article.getId(), article);
 
-        return EntityModel.of(article,
-                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("articlepicture"));
+        return HateoasUtilities.buildArticleEntity(article);
     }
 
     @DeleteMapping(path = "/{articleId}")
     public void deleteArticleById(@PathVariable Long articleId) {
         log.info(String.format("DELETE: v1/articles/%d has been called", articleId));
 
-        Long articlePicutreId = this.articleService.readArticleById(articleId).getArticlePicture().getId();
+        Long articlePictureId = this.articleService.readArticleById(articleId).getArticlePicture().getId();
 
         this.articleService.deleteArticleById(articleId);
-        this.articlePictureService.deleteArticlePictureById(articlePicutreId);
+        this.articlePictureService.deleteArticlePictureById(articlePictureId);
     }
 
 }

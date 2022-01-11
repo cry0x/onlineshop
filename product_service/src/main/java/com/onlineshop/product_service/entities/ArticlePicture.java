@@ -10,7 +10,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class ArticlePicture {
+public class ArticlePicture implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,10 @@ public class ArticlePicture {
     @Getter
     @Setter
     private byte[] data = DefaultProductPicture.getBinaryData();
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 }

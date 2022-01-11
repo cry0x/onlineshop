@@ -9,7 +9,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class Article {
+public class Article implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +32,10 @@ public class Article {
     @Setter
     @OneToOne
     private ArticlePicture articlePicture;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.onlineshop.product_service;
 
+import com.onlineshop.product_service.controllers.ArticlePictureController;
 import com.onlineshop.product_service.services.ArticlePictureService;
 import com.onlineshop.product_service.services.ArticleService;
 import org.junit.jupiter.api.Test;
@@ -11,27 +12,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 class ProductServiceApplicationTests {
 
     @Autowired
-    private ArticleController articleController;
+    private IArticleRepository iArticleRepository;
     @Autowired
     private ArticleService articleService;
     @Autowired
-    private IArticleRepository iArticleRepository;
+    private ArticleController articleController;
+    @Autowired
+    private IArticlePictureRepository iArticlePictureRepository;
     @Autowired
     private ArticlePictureService articlePictureService;
     @Autowired
-    private IArticlePictureRepository iArticlePictureRepository;
+    private ArticlePictureController articlePictureController;
 
     @Test
     void contextLoads() {
-        assertNotNull(articleController);
-        assertNotNull(articleService);
         assertNotNull(iArticleRepository);
-        assertNotNull(articlePictureService);
+        assertNotNull(articleService);
+        assertNotNull(articleController);
         assertNotNull(iArticlePictureRepository);
+        assertNotNull(articlePictureService);
+        assertNotNull(articlePictureController);
     }
 
 }

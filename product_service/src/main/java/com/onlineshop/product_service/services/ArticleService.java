@@ -1,5 +1,6 @@
 package com.onlineshop.product_service.services;
 
+import com.onlineshop.product_service.entities.ArticlePicture;
 import com.onlineshop.product_service.exceptions.ArticleDoesntExistsException;
 import com.onlineshop.product_service.entities.Article;
 import com.onlineshop.product_service.repositories.IArticleRepository;
@@ -12,10 +13,12 @@ import java.util.List;
 public class ArticleService {
 
     private final IArticleRepository iArticleRepository;
+    private final ArticlePictureService articlePictureService;
 
     @Autowired
-    public ArticleService(IArticleRepository iArticleRepository) {
+    public ArticleService(IArticleRepository iArticleRepository, ArticlePictureService articlePictureService) {
         this.iArticleRepository = iArticleRepository;
+        this.articlePictureService = articlePictureService;
     }
 
     public Article createArticle(Article article) {
@@ -30,23 +33,29 @@ public class ArticleService {
         return this.iArticleRepository.findAll();
     }
 
-    public Article updateArticle(Long id, Article updatedArticle) {
-        if (!this.iArticleRepository.existsById(id))
-            throw new ArticleDoesntExistsException(id);
+    public Article updateArticle(Long articleId, Article updatedArticle) {
+        checkArticleExistsById(articleId);
 
-        Article unchangedArticle = readArticleById(id);
+        Article unchangedArticle = readArticleById(articleId);
 
+        updatedArticle.setId(articleId);
         updatedArticle.setName(unchangedArticle.getName());
-        updatedArticle.setId(id);
+
+        ArticlePicture updatedArticlePicture = this.articlePictureService.updateArticlePicture(unchangedArticle.getArticlePicture().getId(), updatedArticle.getArticlePicture());
+        updatedArticle.setArticlePicture(updatedArticlePicture);
 
         return this.iArticleRepository.save(updatedArticle);
     }
 
-    public void deleteArticleById(Long id) {
-        if (!this.iArticleRepository.existsById(id))
-            throw new ArticleDoesntExistsException(id);
+    public void deleteArticleById(Long articleId) {
+        checkArticleExistsById(articleId);
 
-        this.iArticleRepository.deleteById(id);
+        this.iArticleRepository.deleteById(articleId);
+    }
+
+    private final void checkArticleExistsById(Long articleId) {
+        if (!this.iArticleRepository.existsById(articleId))
+            throw new ArticleDoesntExistsException(articleId);
     }
 
 }

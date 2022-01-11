@@ -8,8 +8,9 @@
         <version>2.6.2</version>
         <relativePath/>
     </parent>
-    <groupId>org.msia_projekt</groupId>
-    <artifactId>eureka</artifactId>
+
+    <groupId>com.onlineshop</groupId>
+    <artifactId>eureka_service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>eureka_service</name>
 
