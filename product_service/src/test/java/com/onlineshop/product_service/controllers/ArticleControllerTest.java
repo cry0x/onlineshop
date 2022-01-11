@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlineshop.product_service.entities.Article;
 import com.onlineshop.product_service.entities.ArticlePicture;
+import com.onlineshop.product_service.services.ArticlePictureService;
 import com.onlineshop.product_service.services.ArticleService;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
@@ -23,6 +24,7 @@ import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -39,6 +41,8 @@ public class ArticleControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ArticleService articleService;
+    @MockBean
+    private ArticlePictureService articlePictureService;
 
     private static ArticlePicture testArticlePicture;
     private static ObjectMapper objectMapper;
@@ -151,12 +155,15 @@ public class ArticleControllerTest {
 
     @Test
     void deleteArticleByIdTest() throws Exception {
-        Article article = RandomData.RandomArticle();
+        Article article = RandomData.RandomArticleWithoutId();
         article.setId(1L);
         article.getArticlePicture().setId(1L);
+
         Long articleId  = article.getId();
 
         when(this.articleService.readArticleById(articleId)).thenReturn(article);
+        doNothing().when(this.articleService).deleteArticleById(articleId);
+        doNothing().when(this.articlePictureService).deleteArticlePictureById(articleId);
 
         this.mockMvc.perform(delete(String.format("/v1/articles/%d", articleId)))
                 .andExpect(status().isOk());

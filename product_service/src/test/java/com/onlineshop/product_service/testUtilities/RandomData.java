@@ -67,7 +67,7 @@ public class RandomData {
         article.setDescription(RandomString(50));
         article.setQuantity(RandomInt());
         article.setPrice(RandomDouble());
-        article.setArticlePicture(RandomArticlePicture());
+        article.setArticlePicture(RandomArticlePictureWithoutId());
 
         return article;
     }
