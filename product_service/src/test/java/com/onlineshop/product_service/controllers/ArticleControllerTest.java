@@ -111,6 +111,7 @@ public class ArticleControllerTest {
     void putArticleTest() throws Exception {
         Long articleId = 1L;
 
+
         Article updatedArticle = new Article();
         updatedArticle.setName("Updated Testarticle");
         updatedArticle.setDescription("This is a updated Testarticle");
@@ -119,6 +120,8 @@ public class ArticleControllerTest {
         updatedArticle.setArticlePicture(testArticlePicture);
 
         String updatedArticleJson = objectMapper.writeValueAsString(updatedArticle);
+
+        when(this.articleService.readArticleById(articleId)).thenReturn(updatedArticle);
 
         Article updatedArticleWithId = new Article();
         updatedArticleWithId.setId(articleId);
