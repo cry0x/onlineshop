@@ -1,8 +1,8 @@
 version: "3.9"
 
 services:
-    product_service_db:
-        container_name: product_service_db
+    product-service-db:
+        container_name: product-service-db
         image: postgres:latest
         restart: always
         environment:
@@ -12,25 +12,27 @@ services:
         networks:
             onlineshop_network:
 
-    product_service:
+    product-service:
         build: product_service
-        image: onlineshop/product_service:latest
+        image: onlineshop/product-service:latest
         restart: always
         environment:
-            spring.datasource.url: jdbc:postgresql://product_service_db/product_service
+            spring.datasource.url: jdbc:postgresql://product-service-db/product_service
             spring.datasource.username: root
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
         ports:
             - 9000:8080
         depends_on:
-            - product_service_db
+            - product-service-db
+            - eureka-service
         networks:
             onlineshop_network:
 
-    customer_service_db:
-        container_name: customer_service_db
+    customer-service-db:
+        container_name: customer-service-db
         image: postgres:latest
         restart: always
         environment:
@@ -40,11 +42,12 @@ services:
         networks:
             onlineshop_network:
 
-    customer_service:
+    customer-service:
         build: customer_service
+        image: onlineshop/customer-service:latest
         restart: always
         environment:
-            spring.datasource.url: jdbc:postgresql://customer_service_db/customer_service
+            spring.datasource.url: jdbc:postgresql://customer-service-db/customer_service
             spring.datasource.username: root
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
@@ -52,10 +55,36 @@ services:
         ports:
             - 9001:8080
         depends_on:
-            - customer_service_db
+            - customer-service-db
+            - eureka-service
+        networks:
+            onlineshop_network:
+
+    eureka-service:
+        build: eureka_service
+        image: onlineshop/eureka-service:latest
+        restart: always
+        ports:
+            - 8761:8761
+        networks:
+            onlineshop_network:
+
+    portainer:
+        container_name: portainer
+        image: cr.portainer.io/portainer/portainer-ce:2.9.3
+        restart: always
+        ports:
+            - 8000:8000
+            - 9443:9443
+        volumes:
+            - portainer_data:/data
+            - /var/run/docker.sock:/var/run/docker.sock
         networks:
             onlineshop_network:
 
 networks:
     onlineshop_network:
         driver: bridge
+
+volumes:
+    portainer_data:
