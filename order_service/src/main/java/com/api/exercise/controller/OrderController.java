@@ -9,7 +9,6 @@ import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,12 +29,12 @@ public class OrderController {
             @PathVariable(value="id") Long orderId
     ) {
         log.info("Order '{}' has been requested.", orderId);
-        var orderEntity = orderService.getOderById(orderId);
-        var orderDto = modelMapper.map(orderEntity, OrderDto.class);
+        var orderEntity = orderService.getOrderById(orderId);
+        var orderDto = modelMapper.map(orderEntity, Order.class);
         return orderDto;
     }
 
-    @PostMapping("")
+    @PostMapping
     public OrderDto postOrder(
             @RequestBody OrderDto order
     ) {
@@ -51,7 +50,7 @@ public class OrderController {
     ) {
         log.info("Updating order '{}'.", id);
         var orderEntity = modelMapper.map(order, Order.class);
-        var returnDto = modelMapper.map(orderService.updateOrder(id, orderEntity), SpringDataJaxb.OrderDto.class);
+        var returnDto = modelMapper.map(orderService.updateOrder(id, orderEntity), OrderDto.class);
         return returnDto;
     }
 
@@ -68,50 +67,9 @@ public class OrderController {
             @PathVariable(value="id") Long id
     ) {
         log.info("All orders '{}' have been requested.", id);
-        var orders = orderService.getOderById(id);
+        var orders = orderService.getOrderById(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
-/*
-    @GetMapping("/{bookId}/reviews/{reviewId}")
-    public ReviewDto getReview(
-            @PathVariable(value="bookId") Long bookId,
-            @PathVariable(value="reviewId") Long reviewId
-    ) {
-        log.info("Review '{}' of Book '{}' has been requested.", reviewId, bookId);
-        var review = bookService.getReviewByBookId(bookId, reviewId);
-        return modelMapper.map(review, ReviewDto.class);
-    }
 
-    @PutMapping("/{bookId}/reviews/{reviewId}")
-    public ReviewDto putReview(
-            @PathVariable(value="bookId") Long bookId,
-            @PathVariable(value="reviewId") Long reviewId,
-            @RequestBody ReviewDto reviewDto
-    ) {
-        log.info("Updating Review '{}' of Book '{}'.", reviewId, bookId);
-        var reviewEntity = modelMapper.map(reviewDto, Review.class);
-        var updatedReview = bookService.updateReview(bookId, reviewId, reviewEntity);
-        return modelMapper.map(updatedReview, ReviewDto.class);
-    }
-
-    @DeleteMapping("/{bookId}/reviews/{reviewId}")
-    public void deleteReview(
-            @PathVariable(value="bookId") Long bookId,
-            @PathVariable(value="reviewId") Long reviewId
-    ) {
-        log.info("Deleting Review '{}' of Book '{}'.", reviewId, bookId);
-        bookService.deleteReview(bookId, reviewId);
-    }
-
-    @PostMapping("/{id}/reviews")
-    public ReviewDto postReview(
-            @PathVariable(value="id") Long id,
-            @RequestBody ReviewDto review
-    ) {
-        log.info("Reviews of Book with id '{}' has been requested.", id);
-        var reviewAsEntity = modelMapper.map(review, Review.class);
-        var entity = bookService.createReviewForBook(id, reviewAsEntity);
-        return modelMapper.map(entity, ReviewDto.class);
-    }*/
 }
 

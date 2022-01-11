@@ -1,15 +1,11 @@
 package com.api.exercise.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
-// import Product...
-// import Customer ...
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -22,15 +18,14 @@ public class Order {
     private long orderId;
     @Getter
     @Setter
-    private long  customerId;
-    @Getter
-    @Setter
-    private long total;
-    private Customer customer;
+    private long totalPrice;
     @Getter
     @Setter
     private String orderStatus; // enum 1-4 for Pending, Cancelled, in_delivery, completed?
-    private List<Product> productInformation = new ArrayList<Product>(); // Info
+
+    private Customer customer;
+
+    private List<Product> productInformation = new ArrayList<Product>();
 
     public List<Product> getProductInformation() {
         return productInformation;
@@ -40,9 +35,6 @@ public class Order {
     public void setProductInformation(List<Product> productInformation) {
         this.productInformation = productInformation;
     }
-
-
-
 
 }
 

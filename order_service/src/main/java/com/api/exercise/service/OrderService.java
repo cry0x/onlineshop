@@ -1,6 +1,7 @@
 package com.api.exercise.service;
 
 import com.api.exercise.entity.Order;
+import com.api.exercise.entity.Product;
 import com.api.exercise.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,9 +19,7 @@ public class OrderService {
     @Autowired
     private final IOrderRepository iOrderRepository;
 
-
-
-    public Order getOderById(Long id) {
+    public Order getOrderById(Long id) {
         return iOrderRepository.findById(id).get();
     }
 
@@ -38,36 +37,15 @@ public class OrderService {
     }
 
     public List<Product> getProductsByOrderId(Long id) {
-        // Checks if book exists (error handling omitted)
+        // Checks if order exists (error handling omitted)
         iOrderRepository.findById(id).get();
 
         return IOrderRepository.findOrderByOrderId(id);
     }
 
     public List<Order> getOrdersByCustomerId(Long customerId) {
-        // Checks if review for this book exists (error handling omitted)
         return IOrderRepository.findByCustomerId(customerId).orElseThrow();
     }
-
-    // Genauer anschauen!!!!!!!! TODO
-    public Order updateOrder(Long orderId, List<Product> productList) {
-        // Checks if review for this book exists (error handling omitted)
-        IOrderRepository.findByOrderIdAndProductId(orderId, productId).orElseThrow();
-
-        var book = bookRepository.findById(bookId).get();
-
-        review.setBook(book);
-        review.setId(reviewId);
-        return reviewRepository.save(review);
-    }
-
-    /*
-    public Review createReviewForBook(Long bookId, Review review) {
-        var book = bookRepository.findById(bookId).get();
-        review.setBook(book);
-        reviewRepository.save(review);
-        return review;
-    }*/
 
 }
 
