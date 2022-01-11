@@ -16,35 +16,39 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    @Autowired
     private final IOrderRepository iOrderRepository;
 
+    @Autowired
+    public OrderService(IOrderRepository iOrderRepository) {
+        this.iOrderRepository = iOrderRepository;
+    }
+
     public Order getOrderById(Long id) {
-        return iOrderRepository.findById(id).get();
+        return this.iOrderRepository.findById(id).get();
     }
 
     public Order createOrder(Order order) {
-        return IOrderRepository.save(order);
+        return this.iOrderRepository.save(order);
     }
 
     public Order updateOrder(Long id, Order order) {
         order.setOrderId(id);
-        return iOrderRepository.save(order);
+        return this.iOrderRepository.save(order);
     }
 
     public void deleteOrder(Long id) {
-        iOrderRepository.deleteById(id);
+        this.iOrderRepository.deleteById(id);
     }
 
-    public List<Product> getProductsByOrderId(Long id) {
-        // Checks if order exists (error handling omitted)
-        iOrderRepository.findById(id).get();
+    public List<Product> getProductsByOrderId(Long id) throws Exception {
+        if (this.iOrderRepository.existsById(id))
+            throw new Exception(String.format("The order with Id: %d doesnt exist!", id));
 
-        return IOrderRepository.findOrderByOrderId(id);
+        return this.iOrderRepository.findOrderByOrderId(id).getProductInformation();
     }
 
     public List<Order> getOrdersByCustomerId(Long customerId) {
-        return IOrderRepository.findByCustomerId(customerId).orElseThrow();
+        return this.iOrderRepository.findByCustomerId(customerId);
     }
 
 }

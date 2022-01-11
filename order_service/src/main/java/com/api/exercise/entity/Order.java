@@ -22,10 +22,10 @@ public class Order {
     @Getter
     @Setter
     private String orderStatus; // enum 1-4 for Pending, Cancelled, in_delivery, completed?
-
+    @Transient
     private Customer customer;
-
-    private List<Product> productInformation = new ArrayList<Product>();
+    @Transient
+    private List<Product> productInformation = new ArrayList<>();
 
     public List<Product> getProductInformation() {
         return productInformation;
