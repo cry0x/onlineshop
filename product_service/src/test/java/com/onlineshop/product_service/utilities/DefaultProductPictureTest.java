@@ -11,7 +11,7 @@ import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 public class DefaultProductPictureTest {
 
     @Test

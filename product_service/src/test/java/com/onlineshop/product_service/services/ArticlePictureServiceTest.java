@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 public class ArticlePictureServiceTest {
 
     @Autowired

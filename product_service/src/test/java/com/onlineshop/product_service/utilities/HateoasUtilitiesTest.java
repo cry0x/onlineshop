@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 public class HateoasUtilitiesTest {
 
     @Test

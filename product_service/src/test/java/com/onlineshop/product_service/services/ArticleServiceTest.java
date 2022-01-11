@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 class ArticleServiceTest {
 
     @Autowired
