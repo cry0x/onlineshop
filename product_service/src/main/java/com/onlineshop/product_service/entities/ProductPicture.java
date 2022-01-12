@@ -6,11 +6,11 @@ import com.onlineshop.product_service.utilities.DefaultProductPicture;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "article_pictures")
+@Table(name = "product_pictures")
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class ArticlePicture implements Cloneable {
+public class ProductPicture implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

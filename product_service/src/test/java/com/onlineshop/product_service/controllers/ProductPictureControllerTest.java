@@ -2,9 +2,9 @@ package com.onlineshop.product_service.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onlineshop.product_service.entities.ArticlePicture;
-import com.onlineshop.product_service.repositories.IArticlePictureRepository;
-import com.onlineshop.product_service.services.ArticlePictureService;
+import com.onlineshop.product_service.entities.ProductPicture;
+import com.onlineshop.product_service.repositories.IProductPictureRepository;
+import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,19 +29,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest({"eureka.client.enabled:false"})
 @AutoConfigureMockMvc
-public class ArticlePictureControllerTest {
+public class ProductPictureControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private ArticlePictureService articlePictureService;
+    private ProductPictureService productPictureService;
     @MockBean
-    private IArticlePictureRepository iArticlePictureRepository;
+    private IProductPictureRepository iProductPictureRepository;
 
     private static ObjectMapper objectMapper;
-    private static ArticlePicture testArticlePicture1;
-    private static ArticlePicture testArticlePicture2;
+    private static ProductPicture testProductPicture1;
+    private static ProductPicture testProductPicture2;
 
     @BeforeAll
     static void before() {
@@ -50,36 +50,36 @@ public class ArticlePictureControllerTest {
         objectMapper.registerModule(new Jackson2HalModule());
         objectMapper.setHandlerInstantiator(new Jackson2HalModule.HalHandlerInstantiator(new AnnotationLinkRelationProvider(), CurieProvider.NONE, MessageResolver.DEFAULTS_ONLY));
 
-        testArticlePicture1 = new ArticlePicture();
-        testArticlePicture1.setId(1L);
-        testArticlePicture1.setName("Testpicture_1");
-        testArticlePicture1.setData(RandomData.RandomByteArray(20));
+        testProductPicture1 = new ProductPicture();
+        testProductPicture1.setId(1L);
+        testProductPicture1.setName("Testpicture_1");
+        testProductPicture1.setData(RandomData.RandomByteArray(20));
 
-        testArticlePicture2 = new ArticlePicture();
-        testArticlePicture2.setId(2L);
-        testArticlePicture2.setName("Testpicture_2");
-        testArticlePicture2.setData(RandomData.RandomByteArray(20));
+        testProductPicture2 = new ProductPicture();
+        testProductPicture2.setId(2L);
+        testProductPicture2.setName("Testpicture_2");
+        testProductPicture2.setData(RandomData.RandomByteArray(20));
     }
 
     @Test
-    void getArticlePictureTest() throws Exception {
-        when(this.articlePictureService.readArticlePictureById(testArticlePicture1.getId())).thenReturn(testArticlePicture1);
+    void getProductPictureTest() throws Exception {
+        when(this.productPictureService.readProductPictureById(testProductPicture1.getId())).thenReturn(testProductPicture1);
 
-        String expectedHateoasArticleJson = objectMapper.writeValueAsString(HateoasUtilities.buildArticlePictureEntity(testArticlePicture1));
+        String expectedHateoasProductJson = objectMapper.writeValueAsString(HateoasUtilities.buildProductPictureEntity(testProductPicture1));
 
-        this.mockMvc.perform(get("/v1/articlepictures/1"))
+        this.mockMvc.perform(get("/v1/productpictures/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
-                .andExpect(content().json(expectedHateoasArticleJson));
+                .andExpect(content().json(expectedHateoasProductJson));
     }
 
     @Test
-    void getAllArticlePicturesTest() throws Exception {
-        List<ArticlePicture> expectedArticlePictureList = RandomData.RandomArticlePictureList(15);
+    void getAllProductPicturesTest() throws Exception {
+        List<ProductPicture> expectedProductPictureList = RandomData.RandomProductPictureList(15);
 
-        when(this.articlePictureService.readAllArticlePictures()).thenReturn(expectedArticlePictureList);
+        when(this.productPictureService.readAllProductPictures()).thenReturn(expectedProductPictureList);
 
-        this.mockMvc.perform(get("/v1/articlepictures"))
+        this.mockMvc.perform(get("/v1/productpictures"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE));
     }
