@@ -4,6 +4,7 @@ import com.onlineshop.product_service.entities.Article;
 import com.onlineshop.product_service.entities.ArticlePicture;
 import com.onlineshop.product_service.services.ArticlePictureService;
 import com.onlineshop.product_service.services.ArticleService;
+import com.onlineshop.product_service.services.CustomerServiceClient;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,16 @@ public class ArticleController {
 
     private final ArticleService articleService;
     private final ArticlePictureService articlePictureService;
+    private final CustomerServiceClient customerServiceClient;
     private final static Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     @Autowired
-    public ArticleController(ArticleService articleService, ArticlePictureService articlePictureService) {
+    public ArticleController(ArticleService articleService,
+                             ArticlePictureService articlePictureService,
+                             CustomerServiceClient customerServiceClient) {
         this.articleService = articleService;
         this.articlePictureService = articlePictureService;
+        this.customerServiceClient = customerServiceClient;
     }
 
     @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -114,6 +119,11 @@ public class ArticleController {
 
         this.articleService.deleteArticleById(articleId);
         this.articlePictureService.deleteArticlePictureById(articlePictureId);
+    }
+
+    @GetMapping("/test")
+    public void getCustomerTest() {
+        this.customerServiceClient.testCustomerService();
     }
 
 }
