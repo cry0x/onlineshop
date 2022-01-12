@@ -28,6 +28,8 @@ class ProductServiceTest {
     private IProductRepository iProductRepository;
     @MockBean
     private ProductPictureService productPictureService;
+    @MockBean
+    private OrderService orderService;
 
     @Before
     public void init() {
@@ -142,6 +144,10 @@ class ProductServiceTest {
         when(this.iProductRepository.findAll()).thenReturn(expectedProductList);
 
         assertEquals(expectedProductList, this.productService.readAllProducts());
+    }
+
+    @Test
+    void updateProductInOrder() {
     }
 
 }
