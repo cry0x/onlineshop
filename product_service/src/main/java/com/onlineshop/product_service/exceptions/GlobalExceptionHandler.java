@@ -12,11 +12,11 @@ public class GlobalExceptionHandler {
 
     private final static Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(value = { ArticleDoesntExistsException.class, ArticlePictureDoesntExistException.class })
+    @ExceptionHandler(value = { ProductDoesntExistsException.class, ProductPictureDoesntExistException.class })
     public final ResponseStatusException handleException(Exception ex) {
-        if (ex instanceof ArticleDoesntExistsException) {
+        if (ex instanceof ProductDoesntExistsException) {
             return handleExceptionInternally(HttpStatus.NOT_FOUND, ex);
-        } else if (ex instanceof ArticlePictureDoesntExistException) {
+        } else if (ex instanceof ProductPictureDoesntExistException) {
             return handleExceptionInternally(HttpStatus.NOT_FOUND, ex);
         } else {
             return handleExceptionInternally(HttpStatus.INTERNAL_SERVER_ERROR, ex);

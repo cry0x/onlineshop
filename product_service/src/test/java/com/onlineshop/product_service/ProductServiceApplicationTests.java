@@ -1,12 +1,12 @@
 package com.onlineshop.product_service;
 
-import com.onlineshop.product_service.controllers.ArticlePictureController;
-import com.onlineshop.product_service.services.ArticlePictureService;
-import com.onlineshop.product_service.services.ArticleService;
+import com.onlineshop.product_service.controllers.ProductPictureController;
+import com.onlineshop.product_service.services.ProductPictureService;
+import com.onlineshop.product_service.services.ProductService;
 import org.junit.jupiter.api.Test;
-import com.onlineshop.product_service.controllers.ArticleController;
-import com.onlineshop.product_service.repositories.IArticlePictureRepository;
-import com.onlineshop.product_service.repositories.IArticleRepository;
+import com.onlineshop.product_service.controllers.ProductController;
+import com.onlineshop.product_service.repositories.IProductPictureRepository;
+import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,26 +16,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ProductServiceApplicationTests {
 
     @Autowired
-    private IArticleRepository iArticleRepository;
+    private IProductRepository iProductRepository;
     @Autowired
-    private ArticleService articleService;
+    private ProductService productService;
     @Autowired
-    private ArticleController articleController;
+    private ProductController productController;
     @Autowired
-    private IArticlePictureRepository iArticlePictureRepository;
+    private IProductPictureRepository iProductPictureRepository;
     @Autowired
-    private ArticlePictureService articlePictureService;
+    private ProductPictureService productPictureService;
     @Autowired
-    private ArticlePictureController articlePictureController;
+    private ProductPictureController productPictureController;
 
     @Test
     void contextLoads() {
-        assertNotNull(iArticleRepository);
-        assertNotNull(articleService);
-        assertNotNull(articleController);
-        assertNotNull(iArticlePictureRepository);
-        assertNotNull(articlePictureService);
-        assertNotNull(articlePictureController);
+        assertNotNull(iProductRepository);
+        assertNotNull(productService);
+        assertNotNull(productController);
+        assertNotNull(iProductPictureRepository);
+        assertNotNull(productPictureService);
+        assertNotNull(productPictureController);
     }
 
 }
