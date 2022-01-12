@@ -7,11 +7,7 @@ import java.util.List;
 
 public interface IOrderRepository extends JpaRepository<Order, Long> {
 
-    Order findOrderByOrderId(Long orderId);
-
     List<Order> findByCustomerId(Long customerId);
-
-    Long deleteByOrderId(Long orderId);
 
 }
 

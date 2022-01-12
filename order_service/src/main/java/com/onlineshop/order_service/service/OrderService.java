@@ -32,7 +32,7 @@ public class OrderService {
     }
 
     public Order updateOrder(Long id, Order order) {
-        order.setOrderId(id);
+        order.setId(id);
         return this.iOrderRepository.save(order);
     }
 
@@ -44,7 +44,7 @@ public class OrderService {
         if (this.iOrderRepository.existsById(id))
             throw new Exception(String.format("The order with Id: %d doesnt exist!", id));
 
-        return this.iOrderRepository.findOrderByOrderId(id).getProductInformation();
+        return this.iOrderRepository.findById(id).orElseThrow().getProductListInOrder();
     }
 
     public List<Order> getOrdersByCustomerId(Long customerId) {

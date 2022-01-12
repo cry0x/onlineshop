@@ -25,18 +25,25 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/{id}")
-    public Order getOrder(@PathVariable(value="id") Long orderId) {
-        log.info("Order '{}' has been requested.", orderId);
-        var orderEntity = orderService.getOrderById(orderId);
+    public Order getOrder(@PathVariable(value="id") Long id) {
+        log.info("Order '{}' has been requested.", id);
+        var orderEntity = orderService.getOrderById(id);
         var orderDto = modelMapper.map(orderEntity, Order.class);
         return orderDto;
     }
 
-    @PostMapping
+    @GetMapping("")
+    public String test(){
+        return "Hallo";
+    }
+
+    @PostMapping("")
     public OrderDto postOrder(@RequestBody OrderDto order) {
         log.info("Creating new order.");
         var orderEntity = modelMapper.map(order, Order.class);
-        return modelMapper.map(orderService.createOrder(orderEntity), OrderDto.class);
+        //return modelMapper.map(orderService.createOrder(orderEntity), OrderDto.class);
+        return modelMapper.map(orderEntity, OrderDto.class);
+
     }
 
     @PutMapping("/{id}")

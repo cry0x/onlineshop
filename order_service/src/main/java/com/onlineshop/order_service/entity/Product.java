@@ -4,23 +4,27 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-public class Product {
+public class Product implements Serializable {
 
+    @JoinColumn(name = "customer_id")
+    private long orderId;
+    @Getter
+    @Setter
     @Id
+    @Column(name="product_id",nullable = false,updatable = false)
+    private long id;
     @Getter
     @Setter
-    private Long productId;
-    @Getter
-    @Setter
+    @Column(name="price",nullable = false)
     private long price;
     @Getter
     @Setter
+    @Column(name="quantity",nullable = false)
     private long quantity;
-    private Long id;
 
 }
