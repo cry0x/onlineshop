@@ -58,9 +58,7 @@ public class ProductController {
         log.info("GET: /v1/products has been called");
 
         List<EntityModel<Product>> products = this.productService.readAllProducts().stream()
-                .map(product -> EntityModel.of(product,
-                    linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
-                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture")))
+                .map(product -> HateoasUtilities.buildProductEntity(product))
                 .collect(Collectors.toList());
 
         return CollectionModel.of(products,

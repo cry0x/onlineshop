@@ -14,11 +14,13 @@ public class ProductService {
 
     private final IProductRepository iProductRepository;
     private final ProductPictureService productPictureService;
+    private final OrderService orderService;
 
     @Autowired
-    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService) {
+    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService, OrderService orderService) {
         this.iProductRepository = iProductRepository;
         this.productPictureService = productPictureService;
+        this.orderService = orderService;
     }
 
     public Product createProduct(Product product) {
@@ -34,17 +36,26 @@ public class ProductService {
     }
 
     public Product updateProduct(Long productId, Product updatedProduct) {
+        //wird der check hier benötigt?
         checkProductExistsById(productId);
 
         Product unchangedProduct = readProductById(productId);
 
-        updatedProduct.setId(productId);
-        updatedProduct.setName(unchangedProduct.getName());
+        if (this.orderService.checkProductInOrder(unchangedProduct)) {
+            updatedProduct.setName(unchangedProduct.getName());
+            updatedProduct = this.iProductRepository.save(updatedProduct);
+            unchangedProduct.setNewProductVersion(updatedProduct);
+            this.iProductRepository.save(unchangedProduct);
+        } else {
+            updatedProduct.setId(productId);
+            updatedProduct.setName(unchangedProduct.getName());
 
-        ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(), updatedProduct.getProductPicture());
-        updatedProduct.setProductPicture(updatedProductPicture);
+            ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(), updatedProduct.getProductPicture());
+            updatedProduct.setProductPicture(updatedProductPicture);
+            updatedProduct = this.iProductRepository.save(updatedProduct);
+        }
 
-        return this.iProductRepository.save(updatedProduct);
+        return updatedProduct;
     }
 
     public void deleteProductById(Long productId) {
