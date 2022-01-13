@@ -12,7 +12,7 @@ public class CustomerServiceClient {
 
     private final EurekaClient eurekaClient;
     private final WebClient webClient;
-    private InstanceInfo instanceInfo;
+    private final InstanceInfo instanceInfo;
 
     @Autowired
     public CustomerServiceClient(EurekaClient eurekaClient, WebClient.Builder webClientBuilder) {
@@ -28,7 +28,7 @@ public class CustomerServiceClient {
                 .accept(MediaType.ALL)
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnNext(response -> System.out.println(response))
+                .doOnNext(System.out::println)
                 .subscribe();
     }
 }

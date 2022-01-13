@@ -73,7 +73,7 @@ public class ProductControllerTest {
 
         when(this.productService.readProductById(requestProductId)).thenReturn(expectedProduct);
 
-        EntityModel productPictureEntityModel = EntityModel.of(expectedProduct,
+        EntityModel<Product> productPictureEntityModel = EntityModel.of(expectedProduct,
                 linkTo(methodOn(ProductController.class).getProduct(expectedProduct.getId())).withSelfRel(),
                 linkTo(methodOn(ProductPictureController.class).getProductPicture(expectedProduct.getProductPicture().getId())).withRel("product_picture"));
 
