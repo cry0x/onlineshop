@@ -32,18 +32,17 @@ public class OrderController {
         return orderDto;
     }
 
-    @GetMapping("")
+    @GetMapping("/hallo")
     public String test(){
         return "Hallo";
     }
 
     @PostMapping("")
-    public OrderDto postOrder(@RequestBody OrderDto order) {
-        log.info("Creating new order.");
-        var orderEntity = modelMapper.map(order, Order.class);
-        //return modelMapper.map(orderService.createOrder(orderEntity), OrderDto.class);
-        return modelMapper.map(orderEntity, OrderDto.class);
-
+    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
+        log.info("Creating a new order.");
+        var orderEntity = modelMapper.map(orderDto, Order.class);
+        var newOrder = orderService.createOrder(orderEntity);
+        return modelMapper.map(newOrder, OrderDto.class);
     }
 
     @PutMapping("/{id}")
@@ -60,8 +59,8 @@ public class OrderController {
         orderService.deleteOrder(id);
     }
 
-    @GetMapping("/{id}/orders")
-    public List<Order> getAllOrders(@PathVariable(value="id") Long id) {
+    @GetMapping("/ordersByCustomer")
+    public List<Order> getAllOrdersByCustomerId(@PathVariable(value="id") Long id) {
         log.info("All orders '{}' have been requested.", id);
         var orders = orderService.getOrderById(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());

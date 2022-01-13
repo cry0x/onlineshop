@@ -1,8 +1,6 @@
 package com.onlineshop.order_service.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,19 +9,19 @@ import java.io.Serializable;
 @Data
 public class Product implements Serializable {
 
-    @JoinColumn(name = "customer_id")
-    private long orderId;
-    @Getter
-    @Setter
+
+
     @Id
-    @Column(name="product_id",nullable = false,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="order_id",nullable = false,updatable = false)
     private long id;
-    @Getter
-    @Setter
+
+    @Column(name = "product_id", nullable = false)
+    private long productId;
+
     @Column(name="price",nullable = false)
-    private long price;
-    @Getter
-    @Setter
+    private double price;
+
     @Column(name="quantity",nullable = false)
     private long quantity;
 

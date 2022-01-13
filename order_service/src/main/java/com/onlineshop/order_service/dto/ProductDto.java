@@ -3,8 +3,6 @@ package com.onlineshop.order_service.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +19,7 @@ public class ProductDto {
     private long id;
     @Getter
     @Setter
-    private long price;
+    private double price;
     @Getter
     @Setter
     private long quantity;
