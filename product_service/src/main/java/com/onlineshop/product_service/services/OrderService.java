@@ -11,6 +11,6 @@ public class OrderService {
 
     public boolean checkProductInOrder(Product product) {
         System.out.println("MOCKED: PRODCUT EXISTS IN ORDER");
-        return true;
+        return false;
     }
 }
