@@ -5,11 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "products")
 @EqualsAndHashCode
 @ToString
 @NoArgsConstructor
-public class Article implements Cloneable {
+public class Product implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,11 @@ public class Article implements Cloneable {
     @Getter
     @Setter
     @OneToOne
-    private ArticlePicture articlePicture;
+    private ProductPicture productPicture;
+    @Getter
+    @Setter
+    @OneToOne
+    private Product newProductVersion;
 
     @Override
     public Object clone() throws CloneNotSupportedException {

@@ -1,9 +1,9 @@
 package com.onlineshop.product_service.utilities;
 
-import com.onlineshop.product_service.controllers.ArticleController;
-import com.onlineshop.product_service.controllers.ArticlePictureController;
-import com.onlineshop.product_service.entities.Article;
-import com.onlineshop.product_service.entities.ArticlePicture;
+import com.onlineshop.product_service.controllers.ProductController;
+import com.onlineshop.product_service.controllers.ProductPictureController;
+import com.onlineshop.product_service.entities.Product;
+import com.onlineshop.product_service.entities.ProductPicture;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 
@@ -15,25 +15,32 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 public final class HateoasUtilities {
 
-    public static EntityModel<Article> buildArticleEntity(Article article) {
-        return EntityModel.of(article,
-                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"));
+    public static EntityModel<Product> buildProductEntity(Product product) {
+        if (product.getNewProductVersion() != null) {
+            return EntityModel.of(product,
+                    linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"),
+                    linkTo(methodOn(ProductController.class).getProduct(product.getNewProductVersion().getId())).withRel("NewProductVersion"));
+        } else {
+            return EntityModel.of(product,
+                    linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
+        }
     }
 
-    public static EntityModel<ArticlePicture> buildArticlePictureEntity(ArticlePicture articlePicture) {
-        return EntityModel.of(articlePicture,
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
+    public static EntityModel<ProductPicture> buildProductPictureEntity(ProductPicture productPicture) {
+        return EntityModel.of(productPicture,
+                linkTo(methodOn(ProductPictureController.class).getProductPicture(productPicture.getId())).withSelfRel());
     }
 
-    public static CollectionModel<EntityModel<ArticlePicture>> buildArticlePictureCollection(List<ArticlePicture> articlePictureList) {
-        List<EntityModel<ArticlePicture>> articlePictures = articlePictureList.stream()
-                .map(articlePicture -> EntityModel.of(articlePicture,
-                        linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel()))
+    public static CollectionModel<EntityModel<ProductPicture>> buildProductPictureCollection(List<ProductPicture> productPictureList) {
+        List<EntityModel<ProductPicture>> productPictures = productPictureList.stream()
+                .map(productPicture -> EntityModel.of(productPicture,
+                        linkTo(methodOn(ProductPictureController.class).getProductPicture(productPicture.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
-        return CollectionModel.of(articlePictures,
-                linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withSelfRel());
+        return CollectionModel.of(productPictures,
+                linkTo(methodOn(ProductPictureController.class).getAllProductPictures()).withSelfRel());
     }
 
 }

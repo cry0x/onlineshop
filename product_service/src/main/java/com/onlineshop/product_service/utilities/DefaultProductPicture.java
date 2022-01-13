@@ -8,14 +8,14 @@ import java.io.IOException;
 public class DefaultProductPicture {
 
     public static String getName() {
-        return new ClassPathResource("static\\images\\default_article_picture.jpg").getFilename();
+        return new ClassPathResource("static\\images\\default_product_picture.jpg").getFilename();
     }
 
     public static byte[] getBinaryData() {
         byte[] fileData = new byte[0];
 
         try {
-            Resource resource = new ClassPathResource("static\\images\\default_article_picture.jpg");
+            Resource resource = new ClassPathResource("static\\images\\default_product_picture.jpg");
             fileData = resource.getInputStream().readAllBytes();
         } catch (IOException e) {
             e.printStackTrace();

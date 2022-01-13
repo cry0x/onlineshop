@@ -1,9 +1,9 @@
 package com.onlineshop.product_service.utilities;
 
-import com.onlineshop.product_service.controllers.ArticleController;
-import com.onlineshop.product_service.controllers.ArticlePictureController;
-import com.onlineshop.product_service.entities.Article;
-import com.onlineshop.product_service.entities.ArticlePicture;
+import com.onlineshop.product_service.controllers.ProductController;
+import com.onlineshop.product_service.controllers.ProductPictureController;
+import com.onlineshop.product_service.entities.Product;
+import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,53 +21,53 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class HateoasUtilitiesTest {
 
     @Test
-    void buildArticleEntityTest() {
-        ArticlePicture articlePicture = new ArticlePicture();
-        articlePicture.setId(1L);
-        articlePicture.setName("");
-        articlePicture.setData(RandomData.RandomByteArray(20));
+    void buildProductEntityTest() {
+        ProductPicture productPicture = new ProductPicture();
+        productPicture.setId(1L);
+        productPicture.setName("");
+        productPicture.setData(RandomData.RandomByteArray(20));
 
-        Article article = new Article();
-        article.setId(1L);
-        article.setName("Testarticle");
-        article.setDescription("This a Testarticle");
-        article.setPrice(99.99);
-        article.setQuantity(20);
-        article.setArticlePicture(articlePicture);
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("Testproduct");
+        product.setDescription("This a Testproduct");
+        product.setPrice(99.99);
+        product.setQuantity(20);
+        product.setProductPicture(productPicture);
 
-        EntityModel<Article> expectedArticleEntityModel = EntityModel.of(article,
-                linkTo(methodOn(ArticleController.class).getArticle(article.getId())).withSelfRel(),
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(article.getArticlePicture().getId())).withRel("article_picture"));
+        EntityModel<Product> expectedProductEntityModel = EntityModel.of(product,
+                linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
 
-        assertEquals(expectedArticleEntityModel, HateoasUtilities.buildArticleEntity(article));
+        assertEquals(expectedProductEntityModel, HateoasUtilities.buildProductEntity(product));
     }
 
     @Test
-    void buildArticlePictureEntityTest() {
-        ArticlePicture articlePicture = new ArticlePicture();
-        articlePicture.setId(1L);
-        articlePicture.setName("article_picture.jpg");
-        articlePicture.setData(RandomData.RandomByteArray(20));
+    void buildProductPictureEntityTest() {
+        ProductPicture productPicture = new ProductPicture();
+        productPicture.setId(1L);
+        productPicture.setName("product_picture.jpg");
+        productPicture.setData(RandomData.RandomByteArray(20));
 
-        EntityModel<ArticlePicture> expectedArticleEntityModel = EntityModel.of(articlePicture,
-                linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel());
+        EntityModel<ProductPicture> expectedProductEntityModel = EntityModel.of(productPicture,
+                linkTo(methodOn(ProductPictureController.class).getProductPicture(productPicture.getId())).withSelfRel());
 
-        assertEquals(expectedArticleEntityModel, HateoasUtilities.buildArticlePictureEntity(articlePicture));
+        assertEquals(expectedProductEntityModel, HateoasUtilities.buildProductPictureEntity(productPicture));
     }
 
     @Test
-    void buildArticlePictureCollectionTest() {
-        List<ArticlePicture> articlePictureList = RandomData.RandomArticlePictureList(10);
+    void buildProductPictureCollectionTest() {
+        List<ProductPicture> productPictureList = RandomData.RandomProductPictureList(10);
 
-        List<EntityModel<ArticlePicture>> articlePictures = articlePictureList.stream()
-                .map(articlePicture -> EntityModel.of(articlePicture,
-                        linkTo(methodOn(ArticlePictureController.class).getArticlePicture(articlePicture.getId())).withSelfRel()))
+        List<EntityModel<ProductPicture>> productPictures = productPictureList.stream()
+                .map(productPicture -> EntityModel.of(productPicture,
+                        linkTo(methodOn(ProductPictureController.class).getProductPicture(productPicture.getId())).withSelfRel()))
                 .collect(Collectors.toList());
 
-        CollectionModel<EntityModel<ArticlePicture>> expectedArticlePictureCollection = CollectionModel.of(articlePictures,
-                linkTo(methodOn(ArticlePictureController.class).getAllArticlePictures()).withSelfRel());
+        CollectionModel<EntityModel<ProductPicture>> expectedProductPictureCollection = CollectionModel.of(productPictures,
+                linkTo(methodOn(ProductPictureController.class).getAllProductPictures()).withSelfRel());
 
-        assertEquals(expectedArticlePictureCollection, HateoasUtilities.buildArticlePictureCollection(articlePictureList));
+        assertEquals(expectedProductPictureCollection, HateoasUtilities.buildProductPictureCollection(productPictureList));
     }
 
 }

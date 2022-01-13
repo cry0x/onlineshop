@@ -1,7 +1,7 @@
 package com.onlineshop.product_service.testUtilities;
 
-import com.onlineshop.product_service.entities.Article;
-import com.onlineshop.product_service.entities.ArticlePicture;
+import com.onlineshop.product_service.entities.Product;
+import com.onlineshop.product_service.entities.ProductPicture;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -34,64 +34,64 @@ public class RandomData {
         return new Random().nextDouble();
     }
 
-    public static ArticlePicture RandomArticlePictureWithoutId() {
-        ArticlePicture articlePicture = new ArticlePicture();
-        articlePicture.setName(RandomString(15));
-        articlePicture.setData(RandomByteArray(50));
+    public static ProductPicture RandomProductPictureWithoutId() {
+        ProductPicture productPicture = new ProductPicture();
+        productPicture.setName(RandomString(15));
+        productPicture.setData(RandomByteArray(50));
 
-        return articlePicture;
+        return productPicture;
     }
 
-    public static ArticlePicture RandomArticlePicture() {
-        ArticlePicture articlePicture = new ArticlePicture();
-        articlePicture.setId(RandomLong());
-        articlePicture.setName(RandomString(15));
-        articlePicture.setData(RandomByteArray(50));
+    public static ProductPicture RandomProductPicture() {
+        ProductPicture productPicture = new ProductPicture();
+        productPicture.setId(RandomLong());
+        productPicture.setName(RandomString(15));
+        productPicture.setData(RandomByteArray(50));
 
-        return articlePicture;
+        return productPicture;
     }
 
-    public static List<ArticlePicture> RandomArticlePictureList(int size) {
-        List<ArticlePicture> articlePictureList = new ArrayList<>();
+    public static List<ProductPicture> RandomProductPictureList(int size) {
+        List<ProductPicture> productPictureList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
-            articlePictureList.add(RandomArticlePicture());
+            productPictureList.add(RandomProductPicture());
         }
 
-        return articlePictureList;
+        return productPictureList;
     }
 
-    public static Article RandomArticleWithoutId() {
-        Article article = new Article();
-        article.setName(RandomString(15));
-        article.setDescription(RandomString(50));
-        article.setQuantity(RandomInt());
-        article.setPrice(RandomDouble());
-        article.setArticlePicture(RandomArticlePictureWithoutId());
+    public static Product RandomProductWithoutId() {
+        Product product = new Product();
+        product.setName(RandomString(15));
+        product.setDescription(RandomString(50));
+        product.setQuantity(RandomInt());
+        product.setPrice(RandomDouble());
+        product.setProductPicture(RandomProductPictureWithoutId());
 
-        return article;
+        return product;
     }
 
-    public static Article RandomArticle() {
-        Article article = new Article();
-        article.setId(RandomLong());
-        article.setName(RandomString(15));
-        article.setDescription(RandomString(50));
-        article.setQuantity(RandomInt());
-        article.setPrice(RandomDouble());
-        article.setArticlePicture(RandomArticlePicture());
+    public static Product RandomProduct() {
+        Product product = new Product();
+        product.setId(RandomLong());
+        product.setName(RandomString(15));
+        product.setDescription(RandomString(50));
+        product.setQuantity(RandomInt());
+        product.setPrice(RandomDouble());
+        product.setProductPicture(RandomProductPicture());
 
-        return article;
+        return product;
     }
 
-    public static List<Article> RandomArticleList(int size) {
-        List<Article> articleList = new ArrayList<>();
+    public static List<Product> RandomProductList(int size) {
+        List<Product> productList = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
-            articleList.add(RandomArticle());
+            productList.add(RandomProduct());
         }
 
-        return articleList;
+        return productList;
     }
 
 
