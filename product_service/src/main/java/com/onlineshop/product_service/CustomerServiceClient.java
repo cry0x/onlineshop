@@ -1,4 +1,4 @@
-package com.onlineshop.product_service.services;
+package com.onlineshop.product_service;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
