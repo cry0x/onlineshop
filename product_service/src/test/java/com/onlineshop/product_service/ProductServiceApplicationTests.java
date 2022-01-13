@@ -9,6 +9,7 @@ import com.onlineshop.product_service.repositories.IProductPictureRepository;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

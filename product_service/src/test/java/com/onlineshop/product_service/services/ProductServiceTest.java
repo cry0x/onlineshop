@@ -3,8 +3,9 @@ package com.onlineshop.product_service.services;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.testUtilities.RandomData;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.repositories.IProductRepository;
@@ -14,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 class ProductServiceTest {
 
     @Autowired
+    @InjectMocks
     private ProductService productService;
 
     @MockBean
@@ -31,11 +32,6 @@ class ProductServiceTest {
     private ProductPictureService productPictureService;
     @MockBean
     private OrderService orderService;
-
-    @Before
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void createProduct() {
