@@ -1,5 +1,6 @@
 package com.onlineshop.product_service.controllers;
 
+import com.onlineshop.product_service.ICustomerServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
@@ -28,12 +29,14 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductPictureService productPictureService;
+    private final ICustomerServiceClient iCustomerServiceClient;
     private final static Logger log = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
-    public ProductController(ProductService productService, ProductPictureService productPictureService) {
+    public ProductController(ProductService productService, ProductPictureService productPictureService, ICustomerServiceClient iCustomerServiceClient) {
         this.productService = productService;
         this.productPictureService = productPictureService;
+        this.iCustomerServiceClient = iCustomerServiceClient;
     }
 
     @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -104,4 +107,8 @@ public class ProductController {
         this.productPictureService.deleteProductPictureById(productPictureId);
     }
 
+    @GetMapping("/test")
+    public void getTest() {
+        this.iCustomerServiceClient.getProducts().forEach(product -> System.out.println(product.getName()));
+    }
 }
