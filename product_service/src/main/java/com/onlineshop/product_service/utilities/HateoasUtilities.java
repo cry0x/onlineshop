@@ -16,9 +16,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public final class HateoasUtilities {
 
     public static EntityModel<Product> buildProductEntity(Product product) {
-        return EntityModel.of(product,
-                linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
-                linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
+        if (product.getNewProductVersion() != null) {
+            return EntityModel.of(product,
+                    linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"),
+                    linkTo(methodOn(ProductController.class).getProduct(product.getNewProductVersion().getId())).withRel("NewProductVersion"));
+        } else {
+            return EntityModel.of(product,
+                    linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
+        }
     }
 
     public static EntityModel<ProductPicture> buildProductPictureEntity(ProductPicture productPicture) {

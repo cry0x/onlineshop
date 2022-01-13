@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -78,6 +79,7 @@ class ProductServiceTest {
         oldProduct.setProductPicture(oldProductPicture);
 
         when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(oldProduct));
+        when(this.orderService.checkProductInOrder(oldProduct)).thenReturn(false);
 
         byte[] newProductPictureData = RandomData.RandomByteArray(20);
 
@@ -147,7 +149,24 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProductInOrder() {
+    void updateProductInOrder() throws CloneNotSupportedException {
+        Product existingProduct = RandomData.RandomProduct();
+        Product updatedProduct = RandomData.RandomProductWithoutId();
+
+        Product expectedProduct = (Product) updatedProduct.clone();
+        expectedProduct.setId(RandomData.RandomLong());
+        expectedProduct.setName(existingProduct.getName());
+
+        when(this.iProductRepository.existsById(existingProduct.getId())).thenReturn(true);
+        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
+        when(this.orderService.checkProductInOrder(existingProduct)).thenReturn(true);
+        when(this.iProductRepository.save(updatedProduct)).thenReturn(expectedProduct);
+
+        Product existingProductWithNewVersion = (Product) existingProduct.clone();
+        existingProductWithNewVersion.setNewProductVersion(expectedProduct);
+        when(this.iProductRepository.save(existingProductWithNewVersion)).thenReturn(existingProductWithNewVersion);
+
+        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), updatedProduct));
     }
 
 }

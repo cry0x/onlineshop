@@ -32,6 +32,10 @@ public class Product implements Cloneable {
     @Setter
     @OneToOne
     private ProductPicture productPicture;
+    @Getter
+    @Setter
+    @OneToOne
+    private Product newProductVersion;
 
     @Override
     public Object clone() throws CloneNotSupportedException {
