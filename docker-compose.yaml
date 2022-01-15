@@ -26,16 +26,16 @@ services:
 
     filebeat:
         container_name: filebeat
-        build: filebeat
-        image: onlineshop/filebeat:latest
+        image: docker.elastic.co/beats/filebeat:7.16.3
         restart: always
         networks:
             onlineshop_network:
         volumes:
             - ./product_service/logs:/logs
+            - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
-            strict.perms: false
             output.elasticsearch.hosts: '["http://elasticsearch:9200"]'
 
     product-service-db:
