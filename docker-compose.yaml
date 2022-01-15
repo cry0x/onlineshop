@@ -17,7 +17,7 @@ services:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
         restart: always
         volumes:
-            - ./elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml:ro
+            - ./configs/elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml:ro
         ports:
             - 9200:9200
             - 9300:9300
@@ -34,7 +34,7 @@ services:
             onlineshop_network:
         volumes:
             - ./product_service/logs:/logs
-            - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+            - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
         command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
@@ -49,6 +49,14 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     product-service:
         build: product_service
@@ -71,6 +79,14 @@ services:
             - eureka-service
         networks:
             onlineshop_network:
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     customer-service-db:
         container_name: customer-service-db
@@ -82,6 +98,14 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     customer-service:
         build: customer_service
@@ -100,6 +124,14 @@ services:
             - eureka-service
         networks:
             onlineshop_network:
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     eureka-service:
         build: eureka_service
@@ -109,6 +141,14 @@ services:
             - 8761:8761
         networks:
             onlineshop_network:
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     portainer:
         container_name: portainer
