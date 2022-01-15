@@ -168,7 +168,7 @@ services:
                     memory: 100M
         profiles: ["dev", "prod"]
         healthcheck:
-            test: CMD curl -f http://eureka-service:9000/actuator/health || exit 1
+            test: CMD curl -f http://eureka-service:8761/actuator/health || exit 1
             interval: 15s
             timeout: 10s
             retries: 3
