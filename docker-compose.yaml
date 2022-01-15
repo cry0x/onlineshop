@@ -79,8 +79,10 @@ services:
         ports:
             - 9000:8080
         depends_on:
-            - product-service-db
-            - eureka-service
+            product-service-db:
+                condition: service_started
+            eureka-service:
+                condition: service_healthy
         networks:
             onlineshop_network:
         deploy:
@@ -93,11 +95,11 @@ services:
                     memory: 100M
         profiles: ["dev", "prod"]
         healthcheck:
-            test: "curl -m 5 --silent --fail --request GET http://localhost:8080/actuator/health | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1"
-            interval: 20s
-            timeout: 5s
-            retries: 5
-            start_period: 40s
+            test: CMD curl -f http://product-service:9000/actuator/health || exit 1
+            interval: 15s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
 
     customer-service-db:
         container_name: customer-service-db
@@ -132,8 +134,10 @@ services:
         ports:
             - 9001:8080
         depends_on:
-            - customer-service-db
-            - eureka-service
+            customer-service-db:
+                condition: service_started
+            eureka-service:
+                condition: service_healthy
         networks:
             onlineshop_network:
         deploy:
@@ -163,6 +167,12 @@ services:
                     cpus: '0.25'
                     memory: 100M
         profiles: ["dev", "prod"]
+        healthcheck:
+            test: CMD curl -f http://eureka-service:9000/actuator/health || exit 1
+            interval: 15s
+            timeout: 10s
+            retries: 3
+            start_period: 60s
 
     portainer:
         container_name: portainer
