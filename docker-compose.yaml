@@ -1,6 +1,17 @@
 version: "3.9"
 
 services:
+    logstash:
+        container_name: logstash
+        image: docker.elastic.co/logstash/logstash:7.16.3
+        restart: always
+        volumes:
+            - ./product_service/logs:/logs
+            - ./configs/pipeline:/usr/share/logstash/pipeline/:ro
+            - ./configs/logstash.yml:/usr/share/logstash/config/logstash.yml
+        environment:
+            monitoring.elasticsearch.hosts: '["http://elasticsearch:9200"]'
+
     kibana:
         container_name: kibana
         image: docker.elastic.co/kibana/kibana:7.16.3
