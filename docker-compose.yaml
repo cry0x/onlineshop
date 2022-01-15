@@ -32,7 +32,7 @@ services:
             onlineshop_network:
         volumes:
             - ./product_service/logs:/logs
-            - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+            - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
         command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
