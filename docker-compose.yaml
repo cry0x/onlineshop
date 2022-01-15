@@ -12,8 +12,8 @@ services:
         networks:
             onlineshop_network:
 
-    elastic:
-        container_name: elastic
+    elasticsearch:
+        container_name: elasticsearch
         image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
         restart: always
         ports:
@@ -36,7 +36,6 @@ services:
         command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
-            output.elasticsearch.hosts: http://elasticsearch:9200
 
     product-service-db:
         container_name: product-service-db
