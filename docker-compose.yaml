@@ -30,12 +30,13 @@ services:
         restart: always
         networks:
             onlineshop_network:
+        volumes:
+            - ./product_service/logs:/logs
+            - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
         environment:
             setup.kibana.host: kibana:5601
             strict.perms: false
             output.elasticsearch.hosts: '["http://elasticsearch:9200"]'
-        depends_on:
-            - kibana
 
     product-service-db:
         container_name: product-service-db
