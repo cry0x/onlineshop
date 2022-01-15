@@ -1,4 +1,4 @@
-package com.onlineshop.product_service.services;
+ package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.entities.Article;
 import org.junit.Before;

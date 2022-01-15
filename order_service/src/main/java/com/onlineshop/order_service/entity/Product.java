@@ -12,9 +12,11 @@ public class Product implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="order_id",nullable = false,updatable = false)
     private long id;
+/*
+    @PrimaryKeyJoinColumn(name = "order_id") // needed because it's also foreign key
+    Order order;*/
 
     @Column(name = "product_id", nullable = false)
     private long productId;

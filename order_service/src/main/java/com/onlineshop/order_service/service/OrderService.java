@@ -2,6 +2,7 @@ package com.onlineshop.order_service.service;
 
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
+import com.onlineshop.order_service.entity.StatusEnum;
 import com.onlineshop.order_service.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +13,10 @@ import java.util.List;
 
 @Component
 @Transactional
-
 @Service
 public class OrderService {
 
+    //private EmailService emailService;
     private final IOrderRepository iOrderRepository;
 
     @Autowired
@@ -49,6 +50,17 @@ public class OrderService {
 
     public List<Order> getOrdersByCustomerId(Long customerId) {
         return this.iOrderRepository.findByCustomerId(customerId);
+    }
+
+
+    public void updateOrderStatus(long id, StatusEnum statusEnum){
+
+        long customerId = getOrderById(id).getCustomerId();
+
+        // TODO
+        // RestCustomer customer = RestCustomer.getCustomerById(customerid);
+        // emailService.sendStatusUpdate(customer,id,status.name());
+
     }
 
 }

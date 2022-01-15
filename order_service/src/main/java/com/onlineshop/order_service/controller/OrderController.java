@@ -1,10 +1,12 @@
 package com.onlineshop.order_service.controller;
 
 import com.onlineshop.order_service.dto.OrderDto;
+import com.onlineshop.order_service.dto.ProductDto;
 import com.onlineshop.order_service.entity.Order;
+import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.service.OrderService;
+import com.onlineshop.order_service.service.ProductService;
 import org.modelmapper.ModelMapper;
-
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long id) {
         log.info("Order '{}' has been requested.", id);
@@ -31,7 +36,7 @@ public class OrderController {
         var orderDto = modelMapper.map(orderEntity, Order.class);
         return orderDto;
     }
-
+    // Testmapping
     @GetMapping("/hallo")
     public String test(){
         return "Hallo";
@@ -42,6 +47,7 @@ public class OrderController {
         log.info("Creating a new order.");
         var orderEntity = modelMapper.map(orderDto, Order.class);
         var newOrder = orderService.createOrder(orderEntity);
+
         return modelMapper.map(newOrder, OrderDto.class);
     }
 
@@ -59,12 +65,22 @@ public class OrderController {
         orderService.deleteOrder(id);
     }
 
-    @GetMapping("/ordersByCustomer")
-    public List<Order> getAllOrdersByCustomerId(@PathVariable(value="id") Long id) {
+    @GetMapping("/orders/{customerId}")
+    public List<Order> getAllOrdersByCustomerId(@PathVariable(value="customerId") Long id) {
         log.info("All orders '{}' have been requested.", id);
-        var orders = orderService.getOrderById(id);
+        var orders = orderService.getOrdersByCustomerId(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
+
+    @PostMapping("/products/")
+    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+        log.info("Creating a new product for a order.");
+        var productEntity = modelMapper.map(productDto, Product.class);
+        var newProduct = productService.createProduct(productEntity);
+        return modelMapper.map(newProduct, ProductDto.class);
+    }
+
+
 
 }
 

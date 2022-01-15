@@ -25,6 +25,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.3'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+//    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.5.6'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'

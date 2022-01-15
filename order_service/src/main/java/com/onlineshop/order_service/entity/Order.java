@@ -1,10 +1,9 @@
 package com.onlineshop.order_service.entity;
 
-import javax.persistence.*;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,8 +26,9 @@ public class Order implements Serializable {
     private long customerId;
 
     @Transient
-   // @OneToMany(mappedBy = "", cascade = CascadeType.ALL)
-    private List<Product> productListInOrder = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST) // maybe needed: , cascade = CascadeType.ALL)
+    @Column(name="product_list")
+    private List<Product> productListInOrder;
 
 }
 
