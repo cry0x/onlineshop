@@ -1,0 +1,5 @@
+server:
+  enabled: true
+  var.paths:
+    - /var/log/elasticsearch/*.log
+    - /var/log/elasticsearch/*_server.json

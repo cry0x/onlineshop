@@ -16,6 +16,8 @@ services:
         container_name: elasticsearch
         image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
         restart: always
+        volumes:
+            - ./elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml:ro
         ports:
             - 9200:9200
             - 9300:9300
