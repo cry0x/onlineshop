@@ -11,6 +11,7 @@ services:
             ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
         networks:
             onlineshop_network:
+        profiles: ["prod"]
 
     elasticsearch:
         container_name: elasticsearch
@@ -25,6 +26,7 @@ services:
             discovery.type: single-node
         networks:
             onlineshop_network:
+        profiles: ["prod"]
 
     filebeat:
         container_name: filebeat
@@ -38,6 +40,7 @@ services:
         command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
+        profiles: ["prod"]
 
     product-service-db:
         container_name: product-service-db
@@ -57,6 +60,7 @@ services:
                 reservations:
                     cpus: '0.25'
                     memory: 100M
+        profiles: ["dev", "prod"]
 
     product-service:
         build: product_service
@@ -87,6 +91,7 @@ services:
                 reservations:
                     cpus: '0.25'
                     memory: 100M
+        profiles: ["dev", "prod"]
 
     customer-service-db:
         container_name: customer-service-db
@@ -106,6 +111,7 @@ services:
                 reservations:
                     cpus: '0.25'
                     memory: 100M
+        profiles: ["dev", "prod"]
 
     customer-service:
         build: customer_service
@@ -132,6 +138,7 @@ services:
                 reservations:
                     cpus: '0.25'
                     memory: 100M
+        profiles: ["dev", "prod"]
 
     eureka-service:
         build: eureka_service
@@ -149,6 +156,7 @@ services:
                 reservations:
                     cpus: '0.25'
                     memory: 100M
+        profiles: ["dev", "prod"]
 
     portainer:
         container_name: portainer
@@ -162,6 +170,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
             onlineshop_network:
+        profiles: ["prod"]
 
 networks:
     onlineshop_network:
