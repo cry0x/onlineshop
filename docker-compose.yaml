@@ -16,7 +16,10 @@ services:
         build: product_service
         image: onlineshop/product-service:latest
         restart: always
+        volumes:
+            - ./product_service/logs:/logs
         environment:
+            spring.application.name: product-service
             spring.datasource.url: jdbc:postgresql://product-service-db/product_service
             spring.datasource.username: root
             spring.datasource.password: root
