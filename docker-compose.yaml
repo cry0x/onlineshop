@@ -1,6 +1,29 @@
 version: "3.9"
 
-services: 
+services:
+    kibana:
+        container_name: kibana
+        image: docker.elastic.co/kibana/kibana:latest
+        restart: always
+        ports:
+            - 5601:5601
+        environment:
+            ELASTICSEARCH_HOSTS: '["http://elastic:9200"]'
+        networks:
+            onlineshop_network:
+
+    elastic:
+        container_name: elastic
+        image: docker.elastic.co/elasticsearch/elasticsearch:latest
+        restart: always
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            discovery.type: single-node
+        networks:
+            onlineshop_network:
+
     filebeat:
         container_name: filebeat
         image: docker.elastic.co/beats/filebeat:latest
@@ -9,7 +32,8 @@ services:
             onlineshop_network:
         environment:
             setup.kibana.host: kibana:5601
-            output.elasticsearch.hosts: ["elasticsearch:9200"]
+            strict.perms: false
+            output.elasticsearch.hosts: '["http://elasticsearch:9200"]'
         depends_on:
             - kibana
 
