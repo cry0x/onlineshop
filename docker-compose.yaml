@@ -82,7 +82,7 @@ services:
             product-service-db:
                 condition: service_started
             eureka-service:
-                condition: service_healthy
+                condition: service_started
         networks:
             onlineshop_network:
         deploy:
@@ -94,12 +94,6 @@ services:
                     cpus: '0.25'
                     memory: 100M
         profiles: ["dev", "prod"]
-        healthcheck:
-            test: wget --spider http://product-service:9000/actuator/health || exit 1
-            interval: 15s
-            timeout: 10s
-            retries: 3
-            start_period: 60s
 
     customer-service-db:
         container_name: customer-service-db
@@ -137,7 +131,7 @@ services:
             customer-service-db:
                 condition: service_started
             eureka-service:
-                condition: service_healthy
+                condition: service_started
         networks:
             onlineshop_network:
         deploy:
@@ -167,12 +161,6 @@ services:
                     cpus: '0.25'
                     memory: 100M
         profiles: ["dev", "prod"]
-        healthcheck:
-            test: wget --spider http://eureka-service:8761/actuator/health || exit 1
-            interval: 15s
-            timeout: 10s
-            retries: 3
-            start_period: 60s
 
     portainer:
         container_name: portainer
