@@ -22,8 +22,6 @@ services:
         volumes:
             - ./configs/pipeline:/usr/share/logstash/pipeline/
             - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-        environment:
-            monitoring.elasticsearch.hosts: '["http://elasticsearch:9200"]'
         ports:
             - 5044:5044
         depends_on:
