@@ -8,7 +8,7 @@
 
 ## Setup
 ### Production
-Zum Starten des gesamten Onlineshops muss lediglich: ```docker-compose up -d``` im Root-Ordner
+Zum Starten des gesamten Onlineshops muss lediglich: ```docker-compose --profile prod up -d``` im Root-Ordner
 aufgerufen werden. Dann werden alle drei Services mit ihrend Datenbanken gestartet. 
 Außerdem werden dann noch der Eureka-Service sowie der ELK-Stack gestartet.
 Der Eureka-Serivce wird verwendet um die Services registrieren zu können um deren Kommunikation 
