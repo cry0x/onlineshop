@@ -1,6 +1,5 @@
 package com.onlineshop.product_service.controllers;
 
-import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
