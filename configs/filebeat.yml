@@ -2,6 +2,7 @@ filebeat.inputs:
   - type: log
     paths:
       - /logs/*.log
+    scan_frequency: 5s
 
 output.logstash:
   hosts: logstash:5044
