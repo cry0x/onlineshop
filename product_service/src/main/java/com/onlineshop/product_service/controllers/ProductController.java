@@ -16,11 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "/v1/products")
@@ -32,7 +27,9 @@ public class ProductController {
     private final static Logger log = Logger.getLogger(ProductController.class.getName());
 
     @Autowired
-    public ProductController(ProductService productService, ProductPictureService productPictureService, IOrderServiceClient iOrderServiceClient) {
+    public ProductController(ProductService productService,
+                             ProductPictureService productPictureService,
+                             IOrderServiceClient iOrderServiceClient) {
         this.productService = productService;
         this.productPictureService = productPictureService;
         this.iOrderServiceClient = iOrderServiceClient;
