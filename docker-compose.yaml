@@ -13,7 +13,7 @@ services:
         command: filebeat -e -strict.perms=false
         environment:
             setup.kibana.host: kibana:5601
-        profiles: [ "prod", "elk" ]
+        profiles: [ "prod", "elk", "productservice" ]
 
     logstash:
         container_name: logstash
@@ -28,7 +28,7 @@ services:
             - filebeat
         networks:
             onlineshop_network:
-        profiles: ["prod", "elk"]
+        profiles: ["prod", "elk", "productservice" ]
 
     elasticsearch:
         container_name: elasticsearch
@@ -72,7 +72,7 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
-        profiles: ["dev", "prod"]
+        profiles: ["dev", "prod", "productservice"]
 
     product-service:
         build: product_service
@@ -140,7 +140,7 @@ services:
             - 8761:8761
         networks:
             onlineshop_network:
-        profiles: ["dev", "prod"]
+        profiles: ["dev", "prod", "productservice"]
 
 networks:
     onlineshop_network:
