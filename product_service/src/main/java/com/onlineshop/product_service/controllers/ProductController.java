@@ -1,6 +1,6 @@
 package com.onlineshop.product_service.controllers;
 
-import com.onlineshop.product_service.ICustomerServiceClient;
+import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
@@ -28,14 +28,14 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductPictureService productPictureService;
-    private final ICustomerServiceClient iCustomerServiceClient;
+    private final IOrderServiceClient iOrderServiceClient;
     private final static Logger log = Logger.getLogger(ProductController.class.getName());
 
     @Autowired
-    public ProductController(ProductService productService, ProductPictureService productPictureService, ICustomerServiceClient iCustomerServiceClient) {
+    public ProductController(ProductService productService, ProductPictureService productPictureService, IOrderServiceClient iOrderServiceClient) {
         this.productService = productService;
         this.productPictureService = productPictureService;
-        this.iCustomerServiceClient = iCustomerServiceClient;
+        this.iOrderServiceClient = iOrderServiceClient;
     }
 
     @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -59,12 +59,7 @@ public class ProductController {
     public CollectionModel<EntityModel<Product>> getAllProducts() {
         log.info("GET: /v1/products has been called");
 
-        List<EntityModel<Product>> products = this.productService.readAllProducts().stream()
-                .map(HateoasUtilities::buildProductEntity)
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(products,
-                linkTo(methodOn(ProductController.class).getAllProducts()).withSelfRel());
+        return HateoasUtilities.buildProductCollection(this.productService.readAllProducts());
     }
 
     @PutMapping(value = "/{productId}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -72,10 +67,20 @@ public class ProductController {
                                            @RequestBody Product product) {
         log.info(String.format("PUT: /v1/products/%d has been called", productId));
 
-        ProductPicture productPicture = this.productService.readProductById(productId).getProductPicture();
-        product.setProductPicture(productPicture);
+        Product existingProduct = this.productService.readProductById(productId);
 
-        return HateoasUtilities.buildProductEntity(this.productService.updateProduct(productId, product));
+        if (this.iOrderServiceClient.getIsProductInOrders(productId)) {
+            if (product.getProductPicture() == null)
+                product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
+            product = this.productService.createProduct(product);
+            existingProduct.setNewProductVersion(product);
+            this.productService.updateProduct(existingProduct.getId(), existingProduct);
+        } else {
+            product.setProductPicture(existingProduct.getProductPicture());
+            product = this.productService.updateProduct(productId, product);
+        }
+
+        return HateoasUtilities.buildProductEntity(product);
     }
 
     @PutMapping(value = "/{productId}/productpicture")
@@ -106,8 +111,4 @@ public class ProductController {
         this.productPictureService.deleteProductPictureById(productPictureId);
     }
 
-    @GetMapping("/test")
-    public void getTest() {
-        this.iCustomerServiceClient.getProducts().forEach(product -> System.out.println(product.getName()));
-    }
 }
