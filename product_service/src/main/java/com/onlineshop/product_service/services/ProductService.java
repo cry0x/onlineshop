@@ -1,5 +1,6 @@
 package com.onlineshop.product_service.services;
 
+import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.entities.Product;
@@ -14,13 +15,13 @@ public class ProductService {
 
     private final IProductRepository iProductRepository;
     private final ProductPictureService productPictureService;
-    private final OrderService orderService;
+    private final IOrderServiceClient iOrderServiceClient;
 
     @Autowired
-    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService, OrderService orderService) {
+    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService, IOrderServiceClient iOrderServiceClient) {
         this.iProductRepository = iProductRepository;
         this.productPictureService = productPictureService;
-        this.orderService = orderService;
+        this.iOrderServiceClient = iOrderServiceClient;
     }
 
     public Product createProduct(Product product) {
@@ -41,7 +42,7 @@ public class ProductService {
 
         Product unchangedProduct = readProductById(productId);
 
-        if (this.orderService.checkProductInOrder(unchangedProduct)) {
+        if (this.iOrderServiceClient.getIsProductInOrders(unchangedProduct.getId())) {
             updatedProduct.setName(unchangedProduct.getName());
             updatedProduct = this.iProductRepository.save(updatedProduct);
             unchangedProduct.setNewProductVersion(updatedProduct);
@@ -50,8 +51,10 @@ public class ProductService {
             updatedProduct.setId(productId);
             updatedProduct.setName(unchangedProduct.getName());
 
-            ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(), updatedProduct.getProductPicture());
-            updatedProduct.setProductPicture(updatedProductPicture);
+            if (updatedProduct.getProductPicture() != null) {
+                ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(), updatedProduct.getProductPicture());
+                updatedProduct.setProductPicture(updatedProductPicture);
+            }
             updatedProduct = this.iProductRepository.save(updatedProduct);
         }
 

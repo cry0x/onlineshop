@@ -23,16 +23,13 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductPictureService productPictureService;
-    private final IOrderServiceClient iOrderServiceClient;
     private final static Logger log = Logger.getLogger(ProductController.class.getName());
 
     @Autowired
     public ProductController(ProductService productService,
-                             ProductPictureService productPictureService,
-                             IOrderServiceClient iOrderServiceClient) {
+                             ProductPictureService productPictureService) {
         this.productService = productService;
         this.productPictureService = productPictureService;
-        this.iOrderServiceClient = iOrderServiceClient;
     }
 
     @PostMapping(produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -66,16 +63,12 @@ public class ProductController {
 
         Product existingProduct = this.productService.readProductById(productId);
 
-        if (this.iOrderServiceClient.getIsProductInOrders(productId)) {
-            if (product.getProductPicture() == null)
-                product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
-            product = this.productService.createProduct(product);
-            existingProduct.setNewProductVersion(product);
-            this.productService.updateProduct(existingProduct.getId(), existingProduct);
-        } else {
+        if (product.getProductPicture() == null)
+            product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
+        else
             product.setProductPicture(existingProduct.getProductPicture());
-            product = this.productService.updateProduct(productId, product);
-        }
+
+        product = this.productService.updateProduct(productId, product);
 
         return HateoasUtilities.buildProductEntity(product);
     }

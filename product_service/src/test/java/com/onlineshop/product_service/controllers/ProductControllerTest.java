@@ -2,7 +2,6 @@ package com.onlineshop.product_service.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
@@ -26,8 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,8 +40,6 @@ public class ProductControllerTest {
     private ProductService productService;
     @MockBean
     private ProductPictureService productPictureService;
-    @MockBean
-    private IOrderServiceClient iOrderServiceClient;
 
     private static ProductPicture testProductPicture;
     private static ObjectMapper objectMapper;
@@ -104,8 +99,6 @@ public class ProductControllerTest {
         String updatedProductJson = objectMapper.writeValueAsString(updatedProduct);
 
         when(this.productService.readProductById(productId)).thenReturn(updatedProduct);
-
-        when(this.iOrderServiceClient.getIsProductInOrders(productId)).thenReturn(false);
 
         Product updatedProductWithId = new Product();
         updatedProductWithId.setId(productId);
