@@ -6,8 +6,7 @@ import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.services.ProductService;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -30,7 +29,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductPictureService productPictureService;
     private final ICustomerServiceClient iCustomerServiceClient;
-    private final static Logger log = LoggerFactory.getLogger(ProductController.class);
+    private final static Logger log = Logger.getLogger(ProductController.class.getName());
 
     @Autowired
     public ProductController(ProductService productService, ProductPictureService productPictureService, ICustomerServiceClient iCustomerServiceClient) {
