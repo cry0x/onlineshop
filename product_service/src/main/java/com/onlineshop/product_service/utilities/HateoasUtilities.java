@@ -30,7 +30,7 @@ public final class HateoasUtilities {
 
     public static CollectionModel<EntityModel<Product>> buildProductCollection(List<Product> productList) {
         List<EntityModel<Product>> products  = productList.stream()
-                .map(product -> HateoasUtilities.buildProductEntity(product))
+                .map(HateoasUtilities::buildProductEntity)
                 .collect(Collectors.toList());
 
         return CollectionModel.of(products,

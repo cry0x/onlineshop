@@ -18,7 +18,9 @@ public class ProductService {
     private final IOrderServiceClient iOrderServiceClient;
 
     @Autowired
-    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService, IOrderServiceClient iOrderServiceClient) {
+    public ProductService(IProductRepository iProductRepository,
+                          ProductPictureService productPictureService,
+                          IOrderServiceClient iOrderServiceClient) {
         this.iProductRepository = iProductRepository;
         this.productPictureService = productPictureService;
         this.iOrderServiceClient = iOrderServiceClient;
@@ -36,7 +38,8 @@ public class ProductService {
         return this.iProductRepository.findAll();
     }
 
-    public Product updateProduct(Long productId, Product updatedProduct) {
+    public Product updateProduct(Long productId,
+                                 Product updatedProduct) {
         //wird der check hier benötigt?
         checkProductExistsById(productId);
 
@@ -67,7 +70,7 @@ public class ProductService {
         this.iProductRepository.deleteById(productId);
     }
 
-    private final void checkProductExistsById(Long productId) {
+    private void checkProductExistsById(Long productId) {
         if (!this.iProductRepository.existsById(productId))
             throw new ProductDoesntExistsException(productId);
     }
