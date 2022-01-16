@@ -21,11 +21,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
 
     kibana:
         container_name: kibana
@@ -43,11 +40,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
 
     elasticsearch:
         container_name: elasticsearch
@@ -69,11 +63,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
 
     filebeat:
         container_name: filebeat
@@ -91,12 +82,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
-
+                    memory: 250M
     product-service-db:
         container_name: product-service-db
         image: postgres:latest
@@ -110,11 +97,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
         profiles: ["dev", "prod"]
 
     product-service:
@@ -143,11 +127,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
         profiles: ["dev", "prod"]
 
     customer-service-db:
@@ -163,11 +144,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
         profiles: ["dev", "prod"]
 
     customer-service:
@@ -192,11 +170,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
         profiles: ["dev", "prod"]
 
     eureka-service:
@@ -210,11 +185,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
         profiles: ["dev", "prod"]
 
     portainer:
@@ -233,11 +205,8 @@ services:
         deploy:
             resources:
                 limits:
-                    cpus: '0.50'
-                    memory: 100M
-                reservations:
                     cpus: '0.25'
-                    memory: 100M
+                    memory: 250M
 
 networks:
     onlineshop_network:
