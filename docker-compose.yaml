@@ -44,7 +44,7 @@ services:
             discovery.type: single-node
         networks:
             onlineshop_network:
-        profiles: ["prod", "elk"]
+        profiles: ["prod", "elk", "productservice" ]
         depends_on:
             - filebeat
             - logstash
@@ -59,7 +59,7 @@ services:
             ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
         networks:
             onlineshop_network:
-        profiles: ["prod", "elk"]
+        profiles: ["prod", "elk", "productservice" ]
         depends_on:
             - elasticsearch
 
