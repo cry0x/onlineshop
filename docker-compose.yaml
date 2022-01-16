@@ -1,6 +1,20 @@
 version: "3.9"
 
 services:
+    filebeat:
+        container_name: filebeat
+        image: docker.elastic.co/beats/filebeat:7.16.3
+        restart: always
+        networks:
+            onlineshop_network:
+        volumes:
+            - ./product_service/logs:/logs
+            - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        command: filebeat -e -strict.perms=false
+        environment:
+            setup.kibana.host: kibana:5601
+        profiles: [ "prod", "elk" ]
+
     logstash:
         container_name: logstash
         image: docker.elastic.co/logstash/logstash:7.16.3
@@ -17,21 +31,7 @@ services:
             - filebeat
         networks:
             onlineshop_network:
-        profiles: ["prod", "productservice"]
-
-    kibana:
-        container_name: kibana
-        image: docker.elastic.co/kibana/kibana:7.16.3
-        restart: always
-        ports:
-            - 5601:5601
-        environment:
-            ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
-        networks:
-            onlineshop_network:
-        profiles: ["prod"]
-        depends_on:
-            - elasticsearch
+        profiles: ["prod", "elk"]
 
     elasticsearch:
         container_name: elasticsearch
@@ -46,24 +46,24 @@ services:
             discovery.type: single-node
         networks:
             onlineshop_network:
-        profiles: ["prod"]
+        profiles: ["prod", "elk"]
         depends_on:
             - filebeat
             - logstash
 
-    filebeat:
-        container_name: filebeat
-        image: docker.elastic.co/beats/filebeat:7.16.3
+    kibana:
+        container_name: kibana
+        image: docker.elastic.co/kibana/kibana:7.16.3
         restart: always
+        ports:
+            - 5601:5601
+        environment:
+            ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
         networks:
             onlineshop_network:
-        volumes:
-            - ./product_service/logs:/logs
-            - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-        command: filebeat -e -strict.perms=false
-        environment:
-            setup.kibana.host: kibana:5601
-        profiles: ["prod", "productservice"]
+        profiles: ["prod", "elk"]
+        depends_on:
+            - elasticsearch
 
     product-service-db:
         container_name: product-service-db
@@ -75,7 +75,7 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
-        profiles: ["dev", "prod", "productservice"]
+        profiles: ["dev", "prod"]
 
     product-service:
         build: product_service
@@ -143,7 +143,7 @@ services:
             - 8761:8761
         networks:
             onlineshop_network:
-        profiles: ["dev", "prod", "productservice"]
+        profiles: ["dev", "prod"]
 
 networks:
     onlineshop_network:
