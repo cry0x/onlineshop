@@ -2,6 +2,7 @@ package com.onlineshop.product_service.controllers;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
@@ -42,6 +43,8 @@ public class ProductControllerTest {
     private ProductService productService;
     @MockBean
     private ProductPictureService productPictureService;
+    @MockBean
+    private IOrderServiceClient iOrderServiceClient;
 
     private static ProductPicture testProductPicture;
     private static ObjectMapper objectMapper;
@@ -73,9 +76,7 @@ public class ProductControllerTest {
 
         when(this.productService.readProductById(requestProductId)).thenReturn(expectedProduct);
 
-        EntityModel<Product> productPictureEntityModel = EntityModel.of(expectedProduct,
-                linkTo(methodOn(ProductController.class).getProduct(expectedProduct.getId())).withSelfRel(),
-                linkTo(methodOn(ProductPictureController.class).getProductPicture(expectedProduct.getProductPicture().getId())).withRel("product_picture"));
+        EntityModel<Product> productPictureEntityModel = HateoasUtilities.buildProductEntity(expectedProduct);
 
         this.mockMvc.perform(get("/v1/products/1"))
                 .andExpect(status().isOk())
@@ -103,6 +104,8 @@ public class ProductControllerTest {
         String updatedProductJson = objectMapper.writeValueAsString(updatedProduct);
 
         when(this.productService.readProductById(productId)).thenReturn(updatedProduct);
+
+        when(this.iOrderServiceClient.getIsProductInOrders(productId)).thenReturn(false);
 
         Product updatedProductWithId = new Product();
         updatedProductWithId.setId(productId);
