@@ -18,6 +18,14 @@ services:
         networks:
             onlineshop_network:
         profiles: ["prod"]
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     kibana:
         container_name: kibana
@@ -32,6 +40,14 @@ services:
         profiles: ["prod"]
         depends_on:
             - elasticsearch
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     elasticsearch:
         container_name: elasticsearch
@@ -50,6 +66,14 @@ services:
         depends_on:
             - filebeat
             - logstash
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     filebeat:
         container_name: filebeat
@@ -64,6 +88,14 @@ services:
         environment:
             setup.kibana.host: kibana:5601
         profiles: ["prod"]
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
     product-service-db:
         container_name: product-service-db
@@ -198,6 +230,14 @@ services:
         networks:
             onlineshop_network:
         profiles: ["prod"]
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 100M
+                reservations:
+                    cpus: '0.25'
+                    memory: 100M
 
 networks:
     onlineshop_network:
