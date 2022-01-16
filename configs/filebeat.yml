@@ -4,4 +4,4 @@ filebeat.inputs:
       - /logs/*.log
 
 output.logstash:
-  hosts: ["logstash:5044"]
+  hosts: ["http://logstash:5044"]

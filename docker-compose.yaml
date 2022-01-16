@@ -20,7 +20,6 @@ services:
         image: docker.elastic.co/logstash/logstash:7.16.3
         restart: always
         volumes:
-            - ./product_service/logs:/logs
             - ./configs/pipeline:/usr/share/logstash/pipeline/
             - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
         environment:
