@@ -18,11 +18,6 @@ services:
         networks:
             onlineshop_network:
         profiles: ["prod"]
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
 
     kibana:
         container_name: kibana
@@ -37,11 +32,6 @@ services:
         profiles: ["prod"]
         depends_on:
             - elasticsearch
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
 
     elasticsearch:
         container_name: elasticsearch
@@ -60,11 +50,6 @@ services:
         depends_on:
             - filebeat
             - logstash
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
 
     filebeat:
         container_name: filebeat
@@ -79,11 +64,7 @@ services:
         environment:
             setup.kibana.host: kibana:5601
         profiles: ["prod"]
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
+
     product-service-db:
         container_name: product-service-db
         image: postgres:latest
@@ -94,11 +75,6 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
         profiles: ["dev", "prod"]
 
     product-service:
@@ -124,11 +100,6 @@ services:
                 condition: service_started
         networks:
             onlineshop_network:
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
         profiles: ["dev", "prod"]
 
     customer-service-db:
@@ -141,11 +112,6 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
         profiles: ["dev", "prod"]
 
     customer-service:
@@ -167,11 +133,6 @@ services:
                 condition: service_started
         networks:
             onlineshop_network:
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
         profiles: ["dev", "prod"]
 
     eureka-service:
@@ -182,31 +143,7 @@ services:
             - 8761:8761
         networks:
             onlineshop_network:
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
         profiles: ["dev", "prod"]
-
-    portainer:
-        container_name: portainer
-        image: cr.portainer.io/portainer/portainer-ce:2.11.0
-        restart: always
-        ports:
-            - 8000:8000
-            - 9443:9443
-        volumes:
-            - portainer_data:/data
-            - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            onlineshop_network:
-        profiles: ["prod"]
-        deploy:
-            resources:
-                limits:
-                    cpus: '0.25'
-                    memory: 250M
 
 networks:
     onlineshop_network:
