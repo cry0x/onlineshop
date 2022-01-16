@@ -90,11 +90,6 @@ services:
             EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
         ports:
             - 9000:8080
-        depends_on:
-            product-service-db:
-                condition: service_started
-            eureka-service:
-                condition: service_started
         networks:
             onlineshop_network:
 
@@ -121,11 +116,6 @@ services:
             spring.datasource.driver-class-name: org.postgresql.Driver
         ports:
             - 9001:8080
-        depends_on:
-            customer-service-db:
-                condition: service_started
-            eureka-service:
-                condition: service_started
         networks:
             onlineshop_network:
 
