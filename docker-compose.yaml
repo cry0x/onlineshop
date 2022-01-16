@@ -11,6 +11,13 @@ services:
             - ./configs/logstash.yml:/usr/share/logstash/config/logstash.yml
         environment:
             monitoring.elasticsearch.hosts: '["http://elasticsearch:9200"]'
+        ports:
+            - 5044:5044
+        depends_on:
+            - filebeat
+        networks:
+            onlineshop_network:
+        profiles: ["prod"]
 
     kibana:
         container_name: kibana
@@ -23,6 +30,8 @@ services:
         networks:
             onlineshop_network:
         profiles: ["prod"]
+        depends_on:
+            - elasticsearch
 
     elasticsearch:
         container_name: elasticsearch
@@ -38,6 +47,9 @@ services:
         networks:
             onlineshop_network:
         profiles: ["prod"]
+        depends_on:
+            - filebeat
+            - logstash
 
     filebeat:
         container_name: filebeat
