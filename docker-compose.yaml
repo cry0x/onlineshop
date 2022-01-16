@@ -7,7 +7,7 @@ services:
         restart: always
         volumes:
             - ./product_service/logs:/logs
-            - ./configs/pipeline:/usr/share/logstash/pipeline/:ro
+            - ./configs/pipeline:/usr/share/logstash/pipeline/
             - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
         environment:
             monitoring.elasticsearch.hosts: '["http://elasticsearch:9200"]'
