@@ -4,6 +4,7 @@ import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
 import com.onlineshop.order_service.repository.IOrderRepository;
+import com.onlineshop.order_service.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,15 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    //private EmailService emailService;
+    // TODO private EmailService emailService;
+
     private final IOrderRepository iOrderRepository;
+    private final IProductRepository iProductRepository;
 
     @Autowired
-    ProductService productService;
-
-    @Autowired
-    public OrderService(IOrderRepository iOrderRepository) {
+    public OrderService(IOrderRepository iOrderRepository, IProductRepository iProductRepository) {
         this.iOrderRepository = iOrderRepository;
+        this.iProductRepository = iProductRepository;
     }
 
     public Order getOrderById(Long id) {
@@ -36,7 +37,7 @@ public class OrderService {
     }
 
     public Order createOrder(Order order) {
-        order.setTotalAmount(calculateTotalAmount(order.getProductListInOrder()));
+        order.setTotalAmount(0);
         order.setOrderStatus(StatusEnum.PENDING);
         return this.iOrderRepository.save(order);
     }
@@ -65,31 +66,68 @@ public class OrderService {
     public List<Product> addProductToOrder(Long order_id, Product product) {
         Order order = getOrderById(order_id);
         List<Product> productListInOrder = order.getProductListInOrder();
-        // TODO check for same originalProductId -> only update quantity - don't add product to productListInOrder
-        /*if (productListInOrder != null) {
-            for (Product products : productListInOrder) {
-                if (product.getOriginalId() == products.getOriginalId()) {
-                    productService.updateProduct(order_id, product.getQuantity(), product);
-                } else {
-                    productListInOrder.add(productService.createProduct(product));
+        boolean productExists = false;
+        if (productListInOrder.size() > 0) {
+            for (Product productInList : productListInOrder) {
+                if (product.getOriginalId() == productInList.getOriginalId()) {
+                    productExists = true;
                 }
             }
-        } else {*/
-            productListInOrder.add(productService.createProduct(product));
-            // Calculate total -> Maybe create new method, bc add + remove need calculate
-        //}
+        }
+        if (productExists) {
+            increaseProductQuantity(order_id, product.getQuantity(), product);
+        } else {
+            productListInOrder.add(createProduct(product));
+        }
         order.setTotalAmount(calculateTotalAmount(productListInOrder));
         return productListInOrder;
     }
 
-    public void updateOrderStatus(long id, StatusEnum statusEnum) {
+    // Necessary?
+    public Product getProductById(Long id) {
+        return this.iProductRepository.findById(id).get();
+    }
 
-        long customerId = getOrderById(id).getCustomerId();
+    public Product createProduct(Product product) {
+        return this.iProductRepository.save(product);
+    }
 
-        // TODO
-        // RestCustomer customer = RestCustomer.getCustomerById(customerid);
-        // emailService.sendStatusUpdate(customer,id,status.name());
+    public List<Product> createAllProducts(List<Product> productList) {
+        return this.iProductRepository.saveAll(productList);
+    }
 
+    public Product increaseProductQuantity(Long orderId, Long quantity, Product product) {
+        List<Product> productList = getOrderById(orderId).getProductListInOrder();
+        for (Product productsInList : productList) {
+            if (productsInList.getOriginalId() == product.getOriginalId()) {
+                product.setQuantity(quantity + product.getQuantity());
+            }
+        }
+        return this.iProductRepository.save(product);
+    }
+
+    // Necessary?
+    public Product decreaseProductQuantity(Long orderId, Long quantity, Product product) {
+        List<Product> productList = getOrderById(orderId).getProductListInOrder();
+        for (Product productsInList : productList) {
+            if (productsInList.getOriginalId() == product.getOriginalId()) {
+                if (quantity - product.getQuantity() < 0) {
+                    // throw exception
+                } else {
+                    product.setQuantity(quantity - product.getQuantity());
+                }
+            }
+        }
+        return this.iProductRepository.save(product);
+    }
+
+    public void deleteProductInOrder(Long orderId, Long originalProductId) {
+        List<Product> productList = getOrderById(orderId).getProductListInOrder();
+        for (Product product : productList) {
+            if (product.getOriginalId() == originalProductId) {
+                this.iProductRepository.deleteById(originalProductId);
+            }
+        }
     }
 
 }

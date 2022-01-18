@@ -5,7 +5,6 @@ import com.onlineshop.order_service.dto.ProductDto;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.service.OrderService;
-import com.onlineshop.order_service.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -26,15 +25,12 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private ProductService productService;
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long id) {
         log.info("Order (id: {}) has been requested.", id);
         var orderEntity = orderService.getOrderById(id);
-        var orderDto = modelMapper.map(orderEntity, Order.class);
-        return orderDto;
+        return modelMapper.map(orderEntity, Order.class);
     }
 
     @GetMapping("")
@@ -47,10 +43,8 @@ public class OrderController {
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
         log.info("Creating a new order.");
         var orderEntity = modelMapper.map(orderDto, Order.class);
-        orderEntity.setProductListInOrder(this.productService.createAllProducts(orderEntity.getProductListInOrder()));
-
+        orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder()));
         var newOrder = orderService.createOrder(orderEntity);
-
         return modelMapper.map(newOrder, OrderDto.class);
     }
 
@@ -59,8 +53,7 @@ public class OrderController {
     public OrderDto updateOrder(@PathVariable(value="id") Long id, @RequestBody OrderDto order) {
         log.info("Updating order (id: {}).", id);
         var orderEntity = modelMapper.map(order, Order.class);
-        var returnDto = modelMapper.map(orderService.updateOrder(id, orderEntity), OrderDto.class);
-        return returnDto;
+        return modelMapper.map(orderService.updateOrder(id, orderEntity), OrderDto.class);
     }
 
     @DeleteMapping("/{id}")
@@ -71,7 +64,7 @@ public class OrderController {
 
     @GetMapping("/orders/{customerId}")
     public List<Order> getAllOrdersByCustomerId(@PathVariable(value="customerId") Long id) {
-        log.info("All orders of customer (cusomter id: {}) have been requested.", id);
+        log.info("All orders of customer (customer id: {}) have been requested.", id);
         var orders = orderService.getOrdersByCustomerId(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
@@ -88,7 +81,7 @@ public class OrderController {
     @DeleteMapping("/{order_id}/{product_id}")
     public void deleteProductInOrder(@PathVariable(value="order_id") Long orderId, @PathVariable(value="product_id") Long productId) {
         log.info("Deleting product (id: {}) from order (id: {}.", productId, orderId);
-        productService.deleteProductInOrder(orderId, productId);
+        orderService.deleteProductInOrder(orderId, productId);
     }
 
 }
