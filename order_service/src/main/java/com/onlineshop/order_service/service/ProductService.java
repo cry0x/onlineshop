@@ -7,12 +7,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 @Transactional
 @Service
 public class ProductService {
 
     private final IProductRepository iProductRepository;
+
+    OrderService orderService = null;
 
     @Autowired
     public ProductService(IProductRepository iProductRepository) {
@@ -27,13 +31,28 @@ public class ProductService {
         return this.iProductRepository.save(product);
     }
 
-    public Product updateProduct(Long id, Product product) {
-        product.setId(id);
+    public List<Product> createAllProducts(List<Product> productList) {
+        return this.iProductRepository.saveAll(productList);
+    }
+
+    public Product updateProduct(Long orderId, Long quantity, Product product) {
+        List<Product> productList = orderService.getOrderById(orderId).getProductListInOrder();
+        for (Product products : productList) {
+            if(products.getOriginalId() == product.getOriginalId()){
+                product.setQuantity(quantity + product.getQuantity());
+            }
+        }
+
         return this.iProductRepository.save(product);
     }
 
-    public void deleteProduct(Long id) {
-        this.iProductRepository.deleteById(id);
+    public void deleteProductInOrder(Long orderId, Long originalProductId) {
+        List<Product> productList = orderService.getOrderById(orderId).getProductListInOrder();
+        for (Product product : productList) {
+            if(product.getOriginalId() == originalProductId) {
+                this.iProductRepository.deleteById(originalProductId);
+            }
+        }
     }
 
 }

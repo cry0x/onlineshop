@@ -9,22 +9,18 @@ import java.io.Serializable;
 @Data
 public class Product implements Serializable {
 
-
-
     @Id
-    @Column(name="order_id",nullable = false,updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private long id;
-/*
-    @PrimaryKeyJoinColumn(name = "order_id") // needed because it's also foreign key
-    Order order;*/
 
-    @Column(name = "product_id", nullable = false)
-    private long productId;
-
-    @Column(name="price",nullable = false)
+    @Column(nullable = false)
     private double price;
 
-    @Column(name="quantity",nullable = false)
+    @Column(nullable = false)
     private long quantity;
+
+    @Column(name = "original_id", nullable = false)
+    private long originalId;
 
 }

@@ -20,6 +20,9 @@ public class OrderService {
     private final IOrderRepository iOrderRepository;
 
     @Autowired
+    ProductService productService;
+
+    @Autowired
     public OrderService(IOrderRepository iOrderRepository) {
         this.iOrderRepository = iOrderRepository;
     }
@@ -28,8 +31,22 @@ public class OrderService {
         return this.iOrderRepository.findById(id).get();
     }
 
+    public List<Order> getAllOrders() {
+        return this.iOrderRepository.findAll();
+    }
+
     public Order createOrder(Order order) {
+        order.setTotalAmount(calculateTotalAmount(order.getProductListInOrder()));
+        order.setOrderStatus(StatusEnum.PENDING);
         return this.iOrderRepository.save(order);
+    }
+
+    public double calculateTotalAmount(List<Product> productListInOrder) {
+        double sum = 0;
+        for (Product products : productListInOrder) {
+            sum += (products.getPrice() * products.getQuantity());
+        }
+        return sum;
     }
 
     public Order updateOrder(Long id, Order order) {
@@ -41,19 +58,31 @@ public class OrderService {
         this.iOrderRepository.deleteById(id);
     }
 
-    public List<Product> getProductsByOrderId(Long id) throws Exception {
-        if (this.iOrderRepository.existsById(id))
-            throw new Exception(String.format("The order with Id: %d doesnt exist!", id));
-
-        return this.iOrderRepository.findById(id).orElseThrow().getProductListInOrder();
-    }
-
     public List<Order> getOrdersByCustomerId(Long customerId) {
         return this.iOrderRepository.findByCustomerId(customerId);
     }
 
+    public List<Product> addProductToOrder(Long order_id, Product product) {
+        Order order = getOrderById(order_id);
+        List<Product> productListInOrder = order.getProductListInOrder();
+        // TODO check for same originalProductId -> only update quantity - don't add product to productListInOrder
+        /*if (productListInOrder != null) {
+            for (Product products : productListInOrder) {
+                if (product.getOriginalId() == products.getOriginalId()) {
+                    productService.updateProduct(order_id, product.getQuantity(), product);
+                } else {
+                    productListInOrder.add(productService.createProduct(product));
+                }
+            }
+        } else {*/
+            productListInOrder.add(productService.createProduct(product));
+            // Calculate total -> Maybe create new method, bc add + remove need calculate
+        //}
+        order.setTotalAmount(calculateTotalAmount(productListInOrder));
+        return productListInOrder;
+    }
 
-    public void updateOrderStatus(long id, StatusEnum statusEnum){
+    public void updateOrderStatus(long id, StatusEnum statusEnum) {
 
         long customerId = getOrderById(id).getCustomerId();
 

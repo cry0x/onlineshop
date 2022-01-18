@@ -11,9 +11,9 @@ import java.util.List;
 @Table(name = "orders")
 public class Order implements Serializable {
 
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name="order_id",nullable = false,updatable = false)
+    @Column(nullable = false,updatable = false)
     private long id;
 
     @Column(name="total_amount", nullable = false)
@@ -25,9 +25,7 @@ public class Order implements Serializable {
     @Column(name="customer_id", nullable = false, updatable = false)
     private long customerId;
 
-    @Transient
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST) // maybe needed: , cascade = CascadeType.ALL)
-    @Column(name="product_list")
+    @OneToMany(cascade = CascadeType.REMOVE)
     private List<Product> productListInOrder;
 
 }
