@@ -117,7 +117,6 @@ services:
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URI:http://eureka-service:8761/eureka}
         ports:
             - 9001:8080
         networks:
@@ -147,6 +146,7 @@ services:
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
+            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URI:http://eureka-service:8761/eureka}
         ports:
             - 9002:8080
         networks:
