@@ -123,6 +123,34 @@ services:
             onlineshop_network:
         profiles: [ "prod", "dev" ]
 
+    order-service-db:
+        container_name: order-service-db
+        image: postgres:latest
+        restart: always
+        environment:
+            POSTGRES_DB: order_service
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
+    order-service:
+        build: order_service
+        image: onlineshop/order-service:latest
+        restart: always
+        environment:
+            spring.datasource.url: jdbc:postgresql://order-service-db/order_service
+            spring.datasource.username: root
+            spring.datasource.password: root
+            spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+            spring.datasource.driver-class-name: org.postgresql.Driver
+        ports:
+            - 9002:8080
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
     eureka-service:
         build: eureka_service
         image: onlineshop/eureka-service:latest
