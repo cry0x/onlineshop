@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(path = "/v1/products")
@@ -30,7 +25,8 @@ public class ProductController {
     private final static Logger log = Logger.getLogger(ProductController.class.getName());
 
     @Autowired
-    public ProductController(ProductService productService, ProductPictureService productPictureService) {
+    public ProductController(ProductService productService,
+                             ProductPictureService productPictureService) {
         this.productService = productService;
         this.productPictureService = productPictureService;
     }
@@ -56,12 +52,7 @@ public class ProductController {
     public CollectionModel<EntityModel<Product>> getAllProducts() {
         log.info("GET: /v1/products has been called");
 
-        List<EntityModel<Product>> products = this.productService.readAllProducts().stream()
-                .map(product -> HateoasUtilities.buildProductEntity(product))
-                .collect(Collectors.toList());
-
-        return CollectionModel.of(products,
-                linkTo(methodOn(ProductController.class).getAllProducts()).withSelfRel());
+        return HateoasUtilities.buildProductCollection(this.productService.readAllProducts());
     }
 
     @PutMapping(value = "/{productId}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -69,10 +60,16 @@ public class ProductController {
                                            @RequestBody Product product) {
         log.info(String.format("PUT: /v1/products/%d has been called", productId));
 
-        ProductPicture productPicture = this.productService.readProductById(productId).getProductPicture();
-        product.setProductPicture(productPicture);
+        Product existingProduct = this.productService.readProductById(productId);
 
-        return HateoasUtilities.buildProductEntity(this.productService.updateProduct(productId, product));
+        if (product.getProductPicture() == null)
+            product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
+        else
+            product.setProductPicture(existingProduct.getProductPicture());
+
+        product = this.productService.updateProduct(productId, product);
+
+        return HateoasUtilities.buildProductEntity(product);
     }
 
     @PutMapping(value = "/{productId}/productpicture")

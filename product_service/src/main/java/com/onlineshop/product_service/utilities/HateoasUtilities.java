@@ -19,13 +19,22 @@ public final class HateoasUtilities {
         if (product.getNewProductVersion() != null) {
             return EntityModel.of(product,
                     linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
-                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"),
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("ProductPicture"),
                     linkTo(methodOn(ProductController.class).getProduct(product.getNewProductVersion().getId())).withRel("NewProductVersion"));
         } else {
             return EntityModel.of(product,
                     linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
-                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
+                    linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("ProductPicture"));
         }
+    }
+
+    public static CollectionModel<EntityModel<Product>> buildProductCollection(List<Product> productList) {
+        List<EntityModel<Product>> products  = productList.stream()
+                .map(HateoasUtilities::buildProductEntity)
+                .collect(Collectors.toList());
+
+        return CollectionModel.of(products,
+                linkTo(methodOn(ProductController.class).getAllProducts()).withSelfRel());
     }
 
     public static EntityModel<ProductPicture> buildProductPictureEntity(ProductPicture productPicture) {

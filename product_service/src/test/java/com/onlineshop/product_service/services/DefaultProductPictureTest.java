@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +20,7 @@ public class DefaultProductPictureTest {
     void getDefaultProductPictureTest() throws IOException {
         String actualEncodedPicture = Base64.getEncoder().encodeToString(DefaultProductPicture.getBinaryData());
         InputStream fis = this.getClass().getResourceAsStream("/DefaultBase64ProductPictureTestData");
-        String expectedEncodedPicture = IOUtils.toString(fis, StandardCharsets.UTF_8);
+        String expectedEncodedPicture = IOUtils.toString(Objects.requireNonNull(fis), StandardCharsets.UTF_8);
 
         assertEquals(expectedEncodedPicture, actualEncodedPicture);
     }

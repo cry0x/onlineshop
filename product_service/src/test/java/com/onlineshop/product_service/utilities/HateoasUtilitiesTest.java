@@ -37,7 +37,7 @@ public class HateoasUtilitiesTest {
 
         EntityModel<Product> expectedProductEntityModel = EntityModel.of(product,
                 linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
-                linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("product_picture"));
+                linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("ProductPicture"));
 
         assertEquals(expectedProductEntityModel, HateoasUtilities.buildProductEntity(product));
     }

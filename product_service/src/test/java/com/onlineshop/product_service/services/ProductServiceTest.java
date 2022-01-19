@@ -1,11 +1,11 @@
 package com.onlineshop.product_service.services;
 
+import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.testUtilities.RandomData;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.InjectMocks;
 import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -23,6 +22,7 @@ import static org.mockito.Mockito.when;
 class ProductServiceTest {
 
     @Autowired
+    @InjectMocks
     private ProductService productService;
 
     @MockBean
@@ -30,12 +30,7 @@ class ProductServiceTest {
     @MockBean
     private ProductPictureService productPictureService;
     @MockBean
-    private OrderService orderService;
-
-    @Before
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
+    private IOrderServiceClient iOrderServiceClient;
 
     @Test
     void createProduct() {
@@ -79,7 +74,7 @@ class ProductServiceTest {
         oldProduct.setProductPicture(oldProductPicture);
 
         when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(oldProduct));
-        when(this.orderService.checkProductInOrder(oldProduct)).thenReturn(false);
+        when(this.iOrderServiceClient.getIsProductInOrders(oldProduct.getId())).thenReturn(false);
 
         byte[] newProductPictureData = RandomData.RandomByteArray(20);
 
@@ -159,7 +154,7 @@ class ProductServiceTest {
 
         when(this.iProductRepository.existsById(existingProduct.getId())).thenReturn(true);
         when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
-        when(this.orderService.checkProductInOrder(existingProduct)).thenReturn(true);
+        when(this.iOrderServiceClient.getIsProductInOrders(existingProduct.getId())).thenReturn(true);
         when(this.iProductRepository.save(updatedProduct)).thenReturn(expectedProduct);
 
         Product existingProductWithNewVersion = (Product) existingProduct.clone();

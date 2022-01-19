@@ -1,8 +1,10 @@
 package com.onlineshop.product_service.services;
 
+import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.entities.Product;
+import com.onlineshop.product_service.exceptions.ProductExistsInOrderException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,13 +16,15 @@ public class ProductService {
 
     private final IProductRepository iProductRepository;
     private final ProductPictureService productPictureService;
-    private final OrderService orderService;
+    private final IOrderServiceClient iOrderServiceClient;
 
     @Autowired
-    public ProductService(IProductRepository iProductRepository, ProductPictureService productPictureService, OrderService orderService) {
+    public ProductService(IProductRepository iProductRepository,
+                          ProductPictureService productPictureService,
+                          IOrderServiceClient iOrderServiceClient) {
         this.iProductRepository = iProductRepository;
         this.productPictureService = productPictureService;
-        this.orderService = orderService;
+        this.iOrderServiceClient = iOrderServiceClient;
     }
 
     public Product createProduct(Product product) {
@@ -35,13 +39,11 @@ public class ProductService {
         return this.iProductRepository.findAll();
     }
 
-    public Product updateProduct(Long productId, Product updatedProduct) {
-        //wird der check hier benötigt?
-        checkProductExistsById(productId);
-
+    public Product updateProduct(Long productId,
+                                 Product updatedProduct) {
         Product unchangedProduct = readProductById(productId);
 
-        if (this.orderService.checkProductInOrder(unchangedProduct)) {
+        if (checkProductExistsInOrder(productId)) {
             updatedProduct.setName(unchangedProduct.getName());
             updatedProduct = this.iProductRepository.save(updatedProduct);
             unchangedProduct.setNewProductVersion(updatedProduct);
@@ -50,8 +52,11 @@ public class ProductService {
             updatedProduct.setId(productId);
             updatedProduct.setName(unchangedProduct.getName());
 
-            ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(), updatedProduct.getProductPicture());
-            updatedProduct.setProductPicture(updatedProductPicture);
+            if (updatedProduct.getProductPicture() != null) {
+                ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(),
+                        updatedProduct.getProductPicture());
+                updatedProduct.setProductPicture(updatedProductPicture);
+            }
             updatedProduct = this.iProductRepository.save(updatedProduct);
         }
 
@@ -59,14 +64,20 @@ public class ProductService {
     }
 
     public void deleteProductById(Long productId) {
-        checkProductExistsById(productId);
+        if (!checkProductExistsById(productId))
+            throw new ProductDoesntExistsException(productId);
+        if (checkProductExistsInOrder(productId))
+            throw new ProductExistsInOrderException(productId);
 
         this.iProductRepository.deleteById(productId);
     }
 
-    private final void checkProductExistsById(Long productId) {
-        if (!this.iProductRepository.existsById(productId))
-            throw new ProductDoesntExistsException(productId);
+    private boolean checkProductExistsById(Long productId) {
+        return this.iProductRepository.existsById(productId);
+    }
+
+    private boolean checkProductExistsInOrder(Long productId) {
+        return this.iOrderServiceClient.getIsProductInOrders(productId);
     }
 
 }

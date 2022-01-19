@@ -25,8 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -73,9 +71,7 @@ public class ProductControllerTest {
 
         when(this.productService.readProductById(requestProductId)).thenReturn(expectedProduct);
 
-        EntityModel productPictureEntityModel = EntityModel.of(expectedProduct,
-                linkTo(methodOn(ProductController.class).getProduct(expectedProduct.getId())).withSelfRel(),
-                linkTo(methodOn(ProductPictureController.class).getProductPicture(expectedProduct.getProductPicture().getId())).withRel("product_picture"));
+        EntityModel<Product> productPictureEntityModel = HateoasUtilities.buildProductEntity(expectedProduct);
 
         this.mockMvc.perform(get("/v1/products/1"))
                 .andExpect(status().isOk())

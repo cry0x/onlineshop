@@ -3,9 +3,8 @@ package com.onlineshop.product_service.services;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductPictureDoesntExistException;
 import com.onlineshop.product_service.testUtilities.RandomData;
-import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.mockito.InjectMocks;
 import com.onlineshop.product_service.repositories.IProductPictureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,15 +21,10 @@ import static org.mockito.Mockito.when;
 public class ProductPictureServiceTest {
 
     @Autowired
+    @InjectMocks
     private ProductPictureService productPictureService;
-
     @MockBean
     private IProductPictureRepository iProductPictureRepository;
-
-    @Before
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void readProductPictureByIdTest() {

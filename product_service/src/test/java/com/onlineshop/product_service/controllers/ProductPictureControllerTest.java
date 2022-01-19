@@ -41,7 +41,6 @@ public class ProductPictureControllerTest {
 
     private static ObjectMapper objectMapper;
     private static ProductPicture testProductPicture1;
-    private static ProductPicture testProductPicture2;
 
     @BeforeAll
     static void before() {
@@ -54,11 +53,6 @@ public class ProductPictureControllerTest {
         testProductPicture1.setId(1L);
         testProductPicture1.setName("Testpicture_1");
         testProductPicture1.setData(RandomData.RandomByteArray(20));
-
-        testProductPicture2 = new ProductPicture();
-        testProductPicture2.setId(2L);
-        testProductPicture2.setName("Testpicture_2");
-        testProductPicture2.setData(RandomData.RandomByteArray(20));
     }
 
     @Test

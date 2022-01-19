@@ -13,9 +13,9 @@ import javax.persistence.*;
 public class ProductPicture implements Cloneable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
     @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Getter
     @Setter
