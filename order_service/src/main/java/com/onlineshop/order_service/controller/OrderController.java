@@ -22,14 +22,23 @@ public class OrderController {
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    @Autowired
-    private OrderService orderService;
 
+    private OrderService orderService;
+    private Order orderEntity;
+
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    public OrderController(Order orderEntity){
+        this.orderEntity = orderEntity;
+    }
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long id) {
         log.info("Order (id: {}) has been requested.", id);
-        var orderEntity = orderService.getOrderById(id);
+        orderEntity = orderService.getOrderById(id);
         return modelMapper.map(orderEntity, Order.class);
     }
 
@@ -42,9 +51,9 @@ public class OrderController {
     @PostMapping("")
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
         log.info("Creating a new order.");
-        var orderEntity = modelMapper.map(orderDto, Order.class);
+        orderEntity = modelMapper.map(orderDto, Order.class);
         orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder()));
-        var newOrder = orderService.createOrder(orderEntity);
+        Order newOrder = orderService.createOrder(orderEntity);
         return modelMapper.map(newOrder, OrderDto.class);
     }
 
@@ -52,7 +61,7 @@ public class OrderController {
     @PutMapping("/{id}")
     public OrderDto updateOrder(@PathVariable(value="id") Long id, @RequestBody OrderDto order) {
         log.info("Updating order (id: {}).", id);
-        var orderEntity = modelMapper.map(order, Order.class);
+        orderEntity = modelMapper.map(order, Order.class);
         return modelMapper.map(orderService.updateOrder(id, orderEntity), OrderDto.class);
     }
 
@@ -65,16 +74,16 @@ public class OrderController {
     @GetMapping("/orders/{customerId}")
     public List<Order> getAllOrdersByCustomerId(@PathVariable(value="customerId") Long id) {
         log.info("All orders of customer (customer id: {}) have been requested.", id);
-        var orders = orderService.getOrdersByCustomerId(id);
+        List<Order> orders = orderService.getOrdersByCustomerId(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
     @PostMapping("/products/{id}")
     public List<ProductDto> createAndAddProduct(@PathVariable(value="id") Long id, @RequestBody ProductDto productDto) {
         log.info("Creating a new product and adding it to order (id: {}).", id);
-        var productEntity = modelMapper.map(productDto, Product.class);
+        Product productEntity = modelMapper.map(productDto, Product.class);
         productEntity.setOriginalId(productDto.getId());
-        var newProducts = this.orderService.addProductToOrder(id, productEntity);
+        List<Product> newProducts = this.orderService.addProductToOrder(id, productEntity);
         return modelMapper.map(newProducts, new TypeToken<List<ProductDto>>() {}.getType());
     }
 

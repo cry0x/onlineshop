@@ -1,5 +1,6 @@
 package com.onlineshop.order_service.service;
 
+import com.onlineshop.order_service.Exceptions.OrderNotFoundException;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
@@ -29,7 +30,7 @@ public class OrderService {
     }
 
     public Order getOrderById(Long id) {
-        return this.iOrderRepository.findById(id).get();
+        return this.iOrderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
 
     public List<Order> getAllOrders() {
@@ -50,12 +51,22 @@ public class OrderService {
         return sum;
     }
 
-    public Order updateOrder(Long id, Order order) {
-        order.setId(id);
-        return this.iOrderRepository.save(order);
+    // Necessary?
+    public Order updateOrder(Long id, Order newOrder) {
+        if (!this.iOrderRepository.existsById(id)) {
+            throw new OrderNotFoundException(id);
+        }
+        Order oldOrder = getOrderById(id);
+        newOrder.setProductListInOrder(oldOrder.getProductListInOrder());
+        newOrder.setId(id);
+
+        return this.iOrderRepository.save(newOrder);
     }
 
     public void deleteOrder(Long id) {
+        if (!this.iOrderRepository.existsById(id)) {
+            throw new OrderNotFoundException(id);
+        }
         this.iOrderRepository.deleteById(id);
     }
 
@@ -63,8 +74,11 @@ public class OrderService {
         return this.iOrderRepository.findByCustomerId(customerId);
     }
 
-    public List<Product> addProductToOrder(Long order_id, Product product) {
-        Order order = getOrderById(order_id);
+    public List<Product> addProductToOrder(Long orderId, Product product) {
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        }
+        Order order = getOrderById(orderId);
         List<Product> productListInOrder = order.getProductListInOrder();
         boolean productExists = false;
         if (productListInOrder.size() > 0) {
@@ -75,7 +89,7 @@ public class OrderService {
             }
         }
         if (productExists) {
-            increaseProductQuantity(order_id, product.getQuantity(), product);
+            increaseProductQuantity(orderId, product.getQuantity(), product);
         } else {
             productListInOrder.add(createProduct(product));
         }
@@ -97,6 +111,9 @@ public class OrderService {
     }
 
     public Product increaseProductQuantity(Long orderId, Long quantity, Product product) {
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        }
         List<Product> productList = getOrderById(orderId).getProductListInOrder();
         for (Product productsInList : productList) {
             if (productsInList.getOriginalId() == product.getOriginalId()) {
@@ -108,6 +125,9 @@ public class OrderService {
 
     // Necessary?
     public Product decreaseProductQuantity(Long orderId, Long quantity, Product product) {
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        }
         List<Product> productList = getOrderById(orderId).getProductListInOrder();
         for (Product productsInList : productList) {
             if (productsInList.getOriginalId() == product.getOriginalId()) {
@@ -122,6 +142,9 @@ public class OrderService {
     }
 
     public void deleteProductInOrder(Long orderId, Long originalProductId) {
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        }
         List<Product> productList = getOrderById(orderId).getProductListInOrder();
         for (Product product : productList) {
             if (product.getOriginalId() == originalProductId) {

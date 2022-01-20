@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.order_service'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '11' // 1.8
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ ext {
 
 dependencies {
     implementation 'org.modelmapper:modelmapper:2.4.5'
-    //implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
