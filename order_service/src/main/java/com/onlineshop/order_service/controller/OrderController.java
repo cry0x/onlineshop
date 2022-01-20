@@ -60,5 +60,16 @@ public class OrderController {
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
+    @GetMapping("/product/{realProductId}")
+    public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
+        /*
+        @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Product p WHERE p.original_id = :realProductId")
+        boolean testExistsProductByRealId(@Param("realProductId") Long realProductId);
+        return this.iProductService.existsProductByRealId(realProductId);
+         */
+
+        return false;
+    }
+
 }
 
