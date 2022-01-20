@@ -10,7 +10,7 @@ COPY . .
 RUN chmod a+x gradlew
 
 # CREATE FATJAR FILE
-RUN ./gradlew bootJar
+RUN ./gradlew build
 
 ##################################################
 
