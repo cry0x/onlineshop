@@ -23,15 +23,18 @@ public class RandomData {
     }
 
     public static Long RandomLong() {
-        return new Random().nextLong();
+        Long retValue = new Random().nextLong();
+        return retValue < 0 ? retValue * -1 : retValue;
     }
 
     public static int RandomInt() {
-        return new Random().nextInt();
+        int retValue = new Random().nextInt();
+        return retValue < 0 ? retValue * -1 : retValue;
     }
 
     public static double RandomDouble() {
-        return new Random().nextDouble();
+        double retValue = new Random().nextInt();
+        return retValue < 0 ? retValue * -1 : retValue;
     }
 
     public static ProductPicture RandomProductPictureWithoutId() {
@@ -68,6 +71,16 @@ public class RandomData {
         product.setQuantity(RandomInt());
         product.setPrice(RandomDouble());
         product.setProductPicture(RandomProductPictureWithoutId());
+
+        return product;
+    }
+
+    public static Product RandomProductWithoutIdAndPicture() {
+        Product product = new Product();
+        product.setName(RandomString(15));
+        product.setDescription(RandomString(50));
+        product.setQuantity(RandomInt());
+        product.setPrice(RandomDouble());
 
         return product;
     }
