@@ -80,8 +80,4 @@ public class ProductService {
         return this.iOrderServiceClient.getIsProductInOrders(productId);
     }
 
-    public IOrderServiceClient getIOrderServiceClient() {
-        return this.iOrderServiceClient;
-    };
-
 }
