@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name = "order-service")
 public interface IOrderServiceClient {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/orders/product/{productId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/v1/orders/products/{productId}")
     boolean getIsProductInOrders(@PathVariable("productId") Long productId);
 
 }

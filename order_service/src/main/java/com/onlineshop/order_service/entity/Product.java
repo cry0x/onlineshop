@@ -1,26 +1,19 @@
 package com.onlineshop.order_service.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "products")
 @Data
 public class Product {
 
     @Id
-    @Getter
-    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
-    @Getter
-    @Setter
     private long price;
-    @Getter
-    @Setter
     private long quantity;
-    private Long id;
+    private Long original_id;
 
 }

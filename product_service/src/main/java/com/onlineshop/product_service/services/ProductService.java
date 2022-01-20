@@ -1,6 +1,5 @@
 package com.onlineshop.product_service.services;
 
-import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.entities.Product;
@@ -8,23 +7,25 @@ import com.onlineshop.product_service.exceptions.ProductExistsInOrderException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final IProductRepository iProductRepository;
     private final ProductPictureService productPictureService;
-    private final IOrderServiceClient iOrderServiceClient;
+    private final OrderService orderService;
 
     @Autowired
     public ProductService(IProductRepository iProductRepository,
                           ProductPictureService productPictureService,
-                          IOrderServiceClient iOrderServiceClient) {
+                          OrderService orderService) {
         this.iProductRepository = iProductRepository;
         this.productPictureService = productPictureService;
-        this.iOrderServiceClient = iOrderServiceClient;
+        this.orderService = orderService;
     }
 
     public Product createProduct(Product product) {
@@ -77,7 +78,7 @@ public class ProductService {
     }
 
     private boolean checkProductExistsInOrder(Long productId) {
-        return this.iOrderServiceClient.getIsProductInOrders(productId);
+        return this.orderService.existsProductInOrder(productId);
     }
 
 }

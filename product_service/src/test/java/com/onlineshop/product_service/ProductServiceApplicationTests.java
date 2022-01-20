@@ -1,6 +1,7 @@
 package com.onlineshop.product_service;
 
 import com.onlineshop.product_service.controllers.ProductPictureController;
+import com.onlineshop.product_service.services.OrderService;
 import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ class ProductServiceApplicationTests {
     private ProductPictureService productPictureService;
     @Autowired
     private ProductPictureController productPictureController;
+    @Autowired
+    private OrderService orderService;
 
     @Test
     void contextLoads() {
@@ -36,6 +39,7 @@ class ProductServiceApplicationTests {
         assertNotNull(iProductPictureRepository);
         assertNotNull(productPictureService);
         assertNotNull(productPictureController);
+        assertNotNull(orderService);
     }
 
 }

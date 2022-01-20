@@ -3,6 +3,7 @@ package com.onlineshop.order_service.controller;
 import com.onlineshop.order_service.dto.OrderDto;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.service.OrderService;
+import com.onlineshop.order_service.service.ProductService;
 import org.modelmapper.ModelMapper;
 
 import org.modelmapper.TypeToken;
@@ -18,11 +19,12 @@ import java.util.List;
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-
     private static final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private static ProductService productService;
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long orderId) {
@@ -58,6 +60,11 @@ public class OrderController {
         log.info("All orders '{}' have been requested.", id);
         var orders = orderService.getOrderById(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
+    }
+
+    @GetMapping("/orders/products/{realProductId}")
+    public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
+        return this.productService.existsProductByRealId(realProductId);
     }
 
 }

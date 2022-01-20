@@ -3,7 +3,6 @@ package com.onlineshop.product_service.controllers;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlineshop.product_service.entities.ProductPicture;
-import com.onlineshop.product_service.repositories.IProductPictureRepository;
 import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
@@ -36,8 +35,6 @@ public class ProductPictureControllerTest {
 
     @MockBean
     private ProductPictureService productPictureService;
-    @MockBean
-    private IProductPictureRepository iProductPictureRepository;
 
     private static ObjectMapper objectMapper;
     private static ProductPicture testProductPicture1;
