@@ -62,7 +62,7 @@ public class OrderController {
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
-    @GetMapping("/product/{realProductId}")
+    @GetMapping("/orders/products/{realProductId}")
     public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
         return this.productService.existsProductByRealId(realProductId);
     }
