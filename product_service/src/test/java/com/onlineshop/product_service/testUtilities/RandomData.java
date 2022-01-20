@@ -75,6 +75,16 @@ public class RandomData {
         return product;
     }
 
+    public static Product RandomProductWithoutIdAndPicture() {
+        Product product = new Product();
+        product.setName(RandomString(15));
+        product.setDescription(RandomString(50));
+        product.setQuantity(RandomInt());
+        product.setPrice(RandomDouble());
+
+        return product;
+    }
+
     public static Product RandomProduct() {
         Product product = new Product();
         product.setId(RandomLong());

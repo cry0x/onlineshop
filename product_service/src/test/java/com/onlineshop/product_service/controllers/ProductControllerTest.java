@@ -27,8 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -174,6 +173,63 @@ public class ProductControllerTest {
 
         this.mockMvc.perform(get("/v1/products"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void postProductNewPictureTest() throws Exception {
+        Product actualProduct = RandomData.RandomProductWithoutIdAndPicture();
+        String actualProductJson = objectMapper.writeValueAsString(actualProduct);
+
+        ProductPicture newProductPictureWithoutId = RandomData.RandomProductPictureWithoutId();
+        ProductPicture newProductPicture = (ProductPicture) newProductPictureWithoutId.clone();
+        newProductPicture.setId(1L);
+
+        Product expectedProduct = (Product) actualProduct.clone();
+        expectedProduct.setId(1L);
+        expectedProduct.setProductPicture(newProductPicture);
+        String expectedProductJson = objectMapper.writeValueAsString(HateoasUtilities.buildProductEntity(expectedProduct));
+
+        when(this.productPictureService.createProductPicture(newProductPictureWithoutId)).thenReturn(newProductPicture);
+        when(this.productService.createProduct(actualProduct)).thenReturn(expectedProduct);
+
+        this.mockMvc.perform(post("/v1/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(actualProductJson))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(content().json(expectedProductJson));
+    }
+
+    @Test
+    void putProductNewPictureTest() throws Exception {
+        Long id = 1L;
+        Product newProductWithoutId = RandomData.RandomProductWithoutIdAndPicture();
+        String newProductJson = objectMapper.writeValueAsString(newProductWithoutId);
+
+        Product existingProduct = RandomData.RandomProduct();
+
+        when(this.productService.readProductById(id)).thenReturn(existingProduct);
+
+        ProductPicture newProductPictureWithoutId = RandomData.RandomProductPictureWithoutId();
+        ProductPicture newProductPicture = (ProductPicture)newProductPictureWithoutId.clone();
+        newProductPicture.setId(id);
+
+        when(this.productPictureService.createProductPicture(newProductPictureWithoutId)).thenReturn(newProductPicture);
+
+        Product newProduct = (Product) newProductWithoutId.clone();
+        newProduct.setId(id);
+        newProduct.setProductPicture(newProductPicture);
+
+        when(this.productService.updateProduct(id, newProductWithoutId)).thenReturn(newProduct);
+
+        String expectedHateoasProductJson = objectMapper.writeValueAsString(HateoasUtilities.buildProductEntity(newProduct));
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d", id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newProductJson))
+                .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+                .andExpect(content().json(expectedHateoasProductJson))
                 .andExpect(status().isOk());
     }
 
