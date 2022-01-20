@@ -88,7 +88,7 @@ services:
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_URI:http://eureka-service:8761/eureka}
+            eureka.client.serviceUrl.defaultZone: http://eureka-service:8761/eureka
         ports:
             - 9000:8080
         networks:
@@ -119,6 +119,36 @@ services:
             spring.datasource.driver-class-name: org.postgresql.Driver
         ports:
             - 9001:8080
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
+    order-service-db:
+        container_name: order-service-db
+        image: postgres:latest
+        restart: always
+        environment:
+            POSTGRES_DB: order_service
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
+    order-service:
+        build: order_service
+        image: onlineshop/order-service:latest
+        restart: always
+        environment:
+            spring.application.name: order-service
+            spring.datasource.url: jdbc:postgresql://order-service-db/order_service
+            spring.datasource.username: root
+            spring.datasource.password: root
+            spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+            spring.datasource.driver-class-name: org.postgresql.Driver
+            eureka.client.serviceUrl.defaultZone: http://eureka-service:8761/eureka
+        ports:
+            - 9002:8080
         networks:
             onlineshop_network:
         profiles: [ "prod", "dev" ]

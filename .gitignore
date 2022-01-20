@@ -1,1 +1,4 @@
 /.idea/
+/configs/pipeline/
+/customer_service/build/
+/customer_service/.gradle/
