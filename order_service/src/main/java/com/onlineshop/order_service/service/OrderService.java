@@ -3,12 +3,11 @@ package com.onlineshop.order_service.service;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @Service
+@Transactional
 public class OrderService {
 
     private final IOrderRepository iOrderRepository;
