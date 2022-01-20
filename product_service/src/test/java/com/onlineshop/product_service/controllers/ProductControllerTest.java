@@ -21,7 +21,11 @@ import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -159,6 +163,17 @@ public class ProductControllerTest {
         doNothing().when(this.productPictureService).deleteProductPictureById(productId);
 
         this.mockMvc.perform(delete(String.format("/v1/products/%d", productId)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getAllProducts() throws Exception {
+        List<Product> productList = RandomData.RandomProductList(15);
+
+        when(this.productService.readAllProducts()).thenReturn(productList);
+
+        this.mockMvc.perform(get("/v1/products"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
     }
 

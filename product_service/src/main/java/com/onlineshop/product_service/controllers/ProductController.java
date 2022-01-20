@@ -72,7 +72,7 @@ public class ProductController {
         return HateoasUtilities.buildProductEntity(product);
     }
 
-    @PutMapping(value = "/{productId}/productpicture")
+    @PostMapping(value = "/{productId}/productpicture")
     public EntityModel<Product> putProductPictureOfProductById(@PathVariable Long productId,
                                                                @RequestBody MultipartFile file) throws IOException {
         log.info(String.format("PUT: /v1/products/%d/productpicture has been called", productId));
