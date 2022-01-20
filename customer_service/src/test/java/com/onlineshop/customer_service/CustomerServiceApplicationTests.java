@@ -8,7 +8,11 @@ import com.onlineshop.customer_service.service.CustomerService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
+/**
+ * Tests if the vital components of the order_service are available.
+ * @author Nico Welsch
+ * @version 1.0
+ */
 // @SpringBootTest
 class CustomerServiceApplicationTests {
 

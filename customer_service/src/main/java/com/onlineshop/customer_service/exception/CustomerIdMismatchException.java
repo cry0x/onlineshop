@@ -1,5 +1,10 @@
 package com.onlineshop.customer_service.exception;
 
+/**
+ * Custom Exception Class that checks if the customerId matches.
+ * @author Nico Welsch
+ * @version 1.0
+ */
 public class CustomerIdMismatchException extends RuntimeException {
 
     public CustomerIdMismatchException() {

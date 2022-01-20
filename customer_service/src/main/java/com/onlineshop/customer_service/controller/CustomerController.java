@@ -24,18 +24,34 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
+/**
+ * Controller which enables the user to send REST Requests
+ * by specifying the method adresses and behaviour.
+ * @author Nico Welsch
+ * @version 1.0
+ */
 @RestController()
 @RequestMapping("/v1/customer")
 public class CustomerController {
 
+    // create customer service object
     private final CustomerService customerService;
+    // create logging object
     private final static Logger log = LoggerFactory.getLogger(CustomerController.class);
 
+    /**
+     * Initialize customerService object
+     * @param customerService Object of the CustomerService class.
+     */
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
+    /**
+     * Fetch all customers currently registered in the database
+     * @return  list of customers
+     */
     // Basic API Documentation for fetching all customers from the DB
     @Operation(summary = "This is to fetch all customers stored in the DB")
     @ApiResponses(value = {
@@ -46,14 +62,17 @@ public class CustomerController {
             description = "Not Available",
             content = @Content)
     })
-    // fetch all customers
     @GetMapping("customer/")
     public List<Customer> getAllCustomers() {
         log.info("FETCHING ALL CUSTOMERS...");
         return customerService.allcustomers();
     }
 
-    // fetch customer by id
+    /**
+     * Fetch a specified customer from the database
+     * @param id    customerId of the customer
+     * @return      customer
+     */
     @Operation(summary = "This is to fetch a single customer from the DB specified by it's ID")
     @GetMapping("customer/{id}")
     public Customer getCustomer(@PathVariable Long id) {
@@ -61,7 +80,11 @@ public class CustomerController {
         return customerService.find(id);
     }
 
-    // create customers
+    /**
+     * Creates a customer and posts the object to the database
+     * @param customer  customer to create
+     * @return          customer
+     */
     @Operation(summary = "This is to create a new customer and store it in the DB")
     @PostMapping("customer/")
     @ResponseStatus(HttpStatus.CREATED)
@@ -69,8 +92,11 @@ public class CustomerController {
         return customerService.create(customer);
     }
 
-    // delete customers
-    // TODO: ADD EXCEPTION IF ORDERS EXIST
+    /**
+     * Deletes a specified customer from the database
+     * If there are orders left, return an error.
+     * @param id    customer to delete
+     */
     @Operation(summary = "This is to delete a customer stored in the DB")
     @DeleteMapping("customer/{id}")
     public void deleteCustomer(@PathVariable long id) {
@@ -78,7 +104,12 @@ public class CustomerController {
         this.customerService.delete(id);
     }
 
-    // update customers
+    /**
+     * Updates a already existing customer in the database.
+     * @param customer  updated customer object
+     * @param id        customer to update
+     * @return          customer
+     */
     @Operation(summary = "This is to update a customer stored in the DB")
     @PutMapping("customer/{id}")
     public Customer putCustomer(@RequestBody Customer customer, @PathVariable Long id) {
