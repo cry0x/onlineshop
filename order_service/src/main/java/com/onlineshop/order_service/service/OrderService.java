@@ -40,16 +40,16 @@ public class OrderService {
         this.iOrderRepository.deleteById(id);
     }
 
-    public List<Product> getProductsByOrderId(Long id) throws Exception {
-        if (this.iOrderRepository.existsById(id))
-            throw new Exception(String.format("The order with Id: %d doesnt exist!", id));
-
-        return this.iOrderRepository.findOrderByOrderId(id).getProductInformation();
-    }
-
-    public List<Order> getOrdersByCustomerId(Long customerId) {
-        return this.iOrderRepository.findByCustomerId(customerId);
-    }
+//    public List<Product> getProductsByOrderId(Long id) throws Exception {
+//        if (this.iOrderRepository.existsById(id))
+//            throw new Exception(String.format("The order with Id: %d doesnt exist!", id));
+//
+//        return this.iOrderRepository.findOrderByOrderId(id).getProductInformation();
+//    }
+//
+//    public List<Order> getOrdersByCustomerId(Long customerId) {
+//        return this.iOrderRepository.findByCustomerId(customerId);
+//    }
 
 }
 
