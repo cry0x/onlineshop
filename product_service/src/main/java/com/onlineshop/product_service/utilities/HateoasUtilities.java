@@ -16,6 +16,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public final class HateoasUtilities {
 
     public static EntityModel<Product> buildProductEntity(Product product) {
+        System.out.println(product.getProductPicture().getId());
         if (product.getNewProductVersion() != null) {
             return EntityModel.of(product,
                     linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
