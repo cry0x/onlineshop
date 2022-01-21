@@ -105,17 +105,8 @@ public class ProductController {
                                                                @RequestBody MultipartFile file) throws IOException {
         log.info(String.format("PUT: /v1/products/hateoas/%d/productpicture has been called", productId));
 
-        Product product = this.productService.readProductById(productId);
-
-        ProductPicture productPicture = new ProductPicture();
-        productPicture.setName(file.getOriginalFilename());
-        productPicture.setData(file.getInputStream().readAllBytes());
-
-        productPicture = this.productPictureService.updateProductPicture(product.getProductPicture().getId(), productPicture);
-
-        product.setProductPicture(productPicture);
-
-        return HateoasUtilities.buildProductEntity(this.productService.updateProduct(product.getId(), product));
+        return HateoasUtilities.buildProductEntity(this.productService.updateProduct(productId,
+                putProductPictureOfProductByIdHelper(productId, file)));
     }
 
     @PutMapping(value = "/{productId}/productpicture", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -123,6 +114,11 @@ public class ProductController {
                                                                @RequestBody MultipartFile file) throws IOException {
         log.info(String.format("PUT: /v1/products/%d/productpicture has been called", productId));
 
+        return this.productService.updateProduct(productId, putProductPictureOfProductByIdHelper(productId, file));
+    }
+
+    private Product putProductPictureOfProductByIdHelper(Long productId,
+                                                         MultipartFile file) throws IOException {
         Product product = this.productService.readProductById(productId);
 
         ProductPicture productPicture = new ProductPicture();
@@ -133,7 +129,7 @@ public class ProductController {
 
         product.setProductPicture(productPicture);
 
-        return this.productService.updateProduct(product.getId(), product);
+        return product;
     }
 
     @DeleteMapping(path = "/{productId}")
