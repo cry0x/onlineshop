@@ -62,18 +62,7 @@ public class ProductController {
                                            @RequestBody Product product) {
         log.info(String.format("PUT: /v1/products/%d has been called", productId));
 
-        validateProduct(product);
-
-        Product existingProduct = this.productService.readProductById(productId);
-
-        if (product.getProductPicture() == null)
-            product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
-        else
-            product.setProductPicture(existingProduct.getProductPicture());
-
-        product = this.productService.updateProduct(productId, product);
-
-        return HateoasUtilities.buildProductEntity(product);
+        return HateoasUtilities.buildProductEntity(this.productService.updateProduct(productId, product));
     }
 
     @PutMapping(value = "/{productId}/productpicture")

@@ -47,20 +47,31 @@ public class ProductService {
 
         Product unchangedProduct = readProductById(productId);
 
-        if (checkProductExistsInOrder(productId)) {
-            updatedProduct = this.iProductRepository.save(updatedProduct);
-            unchangedProduct.setNewProductVersion(updatedProduct);
-            this.iProductRepository.save(unchangedProduct);
-        } else {
+        if (!checkProductExistsInOrder(productId)) {
             updatedProduct.setId(productId);
             updatedProduct.setName(unchangedProduct.getName());
 
             if (updatedProduct.getProductPicture() != null) {
                 ProductPicture updatedProductPicture = this.productPictureService.updateProductPicture(unchangedProduct.getProductPicture().getId(),
-                        updatedProduct.getProductPicture());
+                    updatedProduct.getProductPicture());
                 updatedProduct.setProductPicture(updatedProductPicture);
+            } else {
+                updatedProduct.setProductPicture(unchangedProduct.getProductPicture());
             }
             updatedProduct = this.iProductRepository.save(updatedProduct);
+        } else {
+            ProductPicture updatedProductPicture = new ProductPicture();
+
+            if (updatedProduct.getProductPicture() != null) {
+                updatedProductPicture = updatedProduct.getProductPicture();
+            }
+
+            updatedProductPicture = this.productPictureService.createProductPicture(updatedProductPicture);
+            updatedProduct.setProductPicture(updatedProductPicture);
+            updatedProduct = this.iProductRepository.save(updatedProduct);
+            unchangedProduct.setNewProductVersion(updatedProduct);
+
+            this.iProductRepository.save(unchangedProduct);
         }
 
         return updatedProduct;

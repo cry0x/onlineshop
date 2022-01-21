@@ -57,62 +57,6 @@ class ProductServiceTest {
     }
 
     @Test
-    void updateProduct() {
-        Long productId = 1L;
-
-        when(this.iProductRepository.existsById(productId)).thenReturn(true);
-
-        ProductPicture oldProductPicture = new ProductPicture();
-        oldProductPicture.setId(1L);
-        oldProductPicture.setName("ProductPicture");
-        oldProductPicture.setData(RandomData.RandomByteArray(20));
-
-        Product oldProduct = new Product();
-        oldProduct.setId(productId);
-        oldProduct.setName("Product");
-        oldProduct.setDescription("This is a Product");
-        oldProduct.setPrice(99.99);
-        oldProduct.setQuantity(100);
-        oldProduct.setProductPicture(oldProductPicture);
-
-        when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(oldProduct));
-        when(this.iOrderServiceClient.getIsProductInOrders(oldProduct.getId())).thenReturn(false);
-
-        byte[] newProductPictureData = RandomData.RandomByteArray(20);
-
-        ProductPicture newProductPicture = new ProductPicture();
-        newProductPicture.setName("Updated ProductPicture");
-        newProductPicture.setData(newProductPictureData);
-
-        Product newProduct = new Product();
-        newProduct.setName("Updated Product");
-        newProduct.setDescription("This is a updated Product");
-        newProduct.setPrice(9.99);
-        newProduct.setQuantity(10);
-        newProduct.setProductPicture(newProductPicture);
-
-        ProductPicture expectedProductPicture = new ProductPicture();
-        expectedProductPicture.setId(1L);
-        expectedProductPicture.setName("Updated ProductPicture");
-        expectedProductPicture.setData(newProductPictureData);
-
-        when(this.productPictureService.updateProductPicture(oldProduct.getProductPicture().getId(), newProductPicture)).thenReturn(expectedProductPicture);
-
-
-        Product expectedProduct = new Product();
-        expectedProduct.setId(1L);
-        expectedProduct.setName("Product");
-        expectedProduct.setDescription("This is a updated Product");
-        expectedProduct.setPrice(9.99);
-        expectedProduct.setQuantity(10);
-        expectedProduct.setProductPicture(expectedProductPicture);
-
-        when(this.iProductRepository.save(expectedProduct)).thenReturn(expectedProduct);
-
-        assertEquals(expectedProduct, this.productService.updateProduct(productId, newProduct));
-    }
-
-    @Test
     void updateProductThrowsProductDoesntExistsException() {
         Long productId = 1L;
 
@@ -143,24 +87,6 @@ class ProductServiceTest {
         when(this.iProductRepository.findAll()).thenReturn(expectedProductList);
 
         assertEquals(expectedProductList, this.productService.readAllProducts());
-    }
-
-    @Test
-    void updateProductInOrder() throws CloneNotSupportedException {
-        Product updatedProduct = RandomData.RandomProductWithoutId();
-        Product unchangedProduct = RandomData.RandomProduct();
-        Long productId = unchangedProduct.getId();
-
-        when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(unchangedProduct));
-        when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
-        Product updatedProductWithId = (Product) updatedProduct.clone();
-        updatedProductWithId.setId(RandomData.RandomLong());
-        when(this.iProductRepository.save(updatedProduct)).thenReturn(updatedProductWithId);
-        Product unchangedProductWithNewVersion = (Product) unchangedProduct.clone();
-        unchangedProductWithNewVersion.setNewProductVersion(updatedProductWithId);
-
-        assertEquals(updatedProductWithId, this.productService.updateProduct(productId, updatedProduct));
-        verify(this.iProductRepository, times(1)).save(unchangedProductWithNewVersion);
     }
 
     @Test
@@ -207,6 +133,63 @@ class ProductServiceTest {
         this.productService.deleteProductById(productId);
 
         verify(this.iProductRepository, times(1)).deleteById(productId);
+    }
+
+    @Test
+    void updateProductTest() throws CloneNotSupportedException {
+        Product existingProduct = RandomData.RandomProduct();
+
+        Product newProduct = RandomData.RandomProductWithoutId();
+
+        Product expectedProduct = (Product) newProduct.clone();
+        expectedProduct.setId(existingProduct.getId());
+        expectedProduct.setName(existingProduct.getName());
+        expectedProduct.getProductPicture().setId(RandomData.RandomLong());
+
+        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
+        when(this.orderService.existsProductInOrder(existingProduct.getId())).thenReturn(false);
+        when(this.productPictureService.updateProductPicture(existingProduct.getProductPicture().getId(), newProduct.getProductPicture())).thenReturn(expectedProduct.getProductPicture());
+        when(this.iProductRepository.save(newProduct)).thenReturn(expectedProduct);
+
+        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), newProduct));
+    }
+
+    @Test
+    void updateProductNewPictureTest() throws CloneNotSupportedException {
+        Product existingProduct = RandomData.RandomProduct();
+
+        Product newProduct = RandomData.RandomProductWithoutId();
+
+        Product expectedProduct = (Product) newProduct.clone();
+        expectedProduct.setId(existingProduct.getId());
+        expectedProduct.setName(existingProduct.getName());
+        expectedProduct.setProductPicture(newProduct.getProductPicture());
+        expectedProduct.getProductPicture().setId(existingProduct.getProductPicture().getId());
+
+        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
+        when(this.orderService.existsProductInOrder(existingProduct.getId())).thenReturn(false);
+        when(this.productPictureService.updateProductPicture(existingProduct.getProductPicture().getId(), newProduct.getProductPicture())).thenReturn(newProduct.getProductPicture());
+        when(this.iProductRepository.save(newProduct)).thenReturn(expectedProduct);
+
+        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), newProduct));
+    }
+
+    @Test
+    void updateProductInOrderTest() throws CloneNotSupportedException {
+        Product existingProduct = RandomData.RandomProduct();
+
+        Product newProduct = RandomData.RandomProductWithoutId();
+        Product expectedProduct = (Product) newProduct.clone();
+
+        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
+        when(this.orderService.existsProductInOrder(existingProduct.getId())).thenReturn(true);
+        when(this.iProductRepository.save(newProduct)).thenReturn(expectedProduct);
+
+        existingProduct.setNewProductVersion(expectedProduct);
+
+        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), newProduct));
+
+        verify(this.iProductRepository, times(1)).save(existingProduct);
     }
 
 }
