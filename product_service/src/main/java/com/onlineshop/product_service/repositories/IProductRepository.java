@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Product p WHERE p.productPicture = :productPictureId")
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Product p WHERE p.productPicture.id = :productPictureId")
     boolean existsProductPictureInProduct(@Param("productPictureId") Long productPictureId);
 
 }

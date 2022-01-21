@@ -30,6 +30,8 @@ class ProductServiceApplicationTests {
     private ProductPictureController productPictureController;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProductServiceApplication productServiceApplication;
 
     @Test
     void contextLoads() {
@@ -40,5 +42,6 @@ class ProductServiceApplicationTests {
         assertNotNull(productPictureService);
         assertNotNull(productPictureController);
         assertNotNull(orderService);
+        assertNotNull(productServiceApplication);
     }
 }
