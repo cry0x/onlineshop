@@ -3,6 +3,7 @@ package com.onlineshop.product_service.services;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductPictureDoesntExistException;
 import com.onlineshop.product_service.exceptions.ProductPictureExistsInProduct;
+import com.onlineshop.product_service.repositories.IProductRepository;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +28,7 @@ public class ProductPictureServiceTest {
     @MockBean
     private IProductPictureRepository iProductPictureRepository;
     @MockBean
-    private ProductService productService;
+    private IProductRepository iProductRepository;
 
     @Test
     void readProductPictureByIdTest() {
@@ -99,7 +100,7 @@ public class ProductPictureServiceTest {
     void deleteProductPictureByIdTest() {
         Long productPictureId = RandomData.RandomLong();
 
-        when(this.productService.existsProductPictureInProduct(productPictureId)).thenReturn(false);
+        when(this.iProductRepository.existsProductPictureInProduct(productPictureId)).thenReturn(false);
 
         this.productPictureService.deleteProductPictureById(productPictureId);
 
@@ -110,7 +111,7 @@ public class ProductPictureServiceTest {
     void deleteProductPictureByIdThrowsProductPictureExistsInProductTest() {
         Long productPictureId = RandomData.RandomLong();
 
-        when(this.productService.existsProductPictureInProduct(productPictureId)).thenReturn(true);
+        when(this.iProductRepository.existsProductPictureInProduct(productPictureId)).thenReturn(true);
 
         assertThrows(ProductPictureExistsInProduct.class, () -> this.productPictureService.deleteProductPictureById(productPictureId));
     }

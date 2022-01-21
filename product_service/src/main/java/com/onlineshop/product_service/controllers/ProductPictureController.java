@@ -39,4 +39,10 @@ public class ProductPictureController {
         return HateoasUtilities.buildProductPictureCollection(this.productPictureService.readAllProductPictures());
     }
 
+    @DeleteMapping(value = "/{productPictureId}")
+    public void deleteProductPictureById(@PathVariable Long productPictureId) {
+        log.info(String.format("DELETE: /v1/productpictures/%d has been called", productPictureId));
+
+        this.productPictureService.deleteProductPictureById(productPictureId);
+    }
 }

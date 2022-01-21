@@ -92,8 +92,4 @@ public class ProductService {
             throw new ProductPriceNegativeException(product);
     }
 
-    public boolean existsProductPictureInProduct(Long productPictureId) {
-        return this.iProductRepository.existsProductPictureInProduct(productPictureId);
-    }
-
 }
