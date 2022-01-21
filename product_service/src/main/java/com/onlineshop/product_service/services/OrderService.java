@@ -1,6 +1,8 @@
 package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.clients.IOrderServiceClient;
+import com.onlineshop.product_service.controllers.ProductController;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final IOrderServiceClient iOrderServiceClient;
+    private final static Logger log = Logger.getLogger(OrderService.class.getName());
 
     @Autowired
     public OrderService(IOrderServiceClient iOrderServiceClient) {
@@ -17,6 +20,12 @@ public class OrderService {
     }
 
     public boolean existsProductInOrder(Long productId) {
-        return this.iOrderServiceClient.getIsProductInOrders(productId);
+        boolean retValue = false;
+        try {
+            retValue = this.iOrderServiceClient.getIsProductInOrders(productId);
+        } catch (Exception e) {
+            log.error("Order-Service is not available!\n" + e.getLocalizedMessage());
+        }
+        return retValue;
     }
 }
