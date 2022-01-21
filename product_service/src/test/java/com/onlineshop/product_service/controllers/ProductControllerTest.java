@@ -60,7 +60,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void getProductTest() throws Exception {
+    void getProductHateoasTest() throws Exception {
         Long requestProductId = 1L;
 
         Product expectedProduct = new Product();
@@ -88,7 +88,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void postProduct() throws Exception {
+    void postProductHateoasTest() throws Exception {
         Product actualProduct = RandomData.RandomProductWithoutId();
         String actualProductJson = objectMapper.writeValueAsString(actualProduct);
 
@@ -123,7 +123,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void getAllProducts() throws Exception {
+    void getAllProductsHateoasTest() throws Exception {
         List<Product> productList = RandomData.RandomProductList(15);
 
         when(this.productService.readAllProducts()).thenReturn(productList);
@@ -134,7 +134,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void postProductNewPictureTest() throws Exception {
+    void postProductNewPictureHateoasTest() throws Exception {
         Product actualProduct = RandomData.RandomProductWithoutIdAndPicture();
         String actualProductJson = objectMapper.writeValueAsString(actualProduct);
 
@@ -159,7 +159,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void putProductNewPictureTest() throws Exception {
+    void putProductNewPictureHateoasTest() throws Exception {
         Long id = 1L;
         Product newProductWithoutId = RandomData.RandomProductWithoutIdAndPicture();
         String newProductJson = objectMapper.writeValueAsString(newProductWithoutId);
@@ -191,7 +191,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    void putProductTest() throws Exception {
+    void putProductHateoasTest() throws Exception {
         Product existingProduct = RandomData.RandomProduct();
 
         Product newProduct = RandomData.RandomProductWithoutId();
