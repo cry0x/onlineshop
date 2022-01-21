@@ -121,11 +121,17 @@
     <profiles>
         <profile>
             <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev-jens</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <spring.profiles.active>dev</spring.profiles.active>
+                <spring.profiles.active>dev-jens</spring.profiles.active>
             </properties>
         </profile>
         <profile>
