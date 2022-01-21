@@ -35,6 +35,8 @@ public class ProductController {
     public EntityModel<Product> postProduct(@RequestBody Product product) {
         log.info("POST: /v1/products has been called");
 
+        validateProduct(product);
+
         if (product.getProductPicture() == null)
             product.setProductPicture(this.productPictureService.createProductPicture(new ProductPicture()));
 
@@ -59,6 +61,8 @@ public class ProductController {
     public EntityModel<Product> putProduct(@PathVariable Long productId,
                                            @RequestBody Product product) {
         log.info(String.format("PUT: /v1/products/%d has been called", productId));
+
+        validateProduct(product);
 
         Product existingProduct = this.productService.readProductById(productId);
 
@@ -98,6 +102,10 @@ public class ProductController {
 
         this.productService.deleteProductById(productId);
         this.productPictureService.deleteProductPictureById(productPictureId);
+    }
+
+    private void validateProduct(Product product) {
+        this.productService.validateProduct(product);
     }
 
 }

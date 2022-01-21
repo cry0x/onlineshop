@@ -3,10 +3,10 @@ package com.onlineshop.product_service.services;
 import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
+import com.onlineshop.product_service.exceptions.*;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +31,8 @@ class ProductServiceTest {
     private ProductPictureService productPictureService;
     @MockBean
     private IOrderServiceClient iOrderServiceClient;
+    @MockBean
+    private OrderService orderService;
 
     @Test
     void createProduct() {
@@ -162,6 +164,40 @@ class ProductServiceTest {
         when(this.iProductRepository.save(existingProductWithNewVersion)).thenReturn(existingProductWithNewVersion);
 
         assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), updatedProduct));
+    }
+
+    @Test
+    void validateProductPriceNegativeTest() {
+        Product product = RandomData.RandomProduct();
+        product.setPrice(-1);
+
+        assertThrows(ProductPriceNegativeException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void validateProductQuantityNegativeTest() {
+        Product product = RandomData.RandomProduct();
+        product.setQuantity(-1);
+
+        assertThrows(ProductQuantityNegativeException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void validateProductNameEmptyTest() {
+        Product product = RandomData.RandomProduct();
+        product.setName("");
+
+        assertThrows(ProductNameEmptyException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void deleteProductThrowsProductExistsInOrderException() {
+        Long productId = 1L;
+
+        when(this.iProductRepository.existsById(productId)).thenReturn(true);
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
+
+        assertThrows(ProductExistsInOrderException.class, () -> this.productService.deleteProductById(productId));
     }
 
 }

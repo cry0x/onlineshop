@@ -1,9 +1,16 @@
 package com.onlineshop.product_service.exceptions;
 
-public class ProductPictureDoesntExistException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-    public ProductPictureDoesntExistException(Long id) {
-        super(String.format("The productpicture with the ID: %d doesnt exist!", id));
+public class ProductPictureDoesntExistException extends ResponseStatusException {
+
+    public ProductPictureDoesntExistException(Long productId) {
+        super(HttpStatus.NOT_FOUND, getExceptionMessage(productId));
+    }
+
+    private static String getExceptionMessage(Long productId) {
+        return String.format("The productpicture with the ID: %d doesnt exist!", productId);
     }
 
 }

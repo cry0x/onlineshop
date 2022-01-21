@@ -3,37 +3,28 @@ package com.onlineshop.product_service.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "products")
-@EqualsAndHashCode
-@ToString
+@Data
 @NoArgsConstructor
 public class Product implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private Long id;
-    @Getter
-    @Setter
+    @Column(nullable = false)
     private String name;
-    @Getter
-    @Setter
+    @Column(nullable = false)
     private String description;
-    @Getter
-    @Setter
+    @Column(nullable = false)
     private double price;
-    @Getter
-    @Setter
+    @Column(nullable = false)
     private int quantity;
-    @Getter
-    @Setter
     @OneToOne
     private ProductPicture productPicture;
-    @Getter
-    @Setter
     @OneToOne
     private Product newProductVersion;
 

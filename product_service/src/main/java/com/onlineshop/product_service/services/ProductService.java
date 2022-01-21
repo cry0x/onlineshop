@@ -1,9 +1,8 @@
 package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.entities.ProductPicture;
-import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
+import com.onlineshop.product_service.exceptions.*;
 import com.onlineshop.product_service.entities.Product;
-import com.onlineshop.product_service.exceptions.ProductExistsInOrderException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,8 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+        validateProduct(product);
+
         return this.iProductRepository.save(product);
     }
 
@@ -42,6 +43,8 @@ public class ProductService {
 
     public Product updateProduct(Long productId,
                                  Product updatedProduct) {
+        validateProduct(updatedProduct);
+
         Product unchangedProduct = readProductById(productId);
 
         if (checkProductExistsInOrder(productId)) {
@@ -79,6 +82,15 @@ public class ProductService {
 
     private boolean checkProductExistsInOrder(Long productId) {
         return this.orderService.existsProductInOrder(productId);
+    }
+
+    public void validateProduct(Product product) {
+        if (product.getName().isEmpty())
+            throw new ProductNameEmptyException(product);
+        if (product.getQuantity() < 0)
+            throw new ProductQuantityNegativeException(product);
+        if (product.getPrice() < 0)
+            throw new ProductPriceNegativeException(product);
     }
 
 }
