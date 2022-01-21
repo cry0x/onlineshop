@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest({"eureka.client.enabled:false"})
 class ProductServiceTest {
@@ -147,23 +147,20 @@ class ProductServiceTest {
 
     @Test
     void updateProductInOrder() throws CloneNotSupportedException {
-        Product existingProduct = RandomData.RandomProduct();
         Product updatedProduct = RandomData.RandomProductWithoutId();
+        Product unchangedProduct = RandomData.RandomProduct();
+        Long productId = unchangedProduct.getId();
 
-        Product expectedProduct = (Product) updatedProduct.clone();
-        expectedProduct.setId(RandomData.RandomLong());
-        expectedProduct.setName(existingProduct.getName());
+        when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(unchangedProduct));
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
+        Product updatedProductWithId = (Product) updatedProduct.clone();
+        updatedProductWithId.setId(RandomData.RandomLong());
+        when(this.iProductRepository.save(updatedProduct)).thenReturn(updatedProductWithId);
+        Product unchangedProductWithNewVersion = (Product) unchangedProduct.clone();
+        unchangedProductWithNewVersion.setNewProductVersion(updatedProductWithId);
 
-        when(this.iProductRepository.existsById(existingProduct.getId())).thenReturn(true);
-        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
-        when(this.iOrderServiceClient.getIsProductInOrders(existingProduct.getId())).thenReturn(true);
-        when(this.iProductRepository.save(updatedProduct)).thenReturn(expectedProduct);
-
-        Product existingProductWithNewVersion = (Product) existingProduct.clone();
-        existingProductWithNewVersion.setNewProductVersion(expectedProduct);
-        when(this.iProductRepository.save(existingProductWithNewVersion)).thenReturn(existingProductWithNewVersion);
-
-        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), updatedProduct));
+        assertEquals(updatedProductWithId, this.productService.updateProduct(productId, updatedProduct));
+        verify(this.iProductRepository, times(1)).save(unchangedProductWithNewVersion);
     }
 
     @Test
@@ -198,6 +195,18 @@ class ProductServiceTest {
         when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
 
         assertThrows(ProductExistsInOrderException.class, () -> this.productService.deleteProductById(productId));
+    }
+
+    @Test
+    void deleteProductByIdTest() {
+        Long productId = RandomData.RandomLong();
+
+        when(this.iProductRepository.existsById(productId)).thenReturn(true);
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(false);
+
+        this.productService.deleteProductById(productId);
+
+        verify(this.iProductRepository, times(1)).deleteById(productId);
     }
 
 }

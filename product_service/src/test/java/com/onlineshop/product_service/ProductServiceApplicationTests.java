@@ -4,6 +4,7 @@ import com.onlineshop.product_service.controllers.ProductPictureController;
 import com.onlineshop.product_service.services.OrderService;
 import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.services.ProductService;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import com.onlineshop.product_service.controllers.ProductController;
 import com.onlineshop.product_service.repositories.IProductPictureRepository;
@@ -30,16 +31,19 @@ class ProductServiceApplicationTests {
     private ProductPictureController productPictureController;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProductServiceApplication productServiceApplication;
 
     @Test
     void contextLoads() {
         assertNotNull(iProductRepository);
-        assertNotNull(productService);
+        assertNotNull(productPictureService);
+        assertNotNull(orderService);
+//        assertNotNull(productService);
         assertNotNull(productController);
         assertNotNull(iProductPictureRepository);
-        assertNotNull(productPictureService);
         assertNotNull(productPictureController);
-        assertNotNull(orderService);
+        assertNotNull(productServiceApplication);
     }
 
 }

@@ -48,7 +48,6 @@ public class ProductService {
         Product unchangedProduct = readProductById(productId);
 
         if (checkProductExistsInOrder(productId)) {
-            updatedProduct.setName(unchangedProduct.getName());
             updatedProduct = this.iProductRepository.save(updatedProduct);
             unchangedProduct.setNewProductVersion(updatedProduct);
             this.iProductRepository.save(unchangedProduct);
@@ -91,6 +90,10 @@ public class ProductService {
             throw new ProductQuantityNegativeException(product);
         if (product.getPrice() < 0)
             throw new ProductPriceNegativeException(product);
+    }
+
+    public boolean existsProductPictureInProduct(Long productPictureId) {
+        return this.iProductRepository.existsProductPictureInProduct(productPictureId);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.onlineshop.product_service.services;
 
+import com.onlineshop.product_service.exceptions.ProductPictureExistsInProduct;
 import com.onlineshop.product_service.repositories.IProductPictureRepository;
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductPictureDoesntExistException;
@@ -14,10 +15,13 @@ import java.util.List;
 public class ProductPictureService {
 
     private final IProductPictureRepository iProductPictureRepository;
+    private final ProductService productService;
 
     @Autowired
-    public ProductPictureService(IProductPictureRepository iProductPictureRepository) {
+    public ProductPictureService(IProductPictureRepository iProductPictureRepository,
+                                 ProductService productService) {
         this.iProductPictureRepository = iProductPictureRepository;
+        this.productService = productService;
     }
 
     public ProductPicture createProductPicture(ProductPicture productPicture) {
@@ -33,6 +37,9 @@ public class ProductPictureService {
     }
 
     public void deleteProductPictureById(Long id) {
+        if (this.productService.existsProductPictureInProduct(id))
+            throw new ProductPictureExistsInProduct();
+
         this.iProductPictureRepository.deleteById(id);
     }
 
