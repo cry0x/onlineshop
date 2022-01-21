@@ -41,7 +41,7 @@ public class CustomerService {
      * Fetch all customers currently registered in the database
      * @return  list of customers
      */
-    public List<Customer> allcustomers() {
+    public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
     }
 
@@ -87,7 +87,7 @@ public class CustomerService {
      * @param id        customer to update
      * @return          customer
      */
-    public Customer updatecustomer(Customer customer, Long id) {
+    public Customer update(Customer customer, Long id) {
         if (customer.getId() != id) {
             throw new CustomerIdMismatchException();
         }

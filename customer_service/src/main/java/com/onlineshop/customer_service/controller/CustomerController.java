@@ -65,7 +65,7 @@ public class CustomerController {
     @GetMapping("customer/")
     public List<Customer> getAllCustomers() {
         log.info("FETCHING ALL CUSTOMERS...");
-        return customerService.allcustomers();
+        return customerService.getAllCustomers();
     }
 
     /**
@@ -114,7 +114,7 @@ public class CustomerController {
     @PutMapping("customer/{id}")
     public Customer putCustomer(@RequestBody Customer customer, @PathVariable Long id) {
         log.info("UPDATING CUSTOMER WITH ID '{}'...", id);
-        return customerService.updatecustomer(customer, id);
+        return customerService.update(customer, id);
     }
 
 }

@@ -1,21 +1,30 @@
+///////////////////////////////////////////////
+// PROJECT CONFIGURATION OF THE MICROSERVICE //
+///////////////////////////////////////////////
+
+// ADD ADDITIONAL PLUGINS HERE
 plugins {
 	id 'org.springframework.boot' version '2.6.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
 
+// BASE PROJECT CONFIGURATION PARAMETERS
 group = 'com.customer_service'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
+// SET THE REPOSITORY TO DOWNLOAD THE PLUGINS & DEPENDENCIES FROM
 repositories {
 	mavenCentral()
 }
 
+// SPECIFY VERSION
 ext {
     set('springCloudVersion', "2021.0.0")
 }
 
+// PUT ALL NECESSARY DEPENDENCIES HERE
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -29,12 +38,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'  
 }
 
+// MANAGE DEPENCIES EXPLICITLY
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
+// SET TESTING FRAMEWORK
 test {
 	useJUnitPlatform()
 }

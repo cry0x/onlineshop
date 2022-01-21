@@ -32,4 +32,8 @@ public class Customer {
     private int postalCode;
     private int streetNr;
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
