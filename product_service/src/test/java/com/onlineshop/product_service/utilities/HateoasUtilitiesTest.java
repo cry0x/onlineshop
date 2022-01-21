@@ -70,4 +70,17 @@ public class HateoasUtilitiesTest {
         assertEquals(expectedProductPictureCollection, HateoasUtilities.buildProductPictureCollection(productPictureList));
     }
 
+    @Test
+    void buildProductEntityWithNewProductVersion() {
+        Product product = RandomData.RandomProduct();
+        product.setNewProductVersion(RandomData.RandomProduct());
+        EntityModel<Product> expectedProductEntityModel = EntityModel.of(product,
+                linkTo(methodOn(ProductController.class).getProduct(product.getId())).withSelfRel(),
+                linkTo(methodOn(ProductPictureController.class).getProductPicture(product.getProductPicture().getId())).withRel("ProductPicture"),
+                linkTo(methodOn(ProductController.class).getProduct(product.getNewProductVersion().getId())).withRel("NewProductVersion"));
+
+        assertEquals(expectedProductEntityModel, HateoasUtilities.buildProductEntity(product));
+    }
+
+
 }

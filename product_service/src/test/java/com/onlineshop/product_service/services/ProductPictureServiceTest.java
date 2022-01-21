@@ -2,6 +2,8 @@ package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.ProductPictureDoesntExistException;
+import com.onlineshop.product_service.exceptions.ProductPictureExistsInProduct;
+import com.onlineshop.product_service.repositories.IProductRepository;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,7 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest({"eureka.client.enabled:false"})
 public class ProductPictureServiceTest {
@@ -25,6 +27,8 @@ public class ProductPictureServiceTest {
     private ProductPictureService productPictureService;
     @MockBean
     private IProductPictureRepository iProductPictureRepository;
+    @MockBean
+    private IProductRepository iProductRepository;
 
     @Test
     void readProductPictureByIdTest() {
@@ -90,6 +94,26 @@ public class ProductPictureServiceTest {
         when(this.iProductPictureRepository.existsById(productId)).thenReturn(false);
 
         assertThrows(ProductPictureDoesntExistException.class, () -> this.productPictureService.updateProductPicture(productId, product));
+    }
+
+    @Test
+    void deleteProductPictureByIdTest() {
+        Long productPictureId = RandomData.RandomLong();
+
+        when(this.iProductRepository.existsProductPictureInProduct(productPictureId)).thenReturn(false);
+
+        this.productPictureService.deleteProductPictureById(productPictureId);
+
+        verify(this.iProductPictureRepository, times(1)).deleteById(productPictureId);
+    }
+
+    @Test
+    void deleteProductPictureByIdThrowsProductPictureExistsInProductTest() {
+        Long productPictureId = RandomData.RandomLong();
+
+        when(this.iProductRepository.existsProductPictureInProduct(productPictureId)).thenReturn(true);
+
+        assertThrows(ProductPictureExistsInProduct.class, () -> this.productPictureService.deleteProductPictureById(productPictureId));
     }
 
 }

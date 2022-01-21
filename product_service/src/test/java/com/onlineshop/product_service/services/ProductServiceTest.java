@@ -3,10 +3,10 @@ package com.onlineshop.product_service.services;
 import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
 import com.onlineshop.product_service.entities.ProductPicture;
+import com.onlineshop.product_service.exceptions.*;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import com.onlineshop.product_service.exceptions.ProductDoesntExistsException;
 import com.onlineshop.product_service.repositories.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest({"eureka.client.enabled:false"})
 class ProductServiceTest {
@@ -31,6 +31,8 @@ class ProductServiceTest {
     private ProductPictureService productPictureService;
     @MockBean
     private IOrderServiceClient iOrderServiceClient;
+    @MockBean
+    private OrderService orderService;
 
     @Test
     void createProduct() {
@@ -145,23 +147,66 @@ class ProductServiceTest {
 
     @Test
     void updateProductInOrder() throws CloneNotSupportedException {
-        Product existingProduct = RandomData.RandomProduct();
         Product updatedProduct = RandomData.RandomProductWithoutId();
+        Product unchangedProduct = RandomData.RandomProduct();
+        Long productId = unchangedProduct.getId();
 
-        Product expectedProduct = (Product) updatedProduct.clone();
-        expectedProduct.setId(RandomData.RandomLong());
-        expectedProduct.setName(existingProduct.getName());
+        when(this.iProductRepository.findById(productId)).thenReturn(Optional.of(unchangedProduct));
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
+        Product updatedProductWithId = (Product) updatedProduct.clone();
+        updatedProductWithId.setId(RandomData.RandomLong());
+        when(this.iProductRepository.save(updatedProduct)).thenReturn(updatedProductWithId);
+        Product unchangedProductWithNewVersion = (Product) unchangedProduct.clone();
+        unchangedProductWithNewVersion.setNewProductVersion(updatedProductWithId);
 
-        when(this.iProductRepository.existsById(existingProduct.getId())).thenReturn(true);
-        when(this.iProductRepository.findById(existingProduct.getId())).thenReturn(Optional.of(existingProduct));
-        when(this.iOrderServiceClient.getIsProductInOrders(existingProduct.getId())).thenReturn(true);
-        when(this.iProductRepository.save(updatedProduct)).thenReturn(expectedProduct);
+        assertEquals(updatedProductWithId, this.productService.updateProduct(productId, updatedProduct));
+        verify(this.iProductRepository, times(1)).save(unchangedProductWithNewVersion);
+    }
 
-        Product existingProductWithNewVersion = (Product) existingProduct.clone();
-        existingProductWithNewVersion.setNewProductVersion(expectedProduct);
-        when(this.iProductRepository.save(existingProductWithNewVersion)).thenReturn(existingProductWithNewVersion);
+    @Test
+    void validateProductPriceNegativeTest() {
+        Product product = RandomData.RandomProduct();
+        product.setPrice(-1);
 
-        assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), updatedProduct));
+        assertThrows(ProductPriceNegativeException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void validateProductQuantityNegativeTest() {
+        Product product = RandomData.RandomProduct();
+        product.setQuantity(-1);
+
+        assertThrows(ProductQuantityNegativeException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void validateProductNameEmptyTest() {
+        Product product = RandomData.RandomProduct();
+        product.setName("");
+
+        assertThrows(ProductNameEmptyException.class, () -> this.productService.validateProduct(product));
+    }
+
+    @Test
+    void deleteProductThrowsProductExistsInOrderException() {
+        Long productId = 1L;
+
+        when(this.iProductRepository.existsById(productId)).thenReturn(true);
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(true);
+
+        assertThrows(ProductExistsInOrderException.class, () -> this.productService.deleteProductById(productId));
+    }
+
+    @Test
+    void deleteProductByIdTest() {
+        Long productId = RandomData.RandomLong();
+
+        when(this.iProductRepository.existsById(productId)).thenReturn(true);
+        when(this.orderService.existsProductInOrder(productId)).thenReturn(false);
+
+        this.productService.deleteProductById(productId);
+
+        verify(this.iProductRepository, times(1)).deleteById(productId);
     }
 
 }

@@ -1,9 +1,16 @@
 package com.onlineshop.product_service.exceptions;
 
-public class ProductDoesntExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class ProductDoesntExistsException extends ResponseStatusException {
 
     public ProductDoesntExistsException(Long productId) {
-        super(String.format("The product with the ID: %d doesnt exist!", productId));
+        super(HttpStatus.NOT_FOUND, getExceptionMessage(productId));
+    }
+
+    private static String getExceptionMessage(Long productId) {
+        return String.format("The product with the ID: %d doesnt exist!", productId);
     }
 
 }
