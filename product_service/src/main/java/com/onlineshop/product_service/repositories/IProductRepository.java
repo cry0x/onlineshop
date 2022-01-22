@@ -14,8 +14,8 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     /**
      * This method represents a custom query which is used to get to know if a ProductPicture is still referenced inside
      * a product.
-     * @param productPictureId
-     * @return
+     * @param productPictureId Id of the ProductPicture the check
+     * @return true if the ProductPicture is referenced in a Product else false
      */
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Product p WHERE p.productPicture.id = :productPictureId")
     boolean existsProductPictureInProduct(@Param("productPictureId") Long productPictureId);
