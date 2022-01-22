@@ -1,7 +1,6 @@
 package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.clients.IOrderServiceClient;
-import com.onlineshop.product_service.controllers.ProductController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
