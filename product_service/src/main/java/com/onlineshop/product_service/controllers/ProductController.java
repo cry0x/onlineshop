@@ -5,6 +5,10 @@ import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.services.ProductPictureService;
 import com.onlineshop.product_service.services.ProductService;
 import com.onlineshop.product_service.utilities.HateoasUtilities;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -32,6 +36,12 @@ public class ProductController {
         this.productPictureService = productPictureService;
     }
 
+    @Operation(summary = "Creates a new product in the database and returns the new products as HATEOAS-Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Created a new product",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @PostMapping(value = "/hateoas", produces = { MediaTypes.HAL_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public EntityModel<Product> postProductHateoas(@RequestBody Product product) {
         log.info("POST: /v1/products/hateoas has been called");
@@ -44,6 +54,12 @@ public class ProductController {
         return HateoasUtilities.buildProductEntity(this.productService.createProduct(product));
     }
 
+    @Operation(summary = "Creates a new product in the database and returns the new products as Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Created a new product",
+                    content = {@Content(mediaType = "application/json")})
+    })
     @PostMapping(produces = { MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     public Product postProduct(@RequestBody Product product) {
         log.info("POST: /v1/products has been called");
@@ -56,6 +72,12 @@ public class ProductController {
         return this.productService.createProduct(product);
     }
 
+    @Operation(summary = "Fetches the product with the given id from the database and returns it as HATEOAS-Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Fetched the product",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @GetMapping(value = "/hateoas/{productId}", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<Product> getProductHateoas(@PathVariable Long productId) {
         log.info(String.format("GET: /v1/products/hateoas/%d has been called", productId));
@@ -63,6 +85,12 @@ public class ProductController {
         return HateoasUtilities.buildProductEntity(this.productService.readProductById(productId));
     }
 
+    @Operation(summary = "Fetches the product with the given id from the database and returns it as Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Fetched the product",
+                    content = {@Content(mediaType = "application/json")})
+    })
     @GetMapping(value = "/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product getProduct(@PathVariable Long productId) {
         log.info(String.format("GET: /v1/products/%d has been called", productId));
@@ -70,6 +98,12 @@ public class ProductController {
         return this.productService.readProductById(productId);
     }
 
+    @Operation(summary = "Fetches all products from the database and returns them as HATEOAS-Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Fetched all products",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @GetMapping(value = "/hateoas", produces = { MediaTypes.HAL_JSON_VALUE })
     public CollectionModel<EntityModel<Product>> getAllProductsHateoas() {
         log.info("GET: /v1/products/hateoas has been called");
@@ -77,6 +111,12 @@ public class ProductController {
         return HateoasUtilities.buildProductCollection(this.productService.readAllProducts());
     }
 
+    @Operation(summary = "Fetches all products from the database and returns them as Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Fetched all products",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
     public List<Product> getAllProducts() {
         log.info("GET: /v1/products has been called");
@@ -84,6 +124,12 @@ public class ProductController {
         return this.productService.readAllProducts();
     }
 
+    @Operation(summary = "Updates the product with the given id in the database and return it as HATEOAS-Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Updated the product",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @PutMapping(value = "/hateoas/{productId}", produces = MediaTypes.HAL_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<Product> putProductHateoas(@PathVariable Long productId,
                                            @RequestBody Product product) {
@@ -92,6 +138,12 @@ public class ProductController {
         return HateoasUtilities.buildProductEntity(this.productService.updateProduct(productId, product));
     }
 
+    @Operation(summary = "Updates the product with the given id in the database and return it as Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Updated the product",
+                    content = {@Content(mediaType = "application/json")})
+    })
     @PutMapping(value = "/{productId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Product putProduct(@PathVariable Long productId,
                                            @RequestBody Product product) {
@@ -100,6 +152,12 @@ public class ProductController {
         return this.productService.updateProduct(productId, product);
     }
 
+    @Operation(summary = "Updates the productpicture within the product with the given id in the database and return it as HATEOAS-Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Updated the productpicture",
+                    content = {@Content(mediaType = "application/hal+json")})
+    })
     @PutMapping(value = "/hateoas/{productId}/productpicture", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<Product> putProductPictureOfProductByIdHateoas(@PathVariable Long productId,
                                                                @RequestBody MultipartFile file) throws IOException {
@@ -109,6 +167,12 @@ public class ProductController {
                 putProductPictureOfProductByIdHelper(productId, file)));
     }
 
+    @Operation(summary = "Updates the productpicture within the product with the given id in the database and return it as Json")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Updated the productpicture",
+                    content = {@Content(mediaType = "application/json")})
+    })
     @PutMapping(value = "/{productId}/productpicture", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product putProductPictureOfProductById(@PathVariable Long productId,
                                                                @RequestBody MultipartFile file) throws IOException {
@@ -132,6 +196,11 @@ public class ProductController {
         return product;
     }
 
+    @Operation(summary = "Deletes the product with the given id in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Deleted the product")
+    })
     @DeleteMapping(path = "/{productId}")
     public void deleteProductById(@PathVariable Long productId) {
         log.info(String.format("DELETE: /v1/products/%d has been called", productId));

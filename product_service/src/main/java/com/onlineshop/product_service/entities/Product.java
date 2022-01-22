@@ -3,9 +3,12 @@ package com.onlineshop.product_service.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
+/**
+ * Entity class representing the data used inside a Product.
+ * The schema of the table which stores the data of this entity will be generated automatically from this class.
+ * It also contains a reference to the ProductPicture-table and a reference on the Product-table.
+ */
 @Entity
 @Table(name = "products")
 @Data

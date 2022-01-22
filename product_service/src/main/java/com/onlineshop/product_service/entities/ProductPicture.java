@@ -5,6 +5,10 @@ import com.onlineshop.product_service.utilities.DefaultProductPicture;
 
 import javax.persistence.*;
 
+/**
+ * Entity class representing the data used inside a ProductPicture.
+ * The schema of the table which stores the data of this entity will be generated automatically from this class.
+ */
 @Entity
 @Table(name = "product_pictures")
 @EqualsAndHashCode
