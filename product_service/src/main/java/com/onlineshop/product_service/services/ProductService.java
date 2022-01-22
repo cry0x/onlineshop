@@ -77,6 +77,13 @@ public class ProductService {
         return updatedProduct;
     }
 
+    public Product changeQuantity(Long productId, int amount) {
+        Product product = readProductById(productId);
+        product.changeQuantity(amount);
+
+        return this.iProductRepository.save(product);
+    }
+
     public void deleteProductById(Long productId) {
         if (!checkProductExistsById(productId))
             throw new ProductDoesntExistsException(productId);
