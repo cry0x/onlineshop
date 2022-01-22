@@ -1,6 +1,7 @@
 package com.onlineshop.order_service.service;
 
 import com.onlineshop.order_service.Exceptions.OrderNotFoundException;
+import com.onlineshop.order_service.Exceptions.StatusEnumDoesNotExist;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
@@ -18,15 +19,16 @@ import java.util.List;
 @Service
 public class OrderService {
 
-    // TODO private EmailService emailService;
-
     private final IOrderRepository iOrderRepository;
     private final IProductRepository iProductRepository;
+    private Order order;
+    private EmailService emailService;
 
     @Autowired
-    public OrderService(IOrderRepository iOrderRepository, IProductRepository iProductRepository) {
+    public OrderService(IOrderRepository iOrderRepository, IProductRepository iProductRepository, EmailService emailService) {
         this.iOrderRepository = iOrderRepository;
         this.iProductRepository = iProductRepository;
+        this.emailService = emailService;
     }
 
     public Order getOrderById(Long id) {
@@ -48,19 +50,21 @@ public class OrderService {
         for (Product products : productListInOrder) {
             sum += (products.getPrice() * products.getQuantity());
         }
-        return sum;
+        return Math.round(sum*100.0)/100.0; // rundet auf 2 Nachkommastellen
     }
 
-    // Necessary?
-    public Order updateOrder(Long id, Order newOrder) {
-        if (!this.iOrderRepository.existsById(id)) {
-            throw new OrderNotFoundException(id);
+    public Order updateOrderStatus(Long orderId, StatusEnum statusEnum){
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        } else if (!statusEnum.equals(StatusEnum.PENDING) && !statusEnum.equals(StatusEnum.CANCELLED) &&
+                !statusEnum.equals(StatusEnum.COMPLETED) && !statusEnum.equals(StatusEnum.IN_DELIVERY)){
+           throw new StatusEnumDoesNotExist(statusEnum);
         }
-        Order oldOrder = getOrderById(id);
-        newOrder.setProductListInOrder(oldOrder.getProductListInOrder());
-        newOrder.setId(id);
+        order = getOrderById(orderId);
+        order.setOrderStatus(statusEnum);
 
-        return this.iOrderRepository.save(newOrder);
+        emailService.sendStatusUpdateEmail(order.getCustomerEmail(), orderId, statusEnum.toString());
+        return this.iOrderRepository.save(order);
     }
 
     public void deleteOrder(Long id) {
@@ -71,30 +75,49 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByCustomerId(Long customerId) {
+        // Check for customerId exists
         return this.iOrderRepository.findByCustomerId(customerId);
     }
 
-    public List<Product> addProductToOrder(Long orderId, Product product) {
+    public Product addProductToOrder(Long orderId, Product newProduct) {
         if (!this.iOrderRepository.existsById(orderId)) {
             throw new OrderNotFoundException(orderId);
         }
-        Order order = getOrderById(orderId);
+        order = getOrderById(orderId);
         List<Product> productListInOrder = order.getProductListInOrder();
-        boolean productExists = false;
+        Product currentProduct = null;
+        Long currentProductQuantity = null;
+
         if (productListInOrder.size() > 0) {
             for (Product productInList : productListInOrder) {
-                if (product.getOriginalId() == productInList.getOriginalId()) {
-                    productExists = true;
+                if (newProduct.getOriginalId() == productInList.getOriginalId()) {
+                    currentProductQuantity = productInList.getQuantity() ;
+                    currentProduct = productInList;
                 }
             }
         }
-        if (productExists) {
-            increaseProductQuantity(orderId, product.getQuantity(), product);
+        // Geht eleganter als 2 zusätzliche Variablen anzulegen?
+        if (currentProductQuantity != null) {
+            currentProduct.setQuantity(currentProductQuantity + newProduct.getQuantity());
+            order.setTotalAmount(calculateTotalAmount(productListInOrder));
+            return this.iProductRepository.save(currentProduct);
         } else {
-            productListInOrder.add(createProduct(product));
+            productListInOrder.add(createProduct(newProduct));
+            order.setTotalAmount(calculateTotalAmount(productListInOrder));
+            return newProduct;
         }
-        order.setTotalAmount(calculateTotalAmount(productListInOrder));
-        return productListInOrder;
+    }
+
+    public void deleteProductInOrder(Long orderId, Long originalProductId) {
+        if (!this.iOrderRepository.existsById(orderId)) {
+            throw new OrderNotFoundException(orderId);
+        }
+        List<Product> productList = getOrderById(orderId).getProductListInOrder();
+        for (Product productInList : productList) {
+            if (productInList.getOriginalId() == originalProductId) {
+                this.iProductRepository.deleteByOriginalId(originalProductId); // TODO blocked by foreignKey constraint
+            }
+        }
     }
 
     // Necessary?
@@ -106,21 +129,9 @@ public class OrderService {
         return this.iProductRepository.save(product);
     }
 
+    // Necessary?
     public List<Product> createAllProducts(List<Product> productList) {
         return this.iProductRepository.saveAll(productList);
-    }
-
-    public Product increaseProductQuantity(Long orderId, Long quantity, Product product) {
-        if (!this.iOrderRepository.existsById(orderId)) {
-            throw new OrderNotFoundException(orderId);
-        }
-        List<Product> productList = getOrderById(orderId).getProductListInOrder();
-        for (Product productsInList : productList) {
-            if (productsInList.getOriginalId() == product.getOriginalId()) {
-                product.setQuantity(quantity + product.getQuantity());
-            }
-        }
-        return this.iProductRepository.save(product);
     }
 
     // Necessary?
@@ -141,17 +152,16 @@ public class OrderService {
         return this.iProductRepository.save(product);
     }
 
-    public void deleteProductInOrder(Long orderId, Long originalProductId) {
-        if (!this.iOrderRepository.existsById(orderId)) {
-            throw new OrderNotFoundException(orderId);
+    // Necessary?
+    public Order updateOrder(Long id, Order newOrder) {
+        if (!this.iOrderRepository.existsById(id)) {
+            throw new OrderNotFoundException(id);
         }
-        List<Product> productList = getOrderById(orderId).getProductListInOrder();
-        for (Product product : productList) {
-            if (product.getOriginalId() == originalProductId) {
-                this.iProductRepository.deleteById(originalProductId);
-            }
-        }
-    }
+        Order oldOrder = getOrderById(id);
+        newOrder.setProductListInOrder(oldOrder.getProductListInOrder());
+        newOrder.setId(id);
 
+        return this.iOrderRepository.save(newOrder);
+    }
 }
 

@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.Data;
 
 @Data
 public class OrderDto {
@@ -19,6 +18,8 @@ public class OrderDto {
     private long id;
 
     private long customerId;
+
+    private String customerEmail;
 
     private List<Product> productListInOrder = new ArrayList<>(); // Default is empty list instead of null
 

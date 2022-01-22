@@ -22,7 +22,6 @@ public class OrderController {
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
-
     private OrderService orderService;
     private Order orderEntity;
 
@@ -57,14 +56,6 @@ public class OrderController {
         return modelMapper.map(newOrder, OrderDto.class);
     }
 
-    // Not needed?! Add, remove, update product is enough
-    @PutMapping("/{id}")
-    public OrderDto updateOrder(@PathVariable(value="id") Long id, @RequestBody OrderDto order) {
-        log.info("Updating order (id: {}).", id);
-        orderEntity = modelMapper.map(order, Order.class);
-        return modelMapper.map(orderService.updateOrder(id, orderEntity), OrderDto.class);
-    }
-
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable(value="id") Long id) {
         log.info("Deleting order (id: {}).", id);
@@ -79,18 +70,25 @@ public class OrderController {
     }
 
     @PostMapping("/products/{id}")
-    public List<ProductDto> createAndAddProduct(@PathVariable(value="id") Long id, @RequestBody ProductDto productDto) {
+    public ProductDto createAndAddProduct(@PathVariable(value="id") Long id, @RequestBody ProductDto productDto) {
         log.info("Creating a new product and adding it to order (id: {}).", id);
         Product productEntity = modelMapper.map(productDto, Product.class);
         productEntity.setOriginalId(productDto.getId());
-        List<Product> newProducts = this.orderService.addProductToOrder(id, productEntity);
-        return modelMapper.map(newProducts, new TypeToken<List<ProductDto>>() {}.getType());
+        Product newProduct = this.orderService.addProductToOrder(id, productEntity);
+        return modelMapper.map(newProduct, ProductDto.class);
     }
 
     @DeleteMapping("/{order_id}/{product_id}")
     public void deleteProductInOrder(@PathVariable(value="order_id") Long orderId, @PathVariable(value="product_id") Long productId) {
         log.info("Deleting product (id: {}) from order (id: {}.", productId, orderId);
         orderService.deleteProductInOrder(orderId, productId);
+    }
+
+    @PutMapping("/{id}")
+    public OrderDto updateOrderStatus(@PathVariable(value="id") Long id, @RequestBody OrderDto order) {
+        log.info("Updating status of order (id: {}) | Auto-Generated E-Mail sent.", id);
+        orderEntity = modelMapper.map(order, Order.class);
+        return modelMapper.map(orderService.updateOrderStatus(id, order.getOrderStatus()), OrderDto.class);
     }
 
 }

@@ -2,7 +2,7 @@ version: '3'
 #start with: docker compose --profile dev up -d --build
 services:
     # ORDER SERVICE
-    customer_service:
+    order_service:
         build: .
         restart: on-failure
         ports:

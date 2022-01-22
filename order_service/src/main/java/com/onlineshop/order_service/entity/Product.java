@@ -20,7 +20,7 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private long quantity;
 
-    @Column(name = "original_id", nullable = false)
+    @Column(name = "original_id")
     private long originalId;
 
 }

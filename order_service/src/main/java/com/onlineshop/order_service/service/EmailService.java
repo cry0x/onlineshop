@@ -1,4 +1,4 @@
-/*package com.onlineshop.order_service.service;
+package com.onlineshop.order_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,13 +11,19 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendStatusUpdate(String emailAddress, long orderId, String status){
+    public void sendStatusUpdateEmail(String emailAddress, long orderId, String orderStatus){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-
-        // TODO
-
-        // javaMailSender.send(simpleMailMessage);
+        simpleMailMessage.setFrom("spangelow@gmail.com");
+        simpleMailMessage.setTo(emailAddress);
+        simpleMailMessage.setSubject("We updated your order status (Order id: " + orderId + ")");
+        simpleMailMessage.setText(String.format(
+                "Dear Customer, \n\n" +
+                "Your order with the order id %d has been updated. \n The order status is now: %s \n\n " +
+                "This E-Mail has been automatically generated - Please do not respond to this E-Mail! \n\n " +
+                "________________________________________________\n\n" +
+                "Online-Shop for Microservices in industrial Applications \n\nGroup 3", orderId, orderStatus)); // by Jens Krämer, Nico Welsch and Simon Spang ?
+                                                                                                            // Otional TODO: Customer name adden in Anrede?
+        javaMailSender.send(simpleMailMessage);
     }
 
 }
-*/
