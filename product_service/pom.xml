@@ -135,6 +135,12 @@
             </properties>
         </profile>
         <profile>
+            <id>build</id>
+            <properties>
+                <spring.profiles.active>build</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>dev-jens</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
