@@ -21,10 +21,8 @@ import org.springframework.hateoas.mediatype.hal.CurieProvider;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -307,6 +305,36 @@ public class ProductControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(expectedProductJson))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void putChangeProductQuantityAddTest() throws Exception {
+        Product product = RandomData.RandomProduct();
+
+        Product productAddedQuantity = (Product) product.clone();
+        productAddedQuantity.setQuantity(product.getQuantity() + 1);
+
+        when(this.productService.changeQuantity(product.getId(), 1)).thenReturn(productAddedQuantity);
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d/quantity/%d", product.getId(), 1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(objectMapper.writeValueAsString(productAddedQuantity)));
+    }
+
+    @Test
+    void putChangeProductQuantityReduceTest() throws Exception {
+        Product product = RandomData.RandomProduct();
+
+        Product productAddedQuantity = (Product) product.clone();
+        productAddedQuantity.setQuantity(product.getQuantity() - 1);
+
+        when(this.productService.changeQuantity(product.getId(), -1)).thenReturn(productAddedQuantity);
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d/quantity/%d", product.getId(), -1)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(content().json(objectMapper.writeValueAsString(productAddedQuantity)));
     }
 
     @Test
