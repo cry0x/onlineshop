@@ -44,9 +44,6 @@ public class ProductControllerTest {
     @MockBean
     private ProductPictureService productPictureService;
 
-    @MockBean
-    private DataSource dataSource;
-
     private static ProductPicture testProductPicture;
     private static ObjectMapper objectMapper;
 
