@@ -211,6 +211,11 @@ public class ProductController {
         this.productPictureService.deleteProductPictureById(productPictureId);
     }
 
+    @Operation(summary = "Orders a product, reduces the remaining amount of available products and returns the product info")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Successfully ordered product")
+    })
     @PutMapping(path = "/{productId}/{amount}")
     public Product putOrderProduct(@PathVariable Long productId, @PathVariable int amount) throws CloneNotSupportedException {
         log.info(String.format("PUT: /v1/products/%d/%d has been called", productId, amount));
@@ -218,6 +223,11 @@ public class ProductController {
         return this.productService.orderProduct(productId, amount);
     }
 
+    @Operation(summary = "Put request to update the available amount of a product in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Adds the given amount to the product")
+    })
     @PutMapping(path = "/{productId}/quantity/{amount}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Product putChangeProductQuantity(@PathVariable Long productId, @PathVariable int amount) {
         log.info(String.format("PUT: /v1/products/%d/quantity/%d has been called", productId, amount));
