@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.activation.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class ProductControllerTest {
     private ProductService productService;
     @MockBean
     private ProductPictureService productPictureService;
+
+    @MockBean
+    private DataSource dataSource;
 
     private static ProductPicture testProductPicture;
     private static ObjectMapper objectMapper;
