@@ -5,7 +5,6 @@ import com.onlineshop.order_service.dto.ProductDto;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.service.OrderService;
-import com.onlineshop.order_service.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ public class OrderController {
     private static final ModelMapper modelMapper = new ModelMapper();
 
     private OrderService orderService;
-<<<<<<< HEAD
     private Order orderEntity;
 
     @Autowired
@@ -34,10 +32,6 @@ public class OrderController {
     public OrderController(Order orderEntity){
         this.orderEntity = orderEntity;
     }
-=======
-    @Autowired
-    private static ProductService productService;
->>>>>>> main
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long id) {
@@ -56,7 +50,7 @@ public class OrderController {
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
         log.info("Creating a new order.");
         orderEntity = modelMapper.map(orderDto, Order.class);
-        orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder())); // TODO Erstellt leere Liste
+        orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder()));
         Order newOrder = orderService.createOrder(orderEntity);
         return modelMapper.map(newOrder, OrderDto.class);
     }
@@ -67,14 +61,13 @@ public class OrderController {
         orderService.deleteOrder(id);
     }
 
-    @GetMapping("/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public List<Order> getAllOrdersByCustomerId(@PathVariable(value="customerId") Long id) {
         log.info("All orders of customer (customer id: {}) have been requested.", id);
         List<Order> orders = orderService.getOrdersByCustomerId(id);
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
-<<<<<<< HEAD
     @PostMapping("/products/{id}")
     public ProductDto createAndAddProduct(@PathVariable(value="id") Long id, @RequestBody ProductDto productDto) {
         log.info("Creating a new product and adding it to order (id: {}).", id);
@@ -95,12 +88,23 @@ public class OrderController {
         log.info("Updating status of order (id: {}) | Auto-Generated E-Mail sent.", id);
         orderEntity = modelMapper.map(order, Order.class);
         return modelMapper.map(orderService.updateOrderStatus(id, order.getOrderStatus()), OrderDto.class);
-=======
-    @GetMapping("/orders/products/{realProductId}")
-    public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
-        return this.productService.existsProductByRealId(realProductId);
->>>>>>> main
     }
+
+    // =========================== Externe Methoden ================================================================================
+
+    @GetMapping("/orders/products/{realProductId}")
+    public boolean getIsProductInOrders(@PathVariable(value="realProductId") Long realProductId) {
+        log.info("Verifies that the product with the id {} exists in orders.", realProductId);
+        return this.orderService.existsProductByRealId(realProductId);
+    }
+
+    @GetMapping("/{customerId}/orders")
+    public boolean getCustomerOrders(@PathVariable(value="customerId") Long customerId) {
+        log.info("Verifies that the customer with the id {} is involved in orders", customerId);
+        return this.orderService.getCustomerHasOrders(customerId);
+    }
+
+
 
 }
 

@@ -3,24 +3,18 @@ package com.onlineshop.order_service.service;
 import com.onlineshop.order_service.Exceptions.*;
 import com.onlineshop.order_service.clients.IProductServiceClient;
 import com.onlineshop.order_service.entity.Order;
-<<<<<<< HEAD
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
-=======
->>>>>>> main
 import com.onlineshop.order_service.repository.IOrderRepository;
 import com.onlineshop.order_service.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-<<<<<<< HEAD
 import java.util.List;
 
 @Component
-@Transactional
-=======
->>>>>>> main
 @Service
 @Transactional
 public class OrderService {
@@ -82,7 +76,6 @@ public class OrderService {
         this.iOrderRepository.deleteById(id);
     }
 
-<<<<<<< HEAD
     public List<Order> getOrdersByCustomerId(Long customerId) {
         // TODO Check for customerId exists
         /*if () {
@@ -147,6 +140,7 @@ public class OrderService {
         for (Product productInList : productList) {
             if (productInList.getOriginalId() == originalProductId) {
                 this.iProductRepository.deleteByOriginalIdInProductListInOrder(originalProductId, orderId);
+                this.iProductRepository.deleteByOriginalIdProducts(originalProductId);
             }
         }
     }
@@ -226,7 +220,19 @@ public class OrderService {
 
         return this.iOrderRepository.save(newOrder);
     }
-=======
->>>>>>> main
+
+    public boolean existsProductByRealId(Long realProductId) {
+        return this.iProductRepository.existsProductByRealId(realProductId);
+    }
+
+    public boolean getCustomerHasOrders(Long customerId) {
+        return this.iOrderRepository.getCustomerHasOrders(customerId);
+    }
+
+
+
+
+
+
 }
 
