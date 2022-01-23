@@ -139,7 +139,7 @@ public class OrderService {
         List<Product> productList = getOrderById(orderId).getProductListInOrder();
         for (Product productInList : productList) {
             if (productInList.getOriginalId() == originalProductId) {
-                this.iProductRepository.deleteByOriginalId(originalProductId); // TODO blocked by foreignKey constraint
+                this.iProductRepository.deleteByOriginalIdInProductListInOrder(originalProductId, orderId);
             }
         }
     }

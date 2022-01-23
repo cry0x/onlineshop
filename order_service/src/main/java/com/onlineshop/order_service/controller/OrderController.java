@@ -41,13 +41,13 @@ public class OrderController {
         return modelMapper.map(orderEntity, Order.class);
     }
 
-    @GetMapping("")
+    @GetMapping
     public List<Order> getAllOrders() {
         log.info("Getting all orders in a list...");
         return orderService.getAllOrders();
     }
 
-    @PostMapping("")
+    @PostMapping
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
         log.info("Creating a new order.");
         orderEntity = modelMapper.map(orderDto, Order.class);
@@ -62,7 +62,7 @@ public class OrderController {
         orderService.deleteOrder(id);
     }
 
-    @GetMapping("/orders/{customerId}")
+    @GetMapping("/{customerId}")
     public List<Order> getAllOrdersByCustomerId(@PathVariable(value="customerId") Long id) {
         log.info("All orders of customer (customer id: {}) have been requested.", id);
         List<Order> orders = orderService.getOrdersByCustomerId(id);
@@ -80,7 +80,7 @@ public class OrderController {
 
     @DeleteMapping("/{order_id}/{product_id}")
     public void deleteProductInOrder(@PathVariable(value="order_id") Long orderId, @PathVariable(value="product_id") Long productId) {
-        log.info("Deleting product (id: {}) from order (id: {}.", productId, orderId);
+        log.info("Deleting product (id: {}) from order (id: {}).", productId, orderId);
         orderService.deleteProductInOrder(orderId, productId);
     }
 
