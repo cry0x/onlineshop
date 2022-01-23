@@ -1,18 +1,26 @@
 package com.onlineshop.order_service.controller;
 
+import java.util.List;
+
 import com.onlineshop.order_service.dto.OrderDto;
 import com.onlineshop.order_service.entity.Order;
+import com.onlineshop.order_service.service.CustomerService;
 import com.onlineshop.order_service.service.OrderService;
 import com.onlineshop.order_service.service.ProductService;
-import org.modelmapper.ModelMapper;
 
+import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/orders")
@@ -25,6 +33,8 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private static ProductService productService;
+    @Autowired
+    private static CustomerService customerService;
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long orderId) {
@@ -65,6 +75,11 @@ public class OrderController {
     @GetMapping("/orders/products/{realProductId}")
     public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
         return this.productService.existsProductByRealId(realProductId);
+    }
+
+    @GetMapping("/orders/customers/{realCustomerId}")
+    public boolean getExistsCustomerByRealId(@PathVariable(value="realCustomerId") Long realCustomerId) {
+        return this.customerService.existsCustomerByRealId(realCustomerId);
     }
 
 }
