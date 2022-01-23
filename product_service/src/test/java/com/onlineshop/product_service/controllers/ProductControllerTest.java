@@ -311,11 +311,14 @@ public class ProductControllerTest {
 
     @Test
     void putOrderProductTest() throws Exception {
-        Long productId = RandomData.RandomLong();
-        int amount = RandomData.RandomInt();
+        Product productInDb = RandomData.RandomProduct();
 
-        this.mockMvc.perform(put(String.format("/v1/products/%d/%d", productId, amount))).
-                andExpect(status().isOk());
+        Product expectedProduct = (Product) productInDb.clone();
+        expectedProduct.setQuantity(2);
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d/%d", productInDb.getId(), expectedProduct.getQuantity()))).
+                andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedProduct)));
     }
 
 }

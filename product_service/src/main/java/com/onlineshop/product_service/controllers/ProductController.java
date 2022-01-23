@@ -214,6 +214,9 @@ public class ProductController {
     @PutMapping(path = "/{productId}/{amount}")
     public void putOrderProduct(@PathVariable Long productId, @PathVariable int amount) {
         log.info(String.format("PUT: /v1/products/%d/%d has been called", productId, amount));
+
+        Product orderedProduct = this.productService.readProductById(productId);
+        orderedProduct.
     }
 
     private void validateProduct(Product product) {
