@@ -3,9 +3,9 @@ package com.onlineshop.product_service.exceptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class ProdcutQuantityNegative extends ResponseStatusException {
+public class ProdcutQuantityNegativeException extends ResponseStatusException {
 
-    public ProdcutQuantityNegative(int quantity) {
+    public ProdcutQuantityNegativeException(int quantity) {
         super(HttpStatus.NOT_FOUND, getExceptionMessage(quantity));
     }
 
