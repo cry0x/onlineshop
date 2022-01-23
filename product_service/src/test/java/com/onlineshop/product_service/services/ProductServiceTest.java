@@ -2,7 +2,6 @@ package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
-import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.*;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
@@ -102,7 +101,7 @@ class ProductServiceTest {
         Product product = RandomData.RandomProduct();
         product.setQuantity(-1);
 
-        assertThrows(ProductQuantityNegativeException.class, () -> this.productService.validateProduct(product));
+        assertThrows(ProdcutQuantityNegativeException.class, () -> this.productService.validateProduct(product));
     }
 
     @Test

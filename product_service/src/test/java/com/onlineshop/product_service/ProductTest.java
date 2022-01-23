@@ -1,7 +1,7 @@
 package com.onlineshop.product_service;
 
 import com.onlineshop.product_service.entities.Product;
-import com.onlineshop.product_service.exceptions.ProductQuantityNegativeException;
+import com.onlineshop.product_service.exceptions.ProdcutQuantityNegativeException;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +45,6 @@ public class ProductTest {
         Product product = RandomData.RandomProduct();
         product.setQuantity(1);
 
-        assertThrows(ProductQuantityNegativeException.class, () -> product.changeQuantity(-2));
+        assertThrows(ProdcutQuantityNegativeException.class, () -> product.changeQuantity(-2));
     }
 }
