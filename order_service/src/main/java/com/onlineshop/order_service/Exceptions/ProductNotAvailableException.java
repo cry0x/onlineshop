@@ -10,7 +10,7 @@ public class ProductNotAvailableException extends RuntimeException {
         super(String.format("The product with the ID %d is not available!", productId));
     }
 
-    public ProductNotAvailableException(String message) {
+    public ProductNotAvailableException(Long productId, String message) {
         super(message);
     }
 

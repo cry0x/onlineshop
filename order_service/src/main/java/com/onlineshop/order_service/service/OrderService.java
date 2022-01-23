@@ -1,7 +1,7 @@
 package com.onlineshop.order_service.service;
 
-import com.onlineshop.order_service.Exceptions.OrderNotFoundException;
-import com.onlineshop.order_service.Exceptions.StatusEnumDoesNotExist;
+import com.onlineshop.order_service.Exceptions.*;
+import com.onlineshop.order_service.clients.IProductServiceClient;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
@@ -23,6 +23,7 @@ public class OrderService {
     private final IProductRepository iProductRepository;
     private Order order;
     private EmailService emailService;
+    private IProductServiceClient productServiceClient;
 
     @Autowired
     public OrderService(IOrderRepository iOrderRepository, IProductRepository iProductRepository, EmailService emailService) {
@@ -42,6 +43,8 @@ public class OrderService {
     public Order createOrder(Order order) {
         order.setTotalAmount(0);
         order.setOrderStatus(StatusEnum.PENDING);
+        validateOrder(order);
+
         return this.iOrderRepository.save(order);
     }
 
@@ -50,20 +53,19 @@ public class OrderService {
         for (Product products : productListInOrder) {
             sum += (products.getPrice() * products.getQuantity());
         }
-        return Math.round(sum*100.0)/100.0; // rundet auf 2 Nachkommastellen
+
+        return Math.round(sum * 100.0) / 100.0; // rundet auf 2 Nachkommastellen
     }
 
-    public Order updateOrderStatus(Long orderId, StatusEnum statusEnum){
+    public Order updateOrderStatus(Long orderId, StatusEnum statusEnum) {
         if (!this.iOrderRepository.existsById(orderId)) {
             throw new OrderNotFoundException(orderId);
-        } else if (!statusEnum.equals(StatusEnum.PENDING) && !statusEnum.equals(StatusEnum.CANCELLED) &&
-                !statusEnum.equals(StatusEnum.COMPLETED) && !statusEnum.equals(StatusEnum.IN_DELIVERY)){
-           throw new StatusEnumDoesNotExist(statusEnum);
         }
         order = getOrderById(orderId);
+        validateOrder(order);
         order.setOrderStatus(statusEnum);
-
         emailService.sendStatusUpdateEmail(order.getCustomerEmail(), orderId, statusEnum.toString());
+
         return this.iOrderRepository.save(order);
     }
 
@@ -75,7 +77,10 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByCustomerId(Long customerId) {
-        // Check for customerId exists
+        // TODO Check for customerId exists
+        /*if () {
+            throw new CustomerDoesNotExistException(customerId);
+        }*/
         return this.iOrderRepository.findByCustomerId(customerId);
     }
 
@@ -83,7 +88,17 @@ public class OrderService {
         if (!this.iOrderRepository.existsById(orderId)) {
             throw new OrderNotFoundException(orderId);
         }
+        validateProduct(newProduct);
+
+        /* TODO Checks in ProductService if quantity of Product is higher than the Quantity of Product we want to add to the order
+        if ( (checkProductQuantityInProductService(newProduct.getOriginalId()) - newProduct.getQuantity()) < 0 ) {
+            newProduct.setQuantity(actualQuantityFromProductInProductService);
+            throw new ProductNotAvailableException(orderId, "There's not enough product in stock");
+        }
+         */
+
         order = getOrderById(orderId);
+        validateOrder(order);
         List<Product> productListInOrder = order.getProductListInOrder();
         Product currentProduct = null;
         Long currentProductQuantity = null;
@@ -91,21 +106,30 @@ public class OrderService {
         if (productListInOrder.size() > 0) {
             for (Product productInList : productListInOrder) {
                 if (newProduct.getOriginalId() == productInList.getOriginalId()) {
-                    currentProductQuantity = productInList.getQuantity() ;
+                    currentProductQuantity = productInList.getQuantity();
                     currentProduct = productInList;
                 }
             }
         }
-        // Geht eleganter als 2 zusätzliche Variablen anzulegen?
         if (currentProductQuantity != null) {
             currentProduct.setQuantity(currentProductQuantity + newProduct.getQuantity());
             order.setTotalAmount(calculateTotalAmount(productListInOrder));
+            validateOrder(order); // Überprüft totamAmount > 0
+
             return this.iProductRepository.save(currentProduct);
+
         } else {
             productListInOrder.add(createProduct(newProduct));
             order.setTotalAmount(calculateTotalAmount(productListInOrder));
+            validateOrder(order); // Überprüft totamAmount > 0
+
             return newProduct;
         }
+
+    }
+
+    public Product createProduct(Product product) {
+        return this.iProductRepository.save(product);
     }
 
     public void deleteProductInOrder(Long orderId, Long originalProductId) {
@@ -120,14 +144,46 @@ public class OrderService {
         }
     }
 
-    // Necessary?
-    public Product getProductById(Long id) {
-        return this.iProductRepository.findById(id).get();
+    // TODO
+    private long checkProductQuantityInProductService(Long originalId) {
+        return this.productServiceClient.getProductQuantity(originalId);
     }
 
-    public Product createProduct(Product product) {
-        return this.iProductRepository.save(product);
+    public void validateOrder(Order order) {
+        if (order.getTotalAmount() < 0) {
+            throw new NegativeOrderTotalAmountException(order);
+        }
+        // TODO Besserer Weg möglich?
+        if (!order.getOrderStatus().equals(StatusEnum.PENDING) && !order.getOrderStatus().equals(StatusEnum.CANCELLED) &&
+                    !order.getOrderStatus().equals(StatusEnum.COMPLETED) && !order.getOrderStatus().equals(StatusEnum.IN_DELIVERY)) {
+            throw new StatusEnumDoesNotExist(order.getOrderStatus());
+        }
+        if (order.getCustomerId() < 1) {
+            throw new CustomerIdIsZeroOrNegative(order);
+        }
+        if (order.getCustomerEmail().isEmpty()) {
+            throw new CustomerEmailIsMissingException(order);
+        }
     }
+
+    public void validateProduct(Product product) {
+        if (product.getOriginalId() == 0) {
+            throw new MissingOriginalProductIdException(product);
+        }
+        if (product.getQuantity() < 0) {
+            throw new NegativeProductQuantityException(product);
+        }
+        if (product.getPrice() < 0) {
+            throw new NegativeProductPriceException(product);
+        }
+        if (product.getOriginalId() < 0) {
+            throw new NegativeProductOriginalIdException(product);
+        }
+        if (product.getQuantity() == 0) {
+            throw new ProductQuantityIsZeroException(product);
+        }
+    }
+
 
     // Necessary?
     public List<Product> createAllProducts(List<Product> productList) {

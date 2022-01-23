@@ -1,24 +1,13 @@
 package com.onlineshop.order_service.Exceptions;
 
 import com.onlineshop.order_service.entity.StatusEnum;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
-public class StatusEnumDoesNotExist extends RuntimeException {
-
-
-    public StatusEnumDoesNotExist() {
-
-    }
+public class StatusEnumDoesNotExist extends ResponseStatusException {
 
     public StatusEnumDoesNotExist(StatusEnum statusEnum) {
-        super(statusEnum.toString().format("The order status %d does not exist!", statusEnum.toString())); // TODO
-    }
-
-    public StatusEnumDoesNotExist(String message) {
-        super(message);
-    }
-
-    public StatusEnumDoesNotExist(String message, Throwable cause) {
-        super(message, cause);
+        super(HttpStatus.BAD_REQUEST, statusEnum.toString().format("The order status %d does not exist!", statusEnum.toString())); // TODO
     }
 
 }

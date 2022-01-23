@@ -51,7 +51,7 @@ public class OrderController {
     public OrderDto createOrder(@RequestBody OrderDto orderDto) {
         log.info("Creating a new order.");
         orderEntity = modelMapper.map(orderDto, Order.class);
-        orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder()));
+        orderEntity.setProductListInOrder(this.orderService.createAllProducts(orderEntity.getProductListInOrder())); // TODO Erstellt leere Liste
         Order newOrder = orderService.createOrder(orderEntity);
         return modelMapper.map(newOrder, OrderDto.class);
     }
