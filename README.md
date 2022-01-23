@@ -49,27 +49,25 @@ ausgeführt werden.
 ### ELK-Stack
 
 #### Kibana
-
 Es wurde ein Basis-Dashboard erstellt welches importiert werden kann. Dieses lässt sich mit der export-json im
 configs-Ordner des Projekts importieren.
-
 ### Eureka-Server
-
 Der Eureka-Server bedarf keiner weiteren Einstellung, er dient lediglich der Registrierung der verfügbaren Services.
 Nachdem er gestartet wurde melden sich die implementierten Services mit denen eine entsprechende URL zum Eureka-Server
-gegeben wurde bei ihm an. Zur Übersicht der verfügbaren Services liefert Eureka eine UI welche über den `Port: 8761`
+gegeben wurde bei ihm an. Zur Übersicht der verfügbaren Services liefert Eureka eine UI welche über den ``Port: 8761``
 erreichbar ist.
+
 
 ## 🗂 Documentation
 
 ### API
 
-Die API-Dokumentationen der drei implementierten Services können eingesehen werden, indem `/swagger-ui.html` an die
+Die API-Dokumentationen der drei implementierten Services können eingesehen werden, indem ``/swagger-ui.html`` an die
 öffentliche Adresse des Services angefügt wird.
 `z.B.: localhost:9000/swagger-ui.html`
 
 ### Java
-
+### Java Documentation
 Um die Java-Code-Dokumentation einsehen zu können, muss diese erst mit dem Kommando
 
 ```bash
