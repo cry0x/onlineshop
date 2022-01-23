@@ -22,7 +22,6 @@ import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.core.AnnotationLinkRelationProvider;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
@@ -336,6 +335,20 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(content().json(objectMapper.writeValueAsString(productAddedQuantity)));
+    }
+
+    @Test
+    void putOrderProductTest() throws Exception {
+        Product productInDb = RandomData.RandomProduct();
+
+        Product expectedProduct = (Product) productInDb.clone();
+        expectedProduct.setQuantity(2);
+
+        when(this.productService.orderProduct(productInDb.getId(), expectedProduct.getQuantity())).thenReturn(expectedProduct);
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d/%d", productInDb.getId(), expectedProduct.getQuantity()))).
+                andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedProduct)));
     }
 
 }

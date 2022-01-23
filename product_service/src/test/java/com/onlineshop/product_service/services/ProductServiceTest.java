@@ -219,4 +219,32 @@ class ProductServiceTest {
         assertEquals(expectedProdcut, this.productService.changeQuantity(product.getId(), amount));
     }
 
+    @Test
+    void orderProductThrowsProductQuantityNegativeExceptionTest() {
+        Product productInDb = RandomData.RandomProduct();
+        productInDb.setQuantity(1);
+
+        when(this.iProductRepository.findById(productInDb.getId())).thenReturn(Optional.of(productInDb));
+
+        assertThrows(ProdcutQuantityNegativeException.class, () -> this.productService.orderProduct(productInDb.getId(), 2));
+    }
+
+    @Test
+    void orderProductTest() throws CloneNotSupportedException {
+        int amount = 23;
+
+        Product productInDb = RandomData.RandomProduct();
+
+        Product expectedProduct = (Product) productInDb.clone();
+        expectedProduct.setQuantity(amount);
+
+        when(this.iProductRepository.findById(productInDb.getId())).thenReturn(Optional.of(productInDb));
+
+        assertEquals(expectedProduct, this.productService.orderProduct(productInDb.getId(), amount));
+
+        productInDb.changeQuantity(amount);
+
+        verify(this.iProductRepository).save(productInDb);
+    }
+
 }
