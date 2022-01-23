@@ -105,7 +105,7 @@ public class ProductService {
         if (product.getName().isEmpty())
             throw new ProductNameEmptyException(product);
         if (product.getQuantity() < 0)
-            throw new ProdcutQuantityNegative(product.getQuantity());
+            throw new ProdcutQuantityNegativeException(product.getQuantity());
         if (product.getPrice() < 0)
             throw new ProductPriceNegativeException(product);
     }

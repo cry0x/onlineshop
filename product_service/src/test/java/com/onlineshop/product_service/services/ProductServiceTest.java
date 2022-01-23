@@ -101,7 +101,7 @@ class ProductServiceTest {
         Product product = RandomData.RandomProduct();
         product.setQuantity(-1);
 
-        assertThrows(ProdcutQuantityNegative.class, () -> this.productService.validateProduct(product));
+        assertThrows(ProdcutQuantityNegativeException.class, () -> this.productService.validateProduct(product));
     }
 
     @Test

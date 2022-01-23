@@ -1,6 +1,6 @@
 package com.onlineshop.product_service.entities;
 
-import com.onlineshop.product_service.exceptions.ProdcutQuantityNegative;
+import com.onlineshop.product_service.exceptions.ProdcutQuantityNegativeException;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,7 +41,7 @@ public class Product implements Cloneable {
         int newQuantity = getQuantity() + amount;
 
         if (newQuantity < 0)
-            throw new ProdcutQuantityNegative(newQuantity);
+            throw new ProdcutQuantityNegativeException(newQuantity);
 
         setQuantity(newQuantity);
 
