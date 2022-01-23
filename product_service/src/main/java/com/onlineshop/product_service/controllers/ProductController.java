@@ -211,6 +211,11 @@ public class ProductController {
         this.productPictureService.deleteProductPictureById(productPictureId);
     }
 
+    @PutMapping(path = "/{productId}/{amount}")
+    public void putOrderProduct(@PathVariable Long productId, @PathVariable int amount) {
+        log.info(String.format("PUT: /v1/products/%d/%d has been called", productId, amount));
+    }
+
     private void validateProduct(Product product) {
         this.productService.validateProduct(product);
     }

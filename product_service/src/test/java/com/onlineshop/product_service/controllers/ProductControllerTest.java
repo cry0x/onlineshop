@@ -309,4 +309,13 @@ public class ProductControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void putOrderProductTest() throws Exception {
+        Long productId = RandomData.RandomLong();
+        int amount = RandomData.RandomInt();
+
+        this.mockMvc.perform(put(String.format("/v1/products/%d/%d", productId, amount))).
+                andExpect(status().isOk());
+    }
+
 }
