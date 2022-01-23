@@ -1,5 +1,10 @@
 package com.onlineshop.customer_service.exception;
 
+/**
+ * Custom Exception Class that checks if a customer exists.
+ * @author Nico Welsch
+ * @version 1.0
+ */
 public class CustomerNotFoundException extends RuntimeException {
 
     public CustomerNotFoundException() {

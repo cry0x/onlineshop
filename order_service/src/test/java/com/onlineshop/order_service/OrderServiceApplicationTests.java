@@ -1,10 +1,13 @@
 package com.onlineshop.order_service;
 
 import com.onlineshop.order_service.controller.OrderController;
+<<<<<<< HEAD
 import com.onlineshop.order_service.repository.IOrderRepository;
 import com.onlineshop.order_service.repository.IProductRepository;
 import com.onlineshop.order_service.service.EmailService;
 import com.onlineshop.order_service.service.OrderService;
+=======
+>>>>>>> main
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest({"eureka.client.enabled:false"})
 class OrderServiceApplicationTests {
 
+<<<<<<< HEAD
     @Autowired
     private IOrderRepository iOrderRepository;
     @Autowired
@@ -36,5 +40,14 @@ class OrderServiceApplicationTests {
         assertNotNull(orderServiceApplication);
         assertNotNull(emailService);
     }
+=======
+	@Autowired
+	private OrderController orderController;
+
+	@Test
+	void contextLoads() {
+		assertNotNull(orderController);
+	}
+>>>>>>> main
 
 }

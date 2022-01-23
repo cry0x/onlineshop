@@ -5,6 +5,7 @@ import com.onlineshop.order_service.dto.ProductDto;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.service.OrderService;
+import com.onlineshop.order_service.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.slf4j.Logger;
@@ -19,10 +20,10 @@ import java.util.List;
 public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-
     private static final ModelMapper modelMapper = new ModelMapper();
 
     private OrderService orderService;
+<<<<<<< HEAD
     private Order orderEntity;
 
     @Autowired
@@ -33,6 +34,10 @@ public class OrderController {
     public OrderController(Order orderEntity){
         this.orderEntity = orderEntity;
     }
+=======
+    @Autowired
+    private static ProductService productService;
+>>>>>>> main
 
     @GetMapping("/{id}")
     public Order getOrder(@PathVariable(value="id") Long id) {
@@ -69,6 +74,7 @@ public class OrderController {
         return modelMapper.map(orders, new TypeToken<List<Order>>() {}.getType());
     }
 
+<<<<<<< HEAD
     @PostMapping("/products/{id}")
     public ProductDto createAndAddProduct(@PathVariable(value="id") Long id, @RequestBody ProductDto productDto) {
         log.info("Creating a new product and adding it to order (id: {}).", id);
@@ -89,6 +95,11 @@ public class OrderController {
         log.info("Updating status of order (id: {}) | Auto-Generated E-Mail sent.", id);
         orderEntity = modelMapper.map(order, Order.class);
         return modelMapper.map(orderService.updateOrderStatus(id, order.getOrderStatus()), OrderDto.class);
+=======
+    @GetMapping("/orders/products/{realProductId}")
+    public boolean getExistsProductByRealId(@PathVariable(value="realProductId") Long realProductId) {
+        return this.productService.existsProductByRealId(realProductId);
+>>>>>>> main
     }
 
 }

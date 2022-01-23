@@ -7,13 +7,17 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
-// The class is annotated with @Entity which indicates that it is a JPA entity.
-// The id attribute is annotated with both @Id and @GeneratedValue annotations.
-// This means that it is the object's auto-generated primary key.
+/**
+ * The class is annotated with @Entity which indicates that it is a JPA entity.
+ * The customer object attributes are defined inside this entity.
+ * @author Nico Welsch
+ * @version 1.0
+ */
 @Entity
 @Data
 public class Customer {
-
+    // The id attribute is annotated with both @Id and @GeneratedValue annotations.
+    // This means that it is the object's auto-generated primary key.
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -28,4 +32,8 @@ public class Customer {
     private int postalCode;
     private int streetNr;
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

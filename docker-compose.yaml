@@ -1,6 +1,68 @@
 version: "3.9"
 
 services:
+    filebeat:
+        container_name: filebeat
+        image: docker.elastic.co/beats/filebeat:7.16.3
+        restart: always
+        networks:
+            onlineshop_network:
+        volumes:
+            - ./product_service/logs:/logs
+            - ./configs/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        command: filebeat -e -strict.perms=false
+        environment:
+            setup.kibana.host: kibana:5601
+        profiles: [ "prod" ]
+
+    logstash:
+        container_name: logstash
+        image: docker.elastic.co/logstash/logstash:7.16.3
+        restart: always
+        volumes:
+            - ./configs/logstash.yml:/usr/share/logstash/config/logstash.yml
+            - ./configs/pipeline:/usr/share/logstash/pipeline/
+            - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+        ports:
+            - 5044:5044
+        depends_on:
+            - filebeat
+        networks:
+            onlineshop_network:
+        profiles: [ "prod" ]
+
+    elasticsearch:
+        container_name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3
+        restart: always
+        volumes:
+            - ./configs/elasticsearch.yml:/usr/share/elasticsearch/elasticsearch.yml:ro
+        ports:
+            - 9200:9200
+            - 9300:9300
+        environment:
+            discovery.type: single-node
+        networks:
+            onlineshop_network:
+        profiles: [ "prod" ]
+        depends_on:
+            - filebeat
+            - logstash
+
+    kibana:
+        container_name: kibana
+        image: docker.elastic.co/kibana/kibana:7.16.3
+        restart: always
+        ports:
+            - 5601:5601
+        environment:
+            ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+        networks:
+            onlineshop_network:
+        profiles: [ "prod" ]
+        depends_on:
+            - elasticsearch
+
     product-service-db:
         container_name: product-service-db
         image: postgres:latest
@@ -11,25 +73,27 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
+        profiles: [ "prod", "dev" ]
 
     product-service:
         build: product_service
         image: onlineshop/product-service:latest
         restart: always
+        volumes:
+            - ./product_service/logs:/logs
         environment:
+            spring.application.name: product-service
             spring.datasource.url: jdbc:postgresql://product-service-db/product_service
             spring.datasource.username: root
             spring.datasource.password: root
             spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
             spring.datasource.driver-class-name: org.postgresql.Driver
-            EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service:8761/eureka
+            eureka.client.serviceUrl.defaultZone: http://eureka-service:8761/eureka
         ports:
             - 9000:8080
-        depends_on:
-            - product-service-db
-            - eureka-service
         networks:
             onlineshop_network:
+        profiles: [ "prod", "dev" ]
 
     customer-service-db:
         container_name: customer-service-db
@@ -41,6 +105,7 @@ services:
             POSTGRES_PASSWORD: root
         networks:
             onlineshop_network:
+        profiles: [ "prod", "dev" ]
 
     customer-service:
         build: customer_service
@@ -54,11 +119,39 @@ services:
             spring.datasource.driver-class-name: org.postgresql.Driver
         ports:
             - 9001:8080
-        depends_on:
-            - customer-service-db
-            - eureka-service
         networks:
             onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
+    order-service-db:
+        container_name: order-service-db
+        image: postgres:latest
+        restart: always
+        environment:
+            POSTGRES_DB: order_service
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
+
+    order-service:
+        build: order_service
+        image: onlineshop/order-service:latest
+        restart: always
+        environment:
+            spring.application.name: order-service
+            spring.datasource.url: jdbc:postgresql://order-service-db/order_service
+            spring.datasource.username: root
+            spring.datasource.password: root
+            spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+            spring.datasource.driver-class-name: org.postgresql.Driver
+            eureka.client.serviceUrl.defaultZone: http://eureka-service:8761/eureka
+        ports:
+            - 9002:8080
+        networks:
+            onlineshop_network:
+        profiles: [ "prod", "dev" ]
 
     eureka-service:
         build: eureka_service
@@ -68,19 +161,7 @@ services:
             - 8761:8761
         networks:
             onlineshop_network:
-
-    portainer:
-        container_name: portainer
-        image: cr.portainer.io/portainer/portainer-ce:2.9.3
-        restart: always
-        ports:
-            - 8000:8000
-            - 9443:9443
-        volumes:
-            - portainer_data:/data
-            - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            onlineshop_network:
+        profiles: [ "prod", "dev" ]
 
 networks:
     onlineshop_network:

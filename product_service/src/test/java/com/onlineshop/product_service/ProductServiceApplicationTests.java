@@ -1,37 +1,47 @@
 package com.onlineshop.product_service;
 
-import com.onlineshop.product_service.services.ArticlePictureService;
-import com.onlineshop.product_service.services.ArticleService;
+import com.onlineshop.product_service.controllers.ProductController;
+import com.onlineshop.product_service.controllers.ProductPictureController;
+import com.onlineshop.product_service.repositories.IProductPictureRepository;
+import com.onlineshop.product_service.repositories.IProductRepository;
+import com.onlineshop.product_service.services.OrderService;
+import com.onlineshop.product_service.services.ProductPictureService;
+import com.onlineshop.product_service.services.ProductService;
 import org.junit.jupiter.api.Test;
-import com.onlineshop.product_service.controllers.ArticleController;
-import com.onlineshop.product_service.repositories.IArticlePictureRepository;
-import com.onlineshop.product_service.repositories.IArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+@SpringBootTest({"eureka.client.enabled:false"})
 class ProductServiceApplicationTests {
 
     @Autowired
-    private ArticleController articleController;
+    private IProductRepository iProductRepository;
     @Autowired
-    private ArticleService articleService;
+    private ProductService productService;
     @Autowired
-    private IArticleRepository iArticleRepository;
+    private ProductController productController;
     @Autowired
-    private ArticlePictureService articlePictureService;
+    private IProductPictureRepository iProductPictureRepository;
     @Autowired
-    private IArticlePictureRepository iArticlePictureRepository;
+    private ProductPictureService productPictureService;
+    @Autowired
+    private ProductPictureController productPictureController;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ProductServiceApplication productServiceApplication;
 
     @Test
     void contextLoads() {
-        assertNotNull(articleController);
-        assertNotNull(articleService);
-        assertNotNull(iArticleRepository);
-        assertNotNull(articlePictureService);
-        assertNotNull(iArticlePictureRepository);
+        assertNotNull(iProductRepository);
+        assertNotNull(productService);
+        assertNotNull(productController);
+        assertNotNull(iProductPictureRepository);
+        assertNotNull(productPictureService);
+        assertNotNull(productPictureController);
+        assertNotNull(orderService);
+        assertNotNull(productServiceApplication);
     }
-
 }
