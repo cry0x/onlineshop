@@ -1,3 +1,9 @@
+##################################################
+#                                                #
+#   DOCKERFILE TO BUILD THE MICROSERVICE IMAGE   #
+#                                                #
+##################################################
+
 # IMAGE USED TO BUILD DOCKERFILE
 FROM openjdk:8-jdk-alpine as build
 

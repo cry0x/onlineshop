@@ -1,3 +1,9 @@
+##################################################
+#                                                #
+# DOCKER-COMPOSE TO TEST THE MICROSERVICE ITSELF #
+#                                                #
+##################################################
+
 version: '3'
 services:
     # CUSTOMER SERVICE

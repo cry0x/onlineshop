@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Table(name = "orders")
 @Data
 @Table(name = "orders")
 public class Order implements Serializable {

@@ -8,8 +8,13 @@ import com.onlineshop.customer_service.service.CustomerService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-// @SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest;
+/**
+ * Tests if the vital components of the order_service are available.
+ * @author Nico Welsch
+ * @version 1.0
+ */
+@SpringBootTest({"eureka.client.enabled:false"})
 class CustomerServiceApplicationTests {
 
     @Autowired
