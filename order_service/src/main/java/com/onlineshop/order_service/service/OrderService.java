@@ -54,7 +54,7 @@ public class OrderService {
             sum += (products.getPrice() * products.getQuantity());
         }
 
-        return Math.round(sum * 100.0) / 100.0; // rundet auf 2 Nachkommastellen
+        return Math.round(sum * 100.0) / 100.0;
     }
 
     public Order updateOrderStatus(Long orderId, StatusEnum statusEnum) {
@@ -114,14 +114,14 @@ public class OrderService {
         if (currentProductQuantity != null) {
             currentProduct.setQuantity(currentProductQuantity + newProduct.getQuantity());
             order.setTotalAmount(calculateTotalAmount(productListInOrder));
-            validateOrder(order); // Überprüft totamAmount > 0
+            validateOrder(order); // Checks totalAmount > 0
 
             return this.iProductRepository.save(currentProduct);
 
         } else {
             productListInOrder.add(createProduct(newProduct));
             order.setTotalAmount(calculateTotalAmount(productListInOrder));
-            validateOrder(order); // Überprüft totamAmount > 0
+            validateOrder(order); // Checks totalAmount > 0
 
             return newProduct;
         }
@@ -144,10 +144,8 @@ public class OrderService {
             }
         }
     }
-
-    // TODO
-    private long checkProductQuantityInProductService(Long originalId) {
-        return this.productServiceClient.getProductQuantity(originalId);
+    public List<Product> createAllProducts(List<Product> productList) {
+        return this.iProductRepository.saveAll(productList);
     }
 
     public void validateOrder(Order order) {

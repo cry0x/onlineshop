@@ -9,7 +9,7 @@ COPY src src
 
 RUN chmod a+x mvnw
 
-RUN ./mvnw clean package
+RUN ./mvnw clean package -P build
 
 ##################################################
 

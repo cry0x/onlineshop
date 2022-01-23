@@ -2,7 +2,6 @@ package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.clients.IOrderServiceClient;
 import com.onlineshop.product_service.entities.Product;
-import com.onlineshop.product_service.entities.ProductPicture;
 import com.onlineshop.product_service.exceptions.*;
 import com.onlineshop.product_service.testUtilities.RandomData;
 import org.junit.jupiter.api.Test;
@@ -102,7 +101,7 @@ class ProductServiceTest {
         Product product = RandomData.RandomProduct();
         product.setQuantity(-1);
 
-        assertThrows(ProductQuantityNegativeException.class, () -> this.productService.validateProduct(product));
+        assertThrows(ProdcutQuantityNegativeException.class, () -> this.productService.validateProduct(product));
     }
 
     @Test
@@ -190,6 +189,62 @@ class ProductServiceTest {
         assertEquals(expectedProduct, this.productService.updateProduct(existingProduct.getId(), newProduct));
 
         verify(this.iProductRepository, times(1)).save(existingProduct);
+    }
+
+    @Test
+    void changeQuantityAddTest() throws CloneNotSupportedException {
+        int amount = 123;
+        Product product = RandomData.RandomProduct();
+
+        Product expectedProdcut = (Product) product.clone();
+        expectedProdcut.setQuantity(product.getQuantity() + amount);
+
+        when(this.iProductRepository.findById(product.getId())).thenReturn(Optional.of(product));
+        when(this.iProductRepository.save(expectedProdcut)).thenReturn(expectedProdcut);
+
+        assertEquals(expectedProdcut, this.productService.changeQuantity(product.getId(), amount));
+    }
+
+    @Test
+    void changeQuantityReduceTest() throws CloneNotSupportedException {
+        int amount = -123;
+        Product product = RandomData.RandomProduct();
+
+        Product expectedProdcut = (Product) product.clone();
+        expectedProdcut.setQuantity(product.getQuantity() + amount);
+
+        when(this.iProductRepository.findById(product.getId())).thenReturn(Optional.of(product));
+        when(this.iProductRepository.save(expectedProdcut)).thenReturn(expectedProdcut);
+
+        assertEquals(expectedProdcut, this.productService.changeQuantity(product.getId(), amount));
+    }
+
+    @Test
+    void orderProductThrowsProductQuantityNegativeExceptionTest() {
+        Product productInDb = RandomData.RandomProduct();
+        productInDb.setQuantity(1);
+
+        when(this.iProductRepository.findById(productInDb.getId())).thenReturn(Optional.of(productInDb));
+
+        assertThrows(ProdcutQuantityNegativeException.class, () -> this.productService.orderProduct(productInDb.getId(), 2));
+    }
+
+    @Test
+    void orderProductTest() throws CloneNotSupportedException {
+        int amount = 23;
+
+        Product productInDb = RandomData.RandomProduct();
+
+        Product expectedProduct = (Product) productInDb.clone();
+        expectedProduct.setQuantity(amount);
+
+        when(this.iProductRepository.findById(productInDb.getId())).thenReturn(Optional.of(productInDb));
+
+        assertEquals(expectedProduct, this.productService.orderProduct(productInDb.getId(), amount));
+
+        productInDb.changeQuantity(amount);
+
+        verify(this.iProductRepository).save(productInDb);
     }
 
 }

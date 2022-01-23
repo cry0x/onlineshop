@@ -36,4 +36,15 @@ public class Product implements Cloneable {
         return super.clone();
     }
 
+    public int changeQuantity(int amount) {
+        int newQuantity = getQuantity() + amount;
+
+        if (newQuantity < 0)
+            throw new ProdcutQuantityNegativeException(newQuantity);
+
+        setQuantity(newQuantity);
+
+        return getQuantity();
+    }
+
 }

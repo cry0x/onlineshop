@@ -105,6 +105,11 @@ public class OrderController {
     }
 
 
-
+/*
+    @GetMapping("/orders/customers/{realCustomerId}")
+    public boolean getExistsCustomerByRealId(@PathVariable(value="realCustomerId") Long realCustomerId) {
+        return this.customerService.existsCustomerByRealId(realCustomerId);
+    }
+*/
 }
 
