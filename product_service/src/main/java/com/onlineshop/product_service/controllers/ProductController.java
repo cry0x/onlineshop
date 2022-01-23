@@ -212,11 +212,17 @@ public class ProductController {
     }
 
     @PutMapping(path = "/{productId}/{amount}")
-    public void putOrderProduct(@PathVariable Long productId, @PathVariable int amount) {
+    public Product putOrderProduct(@PathVariable Long productId, @PathVariable int amount) throws CloneNotSupportedException {
         log.info(String.format("PUT: /v1/products/%d/%d has been called", productId, amount));
 
-        Product orderedProduct = this.productService.readProductById(productId);
-        orderedProduct.
+        return this.productService.orderProduct(productId, amount);
+    }
+
+    @PutMapping(path = "/{productId}/quantity/{amount}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Product putChangeProductQuantity(@PathVariable Long productId, @PathVariable int amount) {
+        log.info(String.format("PUT: /v1/products/%d/quantity/%d has been called", productId, amount));
+
+        return this.productService.changeQuantity(productId, amount);
     }
 
     private void validateProduct(Product product) {

@@ -344,6 +344,8 @@ public class ProductControllerTest {
         Product expectedProduct = (Product) productInDb.clone();
         expectedProduct.setQuantity(2);
 
+        when(this.productService.orderProduct(productInDb.getId(), expectedProduct.getQuantity())).thenReturn(expectedProduct);
+
         this.mockMvc.perform(put(String.format("/v1/products/%d/%d", productInDb.getId(), expectedProduct.getQuantity()))).
                 andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedProduct)));

@@ -93,6 +93,19 @@ public class ProductService {
         this.iProductRepository.deleteById(productId);
     }
 
+    public Product orderProduct(Long productId, int amount) throws CloneNotSupportedException {
+        Product dbProduct = readProductById(productId);
+
+        Product orderedProduct = (Product) dbProduct.clone();
+        orderedProduct.setQuantity(amount);
+
+        dbProduct.changeQuantity(-amount);
+
+        this.iProductRepository.save(dbProduct);
+
+        return orderedProduct;
+    }
+
     private boolean checkProductExistsById(Long productId) {
         return this.iProductRepository.existsById(productId);
     }
