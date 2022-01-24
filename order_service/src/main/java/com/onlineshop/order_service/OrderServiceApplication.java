@@ -14,7 +14,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 @EnableConfigurationProperties
 @OpenAPIDefinition
-@EntityScan(basePackages = {"com.onlineshop.order_service"})
+//@EntityScan(basePackages = {"com.onlineshop.order_service"})
 public class OrderServiceApplication {
 
 	public static void main(String[] args) {
