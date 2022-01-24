@@ -19,7 +19,7 @@ public interface OrderServiceClient {
      * @param customerId    Specifies the customer
      * @return  true or false
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/orders/customers/{customerId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/v1/orders/{customerId}/orders")
     boolean getCustomerOrders(@PathVariable("customerId") Long customerId);
 
 }
