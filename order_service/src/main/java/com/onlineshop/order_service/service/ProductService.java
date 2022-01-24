@@ -1,6 +1,6 @@
 package com.onlineshop.order_service.service;
 
-
+/*
 import com.onlineshop.order_service.clients.IProductServiceClient;
 import com.onlineshop.order_service.controller.OrderController;
 import com.onlineshop.order_service.dto.ProductDto;
@@ -26,8 +26,6 @@ public class ProductService {
 
     // Checks in Product Service if there's sufficient quantity of the requested product available
     public ProductDto sufficientProductQuantity(Product newProduct) {
-
-        boolean value = false;
         try {
             product = this.iProductServiceClient.sufficientProductQuantity(newProduct.getOriginalId(), newProduct.getQuantity());
             System.out.println("Product is: " + product);
@@ -39,3 +37,5 @@ public class ProductService {
     }
 
 }
+
+ */

@@ -30,7 +30,7 @@ public class OrderService {
     private final IOrderRepository iOrderRepository;
     private final IProductRepository iProductRepository;
     private EmailService emailService;
-    private ProductService productService;
+    //private ProductService productService;
 
     private Order order;
     /**
@@ -188,19 +188,20 @@ public class OrderService {
 
         order = getOrderById(orderId);
 
-
+/*
+        // Throws nullpointerexception...
         if (productService.sufficientProductQuantity(newProduct) == null ) {
             if (productService.sufficientProductQuantity(newProduct).getQuantity() < newProduct.getQuantity()) {
                 throw new ProductQuantityInsufficientException(newProduct.getOriginalId());
             }
         }
 
-        /* TODO Checks in ProductService if quantity of Product is higher than the Quantity of Product we want to add to the order
+        // Check internally if there's enough product in stock
         if ( (checkProductQuantityInProductService(newProduct.getOriginalId()) - newProduct.getQuantity()) < 0 ) {
             newProduct.setQuantity(actualQuantityFromProductInProductService);
             throw new ProductNotAvailableException(orderId, "There's not enough product in stock");
         }
-         */
+*/
 
         validateOrder(order);
         List<Product> productListInOrder = order.getProductListInOrder();
