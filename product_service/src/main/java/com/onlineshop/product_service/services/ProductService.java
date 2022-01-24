@@ -61,8 +61,9 @@ public class ProductService {
     }
 
     /**
+     * Used to read all products from the database.
      *
-     * @return
+     * @return List of all products in the database
      */
     public List<Product> readAllProducts() {
         return this.iProductRepository.findAll();
