@@ -74,6 +74,14 @@ public class CustomerController {
      * @return      customer
      */
     @Operation(summary = "This is to fetch a single customer from the DB specified by it's ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+        description = "Fetched customer from the DB",
+        content = {@Content(mediaType = "application/json")}),
+        @ApiResponse(responseCode = "404",
+            description = "Not Available",
+            content = @Content)
+    })
     @GetMapping("customer/{id}")
     public Customer getCustomer(@PathVariable Long id) {
         log.info("FETCHING CUSTOMER WITH ID '{}'...", id);
@@ -86,6 +94,11 @@ public class CustomerController {
      * @return          customer
      */
     @Operation(summary = "This is to create a new customer and store it in the DB")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+        description = "Posted new customer to the DB",
+        content = {@Content(mediaType = "application/json")})
+    })
     @PostMapping("customer/")
     @ResponseStatus(HttpStatus.CREATED)
     public Customer postCustomer(@RequestBody Customer customer) {
@@ -98,6 +111,11 @@ public class CustomerController {
      * @param id    customer to delete
      */
     @Operation(summary = "This is to delete a customer stored in the DB")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+        description = "Deleted customer from the DB",
+        content = {@Content(mediaType = "application/json")})
+    })
     @DeleteMapping("customer/{id}")
     public void deleteCustomer(@PathVariable long id) {
         log.info("DELETING CUSTOMER WITH ID '{}'...", id);
@@ -111,6 +129,11 @@ public class CustomerController {
      * @return          customer
      */
     @Operation(summary = "This is to update a customer stored in the DB")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+        description = "Put updated customer into the DB",
+        content = {@Content(mediaType = "application/json")})
+    })
     @PutMapping("customer/{id}")
     public Customer putCustomer(@RequestBody Customer customer, @PathVariable Long id) {
         log.info("UPDATING CUSTOMER WITH ID '{}'...", id);
