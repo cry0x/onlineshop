@@ -1,8 +1,7 @@
 package com.onlineshop.product_service.services;
 
 import com.onlineshop.product_service.clients.IOrderServiceClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
     private final IOrderServiceClient iOrderServiceClient;
-    private final static Logger log = LogManager.getLogger(OrderService.class.getName());
+    private final static Logger log = Logger.getLogger(OrderService.class.getName());
 
     @Autowired
     public OrderService(IOrderServiceClient iOrderServiceClient) {
