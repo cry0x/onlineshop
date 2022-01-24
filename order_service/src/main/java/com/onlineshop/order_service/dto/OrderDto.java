@@ -1,40 +1,34 @@
 package com.onlineshop.order_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.onlineshop.order_service.entity.Product;
+import com.onlineshop.order_service.entity.StatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
+/**
+ * DataTransferObject for Orders. This can limit the "access rights", when using Order objects.
+ * @author Simon Spang
+ */
+@Data
 public class OrderDto {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Getter
-    @Setter
-    private Long orderId;
-    @Getter
-    @Setter
-    private Long customerId;
-    @Getter
-    @Setter
-    private Long orderTotal;
-    @Getter
-    @Setter
-    private String orderStatus;
 
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<OrderDto> orderInformation = new ArrayList<>(); // Default is empty list instead of null
+    private long id;
 
-    public List<OrderDto> getOrderInformation() {
-        return orderInformation;
-    }
+    private long customerId;
 
-    public void setOrderInformation(List<OrderDto> orderInformation) {
-        this.orderInformation = orderInformation;
-    }
+    private String customerEmail;
+
+    private List<Product> productListInOrder = new ArrayList<>(); // Default is empty list instead of null
+
+    private double totalAmount;
+
+    private StatusEnum orderStatus;
 
 }

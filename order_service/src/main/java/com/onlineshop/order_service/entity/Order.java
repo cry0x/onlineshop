@@ -1,41 +1,41 @@
 package com.onlineshop.order_service.entity;
 
-import javax.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import java.util.ArrayList;
+import org.hibernate.annotations.Cascade;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
+/**
+ * JPA entity class, where order object attributes are defined
+ * @author Simon Spang
+ */
 @Entity
 @Table(name = "orders")
 @Data
-public class Order {
+public class Order implements Serializable {
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter
-    @Setter
-    private long orderId;
-    @Getter
-    @Setter
-    private long totalPrice;
-    @Getter
-    @Setter
-    private String orderStatus; // enum 1-4 for Pending, Cancelled, in_delivery, completed?
-    @Transient
-    private Customer customer;
-    @Transient
-    private List<Product> productInformation = new ArrayList<>();
+    @Cascade(org.hibernate.annotations.CascadeType.REMOVE)
+    private long id;
 
-    public List<Product> getProductInformation() {
-        return productInformation;
-    }
+    @Column(name="total_amount", nullable = false)
+    private double totalAmount;
 
-    // Reduce amount when order is done?
-    public void setProductInformation(List<Product> productInformation) {
-        this.productInformation = productInformation;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name="order_status", nullable = false)
+    private StatusEnum orderStatus;
+
+    @Column(name="customer_id", nullable = false, updatable = false)
+    private long customerId;
+
+    @Column(name="customer_email", nullable = false)
+    private String customerEmail;
+
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private List<Product> productListInOrder;
 
 }
 

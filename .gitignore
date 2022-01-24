@@ -3,3 +3,5 @@
 /customer_service/build/
 /customer_service/.gradle/
 /product_service/src/main/resources/application-dev-jens.properties
+/order_service/build/
+/order_service/.gradle/

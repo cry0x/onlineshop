@@ -13,6 +13,8 @@ WORKDIR /customer_service
 # CP ALL FILES TO WORKDIR
 COPY . .
 
+RUN chmod a+x gradlew
+
 # CREATE FATJAR FILE
 RUN ./gradlew bootJar
 
