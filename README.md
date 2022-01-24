@@ -10,7 +10,6 @@
     - [Eureka-Server](#eureka-server)
   - [🗂 Documentation](#-documentation)
     - [API](#api)
-    - [Java](#java)
 
 ## 🃏 Services
 
@@ -32,7 +31,7 @@ docker-compose --profile prod up -d
 im Root-Ordner aufgerufen werden. Dann werden alle drei Services mit ihrend Datenbanken gestartet.
 Außerdem werden dann noch der Eureka-Service sowie der ELK-Stack gestartet.
 Der Eureka-Serivce wird verwendet um die Services registrieren zu können um deren Kommunikation
-untereinander erledichtern zu können. Der ELK-Stack wird verwendet um die Logs der Services sammeln
+untereinander erleichtern zu können. Der ELK-Stack wird verwendet um die Logs der Services sammeln
 und an einer zentralen Stelle auswerten zu können.
 
 ### Dev-Setup
@@ -51,6 +50,7 @@ ausgeführt werden.
 #### Kibana
 Es wurde ein Basis-Dashboard erstellt welches importiert werden kann. Dieses lässt sich mit der export-json im
 configs-Ordner des Projekts importieren.
+
 ### Eureka-Server
 Der Eureka-Server bedarf keiner weiteren Einstellung, er dient lediglich der Registrierung der verfügbaren Services.
 Nachdem er gestartet wurde melden sich die implementierten Services mit denen eine entsprechende URL zum Eureka-Server
@@ -66,7 +66,6 @@ Die API-Dokumentationen der drei implementierten Services können eingesehen wer
 öffentliche Adresse des Services angefügt wird.
 `z.B.: localhost:9000/swagger-ui.html`
 
-### Java
 ### Java Documentation
 Um die Java-Code-Dokumentation einsehen zu können, muss diese erst mit dem Kommando
 
