@@ -1,7 +1,4 @@
 # IMAGE USED TO BUILD DOCKERFILE
-FROM openjdk:11 as build
-#USER root
-
 FROM openjdk:11-jdk as build
 
 
@@ -25,9 +22,6 @@ RUN ./gradlew build -x test
 ##################################################
 
 # IMAGE USED FOR CONTAINER RUNTIME
-
-FROM openjdk:11 as run
-
 FROM openjdk:11-jre-slim as run
 
 
