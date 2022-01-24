@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * This class holds all logic to work with products
+ */
 @Service
 @Transactional
 public class ProductService {
@@ -18,6 +21,13 @@ public class ProductService {
     private final ProductPictureService productPictureService;
     private final OrderService orderService;
 
+    /**
+     * Used the autowire the needed beans.
+     *
+     * @param iProductRepository Bean to store products
+     * @param productPictureService Bean to work with product-pictures
+     * @param orderService Bean to communicate to the order-service
+     */
     @Autowired
     public ProductService(IProductRepository iProductRepository,
                           ProductPictureService productPictureService,
@@ -27,20 +37,46 @@ public class ProductService {
         this.orderService = orderService;
     }
 
+    /**
+     * Creates a product in the database from the given product-data and returns the product with its id.
+     *
+     * @param product The product to be created.
+     * @return The created product with id
+     */
     public Product createProduct(Product product) {
         validateProduct(product);
 
         return this.iProductRepository.save(product);
     }
 
-    public Product readProductById(Long id) {
-        return this.iProductRepository.findById(id).orElseThrow(() -> new ProductDoesntExistsException(id));
+    /**
+     * Reads the product from the database and returns it.
+     *
+     * @param productTd The id of the product which should be read
+     * @return The product with the corresponding id
+     * @throws ProductDoesntExistsException
+     */
+    public Product readProductById(Long productTd) {
+        return this.iProductRepository.findById(productTd).orElseThrow(() -> new ProductDoesntExistsException(productTd));
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Product> readAllProducts() {
         return this.iProductRepository.findAll();
     }
 
+    /**
+     * This method updates a product with the given prodcut information.
+     * If the product is referenced in a order a new one will be created and appended to the existing one.
+     * If it is in no order the product will simply be updated.
+     *
+     * @param productId The id of thr product to update
+     * @param updatedProduct The prodcut object containing the new prodcut-data
+     * @return The updated product
+     */
     public Product updateProduct(Long productId,
                                  Product updatedProduct) {
         validateProduct(updatedProduct);
@@ -77,6 +113,13 @@ public class ProductService {
         return updatedProduct;
     }
 
+    /**
+     * Function to change the available quantity of a product.
+     *
+     * @param productId The id of the product to change the quantity on
+     * @param amount The amount of quantity to be changed
+     * @return The product with the updated quantity
+     */
     public Product changeQuantity(Long productId, int amount) {
         Product product = readProductById(productId);
         product.changeQuantity(amount);
@@ -84,6 +127,11 @@ public class ProductService {
         return this.iProductRepository.save(product);
     }
 
+    /**
+     * Deletes a product by the given id.
+     *
+     * @param productId The id of the product to be deleted
+     */
     public void deleteProductById(Long productId) {
         if (!checkProductExistsById(productId))
             throw new ProductDoesntExistsException(productId);
@@ -93,6 +141,17 @@ public class ProductService {
         this.iProductRepository.deleteById(productId);
     }
 
+    /**
+     * This function is used to order an product.
+     * It will check if the product has the needed quantity to be ordered.
+     * If it can be ordered the wanted product is returned with the given quantity and also the product quantity in
+     * the database is updated.
+     *
+     * @param productId The product which should be ordered
+     * @param amount The amount to be ordered
+     * @return The ordered product
+     * @throws CloneNotSupportedException
+     */
     public Product orderProduct(Long productId, int amount) throws CloneNotSupportedException {
         Product dbProduct = readProductById(productId);
 
@@ -106,14 +165,12 @@ public class ProductService {
         return orderedProduct;
     }
 
-    private boolean checkProductExistsById(Long productId) {
-        return this.iProductRepository.existsById(productId);
-    }
-
-    private boolean checkProductExistsInOrder(Long productId) {
-        return this.orderService.existsProductInOrder(productId);
-    }
-
+    /**
+     * Checks if the product matches certain requirements.
+     * Name not empty, quantity and price not below 0.
+     *
+     * @param product The product which should be checked
+     */
     public void validateProduct(Product product) {
         if (product.getName().isEmpty())
             throw new ProductNameEmptyException(product);
@@ -121,6 +178,14 @@ public class ProductService {
             throw new ProdcutQuantityNegativeException(product.getQuantity());
         if (product.getPrice() < 0)
             throw new ProductPriceNegativeException(product);
+    }
+
+    private boolean checkProductExistsById(Long productId) {
+        return this.iProductRepository.existsById(productId);
+    }
+
+    private boolean checkProductExistsInOrder(Long productId) {
+        return this.orderService.existsProductInOrder(productId);
     }
 
 }
