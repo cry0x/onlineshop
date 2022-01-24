@@ -9,12 +9,9 @@ WORKDIR /order_service
 COPY . .
 
 #RUN chmod a+x gradlew
-
+RUN chmod a+x gradlew
 # CREATE FATJAR FILE
 RUN ./gradlew bootJar
-
-
-RUN chmod a+x gradlew
 
 # CREATE FATJAR FILE
 RUN ./gradlew build -x test
