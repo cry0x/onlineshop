@@ -5,7 +5,10 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 
-
+/**
+ * JPA entity class, where product object attributes are defined
+ * @author Simon Spang
+ */
 @Entity
 @Table(name = "products")
 @Data

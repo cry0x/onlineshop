@@ -4,6 +4,10 @@ import com.onlineshop.order_service.entity.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Custom exception that checks if the original product id of a product is missing.
+ * @author Simon Spang
+ */
 public class MissingOriginalProductIdException extends ResponseStatusException {
 
     public MissingOriginalProductIdException(Product product) {

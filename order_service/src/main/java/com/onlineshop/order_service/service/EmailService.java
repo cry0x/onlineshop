@@ -5,6 +5,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/**
+ * This EmailService is used for sending an automatic-generated notification email to a customer, once the status
+ * of their order gets updated. Using javaMailSender and apps of google account (app passwords), which generates
+ * a password for accessing gmail. The appropriate data gets stored in application.properties.
+ *
+ * @author Simon Spang
+ */
 @Service
 public class EmailService {
 
@@ -21,8 +28,8 @@ public class EmailService {
                 "Your order with the order id %d has been updated. \n The order status is now: %s \n\n " +
                 "This E-Mail has been automatically generated - Please do not respond to this E-Mail! \n\n " +
                 "________________________________________________\n\n" +
-                "Online-Shop for Microservices in industrial Applications \n\nGroup 3", orderId, orderStatus)); // by Jens Krämer, Nico Welsch and Simon Spang ?
-                                                                                                            // Otional TODO: Customer name adden in Anrede?
+                "Online-Shop for Microservices in industrial Applications \n\nGroup 3", orderId, orderStatus)); // by Jens Krämer, Nico Welsch and Simon Spang
+
         javaMailSender.send(simpleMailMessage);
     }
 

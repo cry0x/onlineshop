@@ -4,6 +4,10 @@ import com.onlineshop.order_service.entity.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Custom exception that checks if the product quantity is zero.
+ * @author Simon Spang
+ */
 public class ProductQuantityIsZeroException extends ResponseStatusException {
 
     public ProductQuantityIsZeroException(Product product) {

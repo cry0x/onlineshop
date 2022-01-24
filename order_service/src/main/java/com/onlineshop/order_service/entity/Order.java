@@ -7,6 +7,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * JPA entity class, where order object attributes are defined
+ * @author Simon Spang
+ */
 @Entity
 @Table(name = "orders")
 @Data

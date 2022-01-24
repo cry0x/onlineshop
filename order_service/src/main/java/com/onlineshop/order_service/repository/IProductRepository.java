@@ -7,6 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * This interface is used for implementing methods used for database access of Products, extending the Spring data
+ * JPARepository interface.
+ * @author Simon Spang
+ */
 @Repository
 public interface IProductRepository extends JpaRepository<Product, Long> {
 

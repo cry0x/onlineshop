@@ -9,6 +9,10 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DataTransferObject for Orders. This can limit the "access rights", when using Order objects.
+ * @author Simon Spang
+ */
 @Data
 public class OrderDto {
 

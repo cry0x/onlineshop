@@ -4,6 +4,10 @@ import com.onlineshop.order_service.entity.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Custom exception that checks if the ID of a customer is less than 1
+ * @author Simon Spang
+ */
 public class CustomerIdIsZeroOrNegative extends ResponseStatusException {
 
     public CustomerIdIsZeroOrNegative(Order order){

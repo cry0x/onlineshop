@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import javax.persistence.Id;
 
+/**
+ * DataTransferObject for Products. This can limit the "access rights", when using Product objects.
+ * @author Simon Spang
+ */
 public class ProductDto {
-
-   // @Schema(accessMode = Schema.AccessMode.READ_ONLY)
-   // @JsonProperty(access = JsonProperty.Access.READ_ONLY) // TODO  remove when ID comes from productService
 
     @Id
     @Getter

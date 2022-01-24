@@ -3,6 +3,7 @@ package com.onlineshop.order_service.testUtilities;
 import com.onlineshop.order_service.entity.Order;
 import com.onlineshop.order_service.entity.Product;
 import com.onlineshop.order_service.entity.StatusEnum;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,10 @@ public class RandomData {
     public static Long RandomLong() {
         Long retValue = new Random().nextLong();
         return retValue < 0 ? retValue * -1 : retValue;
+    }
+
+    public static String RandomString(int length) {
+        return RandomStringUtils.randomAlphabetic(length);
     }
 
     public static double RandomDouble() {
@@ -49,10 +54,12 @@ public class RandomData {
 
     public static Order RandomOrder() {
         Order order = new Order();
+
         order.setId(RandomLong());
+
         order.setOrderStatus(RandomStatusEnum());
         order.setCustomerId(RandomLong());
-        //order.setCustomerEmail(RandomString(10)); needs to fit *@*.* form
+        order.setCustomerEmail(RandomString(10));
         order.setProductListInOrder(RandomProductsInOrderList(10));
 
         return order;

@@ -4,6 +4,10 @@ import com.onlineshop.order_service.entity.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Custom exception that checks if a product price has a negative value.
+ * @author Simon Spang
+ */
 public class NegativeProductPriceException extends ResponseStatusException {
 
     public NegativeProductPriceException(Product product) {

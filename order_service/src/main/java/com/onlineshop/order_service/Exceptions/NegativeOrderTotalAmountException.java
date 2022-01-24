@@ -4,6 +4,10 @@ import com.onlineshop.order_service.entity.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Custom exception that checks if the total amount has a negative value.
+ * @author Simon Spang
+ */
 public class NegativeOrderTotalAmountException extends ResponseStatusException {
 
     public NegativeOrderTotalAmountException(Order order) {

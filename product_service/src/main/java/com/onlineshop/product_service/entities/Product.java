@@ -1,5 +1,6 @@
 package com.onlineshop.product_service.entities;
 
+import com.onlineshop.product_service.exceptions.ProdcutQuantityNegativeException;
 import lombok.*;
 
 import javax.persistence.*;
