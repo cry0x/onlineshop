@@ -1,7 +1,4 @@
 # IMAGE USED TO BUILD DOCKERFILE
-FROM openjdk:11 as build
-#USER root
-
 FROM openjdk:11-jdk as build
 
 
@@ -12,12 +9,9 @@ WORKDIR /order_service
 COPY . .
 
 #RUN chmod a+x gradlew
-
+RUN chmod a+x gradlew
 # CREATE FATJAR FILE
 RUN ./gradlew bootJar
-
-
-RUN chmod a+x gradlew
 
 # CREATE FATJAR FILE
 RUN ./gradlew build -x test
@@ -25,9 +19,6 @@ RUN ./gradlew build -x test
 ##################################################
 
 # IMAGE USED FOR CONTAINER RUNTIME
-
-FROM openjdk:11 as run
-
 FROM openjdk:11-jre-slim as run
 
 

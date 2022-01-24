@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProductService {
 
-    private final IProductServiceClient iProductServiceClient;
+    private IProductServiceClient iProductServiceClient;
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private ProductDto product;
 
