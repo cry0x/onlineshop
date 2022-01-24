@@ -9,7 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -27,7 +28,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final ProductPictureService productPictureService;
-    private final static Logger log = Logger.getLogger(ProductController.class.getName());
+    private final static Logger log = LogManager.getLogger(ProductController.class.getName());
 
     @Autowired
     public ProductController(ProductService productService,
